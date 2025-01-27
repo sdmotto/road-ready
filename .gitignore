@@ -11,6 +11,7 @@ UserSettings/
 *.csproj
 *.sln
 *.suo
+*.vscode/
 
 # OS-specific
 .DS_Store
