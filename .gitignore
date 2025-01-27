@@ -1,0 +1,26 @@
+# Unity-specific
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+
+# Visual Studio
+*.csproj
+*.sln
+*.suo
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Auto-generated files
+*.pidb
+*.booproj
+*.opendb
+*.VC.db
+
+# Unity Cache
+*.unitypackage
