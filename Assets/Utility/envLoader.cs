@@ -4,52 +4,74 @@ using System.IO;
 
 public class EnvLoader : MonoBehaviour
 {
-    // Dictionary to store all key-value pairs from the .env file
     public static Dictionary<string, string> EnvVariables = new Dictionary<string, string>();
 
     void Awake()
     {
-        // Path to the .env file
-        string envPath = Path.Combine(Application.dataPath, ".env");
+        Debug.Log("EnvLoader: Awake called. Starting environment load process.");
 
-        if (File.Exists(envPath))
+        // Print the current Application.dataPath.
+        Debug.Log($"EnvLoader: Application.dataPath = {Application.dataPath}");
+
+        // Attempt to find the project root by going up one level from 'Assets'
+        string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+        Debug.Log($"EnvLoader: Computed projectRoot = {projectRoot}");
+
+        // Build the full path to the .env file in the root
+        string envPath = Path.Combine(projectRoot, ".env");
+        Debug.Log($"EnvLoader: Using envPath = {envPath}");
+
+        if (!File.Exists(envPath))
         {
-            string[] lines = File.ReadAllLines(envPath);
-            foreach (string line in lines)
-            {
-                // Ignore comments and empty lines
-                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
-                    continue;
+            Debug.LogError($"EnvLoader: .env file NOT found at {envPath}");
+            return;
+        }
 
-                // Split the line into key and value
-                int separatorIndex = line.IndexOf('=');
-                if (separatorIndex > 0)
-                {
-                    string key = line.Substring(0, separatorIndex).Trim();
-                    string value = line.Substring(separatorIndex + 1).Trim();
-                    EnvVariables[key] = value;
-                }
+        // Read all lines from the .env
+        string[] lines = File.ReadAllLines(envPath);
+        Debug.Log($"EnvLoader: Read {lines.Length} lines from .env at {envPath}");
+
+        foreach (string line in lines)
+        {
+            Debug.Log($"EnvLoader: Processing line: '{line}'");
+            if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
+            {
+                Debug.Log("EnvLoader: Skipping empty/comment line.");
+                continue;
             }
 
-            Debug.Log("Environment variables loaded successfully!");
+            int separatorIndex = line.IndexOf('=');
+            if (separatorIndex < 0)
+            {
+                Debug.LogWarning($"EnvLoader: No '=' in line: '{line}', skipping.");
+                continue;
+            }
+
+            string key = line.Substring(0, separatorIndex).Trim();
+            string value = line.Substring(separatorIndex + 1).Trim();
+
+            Debug.Log($"EnvLoader: Found key='{key}', value='{value}'");
+            EnvVariables[key] = value;
         }
-        else
-        {
-            Debug.LogError(".env file not found at: " + envPath);
-        }
+
+        Debug.Log($"EnvLoader: Successfully loaded {EnvVariables.Count} environment variables from the root .env.");
     }
 
-    // Helper method to get a variable by key
     public static string GetEnv(string key)
     {
-        if (EnvVariables.ContainsKey(key))
+        Debug.Log($"EnvLoader.GetEnv: Attempting to retrieve key='{key}' from dictionary.");
+        if (!EnvVariables.ContainsKey(key))
         {
-            return EnvVariables[key];
-        }
-        else
-        {
-            Debug.LogWarning($"Environment variable '{key}' not found!");
+            Debug.LogError($"EnvLoader.GetEnv: Key '{key}' not found! Check spelling and .env.");
+            Debug.Log("EnvLoader.GetEnv: Available keys in EnvVariables are:");
+            foreach (var kvp in EnvVariables)
+            {
+                Debug.Log($"   {kvp.Key} = {kvp.Value}");
+            }
             return null;
         }
+
+        Debug.Log($"EnvLoader.GetEnv: Key '{key}' found, value = '{EnvVariables[key]}'");
+        return EnvVariables[key];
     }
 }
