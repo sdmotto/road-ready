@@ -5,7 +5,7 @@ public class SceneLoader : MonoBehaviour
 {
     public void LoadWorldScene()
     {
-        SceneManager.LoadScene("world");
+        SceneManager.LoadScene("routes");
     }
 
     public void QuitGame()
