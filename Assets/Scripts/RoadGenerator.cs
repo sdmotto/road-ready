@@ -41,28 +41,6 @@ public class RoadGenerator : MonoBehaviour
         }
     }
 
-    private IEnumerator GetElevation(float lat, float lon, System.Action<float> callback)
-    {
-        string url = $"https://maps.googleapis.com/maps/api/elevation/json?locations={lat},{lon}&key=AIzaSyBSRagLKFBh4fqbqoc0q6C8kMfJq30MdvY";
-        
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                JObject json = JObject.Parse(request.downloadHandler.text);
-                float elevation = (float)json["results"][0]["elevation"];
-                callback(elevation);
-            }
-            else
-            {
-                Debug.LogError("Failed to get elevation data.");
-                callback(0); // Default to 0 if error
-            }
-        }
-    }
-
     private void ParseAndDrawRoads(string jsonResponse)
     {
         JObject json = JObject.Parse(jsonResponse);
@@ -80,20 +58,7 @@ public class RoadGenerator : MonoBehaviour
             {
                 float lat = (float)node["lat"];
                 float lon = (float)node["lon"];
-                // StartCoroutine(GetElevation(lat, lon, (height) =>
-                // {
-                //     double3 unityPos = LatLongToUnityPosition(lat, lon, height);
-                //     Vector3 worldPosition = toVector3(unityPos);
-                //     roadPoints.Add(worldPosition);
-
-                //     Debug.Log($"  - Road Point: Lat {lat}, Lon {lon}, Height: {height} -> Unity {worldPosition}");
-
-                //     // If all points are collected, draw the roads
-                //     if (roadPoints.Count > 1)
-                //     {
-                //         DrawRoad(roadPoints);
-                //     }
-                // }));
+                
                 double3 unityPos = LatLongToUnityPosition(lat, lon, 177.6583f);
                 Vector3 worldPosition = toVector3(unityPos);
                 roadPoints.Add(worldPosition);
