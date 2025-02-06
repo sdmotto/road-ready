@@ -15,7 +15,7 @@ public class MarkerDeleterScript : MonoBehaviour
     void Update()
     {
         // Check for U key press
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.Backspace))
         {
             if (cameraRig != null)
             {
@@ -44,6 +44,9 @@ public class MarkerDeleterScript : MonoBehaviour
                 else
                 {
                     Debug.Log("Ray did not hit any object.");
+                    Debug.Log(deletionRay);
+                    Debug.Log(hit);
+                    Debug.Log(deletionRayDistance);
                 }
             }
             else
