@@ -58,8 +58,8 @@ public class RoadGenerator : MonoBehaviour
             {
                 float lat = (float)node["lat"];
                 float lon = (float)node["lon"];
-                
-                double3 unityPos = LatLongToUnityPosition(lat, lon, 177.6583f);
+
+                double3 unityPos = LatLongToUnityPosition(lat, lon, 177.6583f + 10);
                 Vector3 worldPosition = toVector3(unityPos);
                 roadPoints.Add(worldPosition);
 
