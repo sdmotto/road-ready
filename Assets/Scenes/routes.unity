@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 356245460}
   - component: {fileID: 356245459}
   - component: {fileID: 356245458}
+  - component: {fileID: 356245461}
   m_Layer: 6
   m_Name: Cesium3DTileset
   m_TagString: Untagged
@@ -276,6 +277,19 @@ MonoBehaviour:
   _updateInEditor: 1
   _logSelectionStats: 0
   _createPhysicsMeshes: 1
+--- !u!114 &356245461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356245456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4040d4d2ed707db4480cb19b100d2e1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cesiumGeoreference: {fileID: 0}
 --- !u!1 &437682817
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +302,7 @@ GameObject:
   - component: {fileID: 437682820}
   - component: {fileID: 437682819}
   - component: {fileID: 437682818}
+  - component: {fileID: 437682822}
   m_Layer: 0
   m_Name: CesiumGeoreference
   m_TagString: Untagged
@@ -364,6 +379,19 @@ Transform:
   - {fileID: 803324825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &437682822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437682817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4040d4d2ed707db4480cb19b100d2e1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cesiumGeoreference: {fileID: 437682820}
 --- !u!1 &639617308
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +423,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639617308}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 4.266105e-18, z: 0.000017414575, w: 1}
+  m_LocalRotation: {x: 0, y: 1.3904506e-17, z: 0.000017414575, w: 1}
   m_LocalPosition: {x: -278.7342, y: 200, z: 77.295}
   m_LocalScale: {x: 1, y: 0.999997, z: 0.999997}
   m_ConstrainProportionsScale: 0
@@ -526,8 +554,8 @@ MonoBehaviour:
   _localToGlobeFixedMatrix:
     c0:
       x: 0.9996406207861621
-      y: -0.026807251598852704
-      z: 0.000023151077174073077
+      y: -0.026807251598852718
+      z: 0.000023151077174058626
       w: 0
     c1:
       x: -0.020043202686396654
@@ -535,7 +563,7 @@ MonoBehaviour:
       z: 0.6647020615807154
       w: 0
     c2:
-      x: 0.01780154535344358
+      x: 0.017801545353443596
       y: 0.6644636454981203
       z: 0.7471045498046321
       w: 0

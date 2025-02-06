@@ -112,9 +112,6 @@ public class RoadGenerator : MonoBehaviour
         if (road.Count < 2) return; // Skip roads with only one point
 
         GameObject roadObject = new GameObject("RoadSegment");
-        GameObject cesiumOrigin = GameObject.Find("Origin"); // Get Cesium's anchor object
-        roadObject.transform.SetParent(cesiumOrigin.transform, false);
-
         LineRenderer lineRenderer = roadObject.AddComponent<LineRenderer>();
 
         lineRenderer.positionCount = road.Count;
