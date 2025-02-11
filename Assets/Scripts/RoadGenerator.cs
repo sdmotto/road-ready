@@ -11,7 +11,15 @@ public class RoadGenerator : MonoBehaviour
 {
     public CesiumGeoreference cesiumGeoreference;
 
-    private string overpassUrl = "https://overpass-api.de/api/interpreter?data=[out:json];way(around:400,41.65962,-91.53464)[highway];out geom;";
+    private string overpassUrl = "https://overpass-api.de/api/interpreter?data=";
+
+    private HashSet<long> processedWayIds = new HashSet<long>();
+
+    private float baseLat = 41.65962f;
+    private float baseLon = -91.53464f;
+    private float gridSize = 0.01f; // Step size for sweeping (~1km per step)
+    private int numStepsX = 2;
+    private int numStepsY = 2;
 
     private double3 LatLongToUnityPosition(float lat, float lon, float height)
     {
@@ -20,7 +28,29 @@ public class RoadGenerator : MonoBehaviour
     }
 
     void Start() {
-        StartCoroutine(FetchRoadData(overpassUrl));
+        StartCoroutine(SweepArea());
+    }
+
+    private IEnumerator SweepArea()
+    {
+        for (int i = -numStepsX; i <= numStepsX; i++)
+        {
+            for (int j = -numStepsY; j <= numStepsY; j++)
+            {
+                float lat = baseLat + (j * gridSize);
+                float lon = baseLon + (i * gridSize);
+                
+                string query = $@"
+                    [out:json];
+                    way(around:500,{lat},{lon})
+                    ['highway'~'primary|secondary|tertiary|motorway|trunk|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link|residential'];
+                    out geom;
+                ";
+
+                Debug.Log($"Fetching roads for lat: {lat}, lon: {lon}");
+                yield return StartCoroutine(FetchRoadData(overpassUrl + query));
+            }
+        }
     }
 
     private IEnumerator FetchRoadData(string url)
@@ -44,15 +74,16 @@ public class RoadGenerator : MonoBehaviour
     private void ParseAndDrawRoads(string jsonResponse)
     {
         JObject json = JObject.Parse(jsonResponse);
-        Debug.Log("Full JSON Response: " + json);
 
         foreach (var way in json["elements"])
         {
             if ((string)way["type"] != "way") continue;
 
-            List<Vector3> roadPoints = new List<Vector3>();
+            long wayId = (long)way["id"];
 
-            Debug.Log($"\nWay ID: {way["id"]}");
+            if (processedWayIds.Contains(wayId)) continue;
+
+            List<Vector3> roadPoints = new List<Vector3>();
 
             foreach (var node in way["geometry"])
             {
@@ -78,9 +109,11 @@ public class RoadGenerator : MonoBehaviour
 
         GameObject roadObject = new GameObject("RoadSegment");
         GameObject roadManager = GameObject.Find("RoadManager");
-        
+
         LineRenderer lineRenderer = roadObject.AddComponent<LineRenderer>();
         roadObject.transform.SetParent(roadManager.transform, false);
+
+        
 
         lineRenderer.positionCount = road.Count;
         lineRenderer.SetPositions(road.ToArray());
@@ -96,8 +129,6 @@ public class RoadGenerator : MonoBehaviour
         Material pinkMaterial = new Material(Shader.Find("Unlit/Color"));
         pinkMaterial.color = Color.magenta;
         lineRenderer.material = pinkMaterial;
-
-        Debug.Log($"Drawn road with {road.Count} points.");
     }
 
     private static Vector3 toVector3(double3 x) {
