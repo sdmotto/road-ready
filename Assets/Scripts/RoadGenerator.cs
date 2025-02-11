@@ -77,7 +77,10 @@ public class RoadGenerator : MonoBehaviour
         if (road.Count < 2) return; // Skip roads with only one point
 
         GameObject roadObject = new GameObject("RoadSegment");
+        GameObject roadManager = GameObject.Find("RoadManager");
+        
         LineRenderer lineRenderer = roadObject.AddComponent<LineRenderer>();
+        roadObject.transform.SetParent(roadManager.transform, false);
 
         lineRenderer.positionCount = road.Count;
         lineRenderer.SetPositions(road.ToArray());
