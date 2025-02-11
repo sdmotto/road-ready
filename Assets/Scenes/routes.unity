@@ -423,7 +423,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639617308}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 4.5186326e-17, z: 0.000017414575, w: 1}
+  m_LocalRotation: {x: 0, y: 7.7670936e-17, z: 0.000017414575, w: 1}
   m_LocalPosition: {x: -278.7342, y: 200, z: 77.295}
   m_LocalScale: {x: 1, y: 0.999997, z: 0.999997}
   m_ConstrainProportionsScale: 0
@@ -554,8 +554,8 @@ MonoBehaviour:
   _localToGlobeFixedMatrix:
     c0:
       x: 0.9996406207861621
-      y: -0.02680725159885276
-      z: 0.000023151077174011884
+      y: -0.0268072515988528
+      z: 0.000023151077173963345
       w: 0
     c1:
       x: -0.020043202686396654
@@ -563,7 +563,7 @@ MonoBehaviour:
       z: 0.6647020615807154
       w: 0
     c2:
-      x: 0.017801545353443658
+      x: 0.017801545353443724
       y: 0.6644636454981203
       z: 0.7471045498046321
       w: 0
@@ -953,11 +953,12 @@ MonoBehaviour:
   cameraRig: {fileID: 803324825}
   markerPrefab: {fileID: 8960757101466371486, guid: a8f2f4ce0a443054db8b782de14a16ea, type: 3}
   markerHolder: {fileID: 1537376595}
-  lineMaterial: {fileID: 2100000, guid: 2c98d1db4992d0a47b21201815829031, type: 2}
-  lineWidth: 5
+  lineMaterial: {fileID: 2100000, guid: 8cf558123d8a2f64789ff675a454f826, type: 2}
+  lineWidth: 1
+  sampleStepsPerSegment: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   groundOffset: 0.1
 --- !u!4 &943212747
 Transform:
