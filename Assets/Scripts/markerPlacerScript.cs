@@ -69,7 +69,7 @@ public class markerPlacerScript : MonoBehaviour
         }
     }
 
-    void CreateRouteMap()
+void CreateRouteMap()
     {
         // Make sure there are markers in the markerHolder.
         if (markerHolder.childCount == 0)
@@ -78,14 +78,20 @@ public class markerPlacerScript : MonoBehaviour
             return;
         }
 
-        // Determine a unique route map name based on the number of existing route map prefabs.
+        // Determine a unique route map name.
         int routeNumber = 1;
 #if UNITY_EDITOR
-        string folderPath = "Assets/Routes";
-        // Create the Routes folder if it doesn't exist.
+        // Use the Resources/Routes folder path.
+        string folderPath = "Assets/Resources/Routes";
+        // Ensure that Assets/Resources exists.
+        if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+        {
+            AssetDatabase.CreateFolder("Assets", "Resources");
+        }
+        // Ensure that Assets/Resources/Routes exists.
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
-            AssetDatabase.CreateFolder("Assets", "Routes");
+            AssetDatabase.CreateFolder("Assets/Resources", "Routes");
         }
         // Count the existing routeMap prefabs in the folder.
         string[] files = Directory.GetFiles(folderPath, "routeMap*.prefab", SearchOption.TopDirectoryOnly);
@@ -93,13 +99,13 @@ public class markerPlacerScript : MonoBehaviour
 #else
         routeNumber = 1;
 #endif
-        // Format the route map name as routeMapXXXXX (5 digits)
+        // Format the route map name as routeMapXXXXX (5 digits).
         string routeMapName = "routeMap" + routeNumber.ToString("D5");
 
         // Create the routeMap GameObject.
         GameObject routeMap = new GameObject(routeMapName);
 
-        // Create a child object to hold the LineRenderer for connecting markers.
+        // Create a child object to hold the LineRenderer.
         GameObject lineObj = new GameObject("LineConnector");
         lineObj.transform.parent = routeMap.transform;
 
@@ -173,13 +179,12 @@ public class markerPlacerScript : MonoBehaviour
         markerList.Clear();
 
 #if UNITY_EDITOR
-        // Save the routeMap as a prefab in the Routes folder.
+        // Save the routeMap as a prefab in the Resources/Routes folder.
         string prefabPath = folderPath + "/" + routeMapName + ".prefab";
         PrefabUtility.SaveAsPrefabAsset(routeMap, prefabPath);
         Debug.Log("RouteMap prefab saved to: " + prefabPath);
 #endif
     }
-
     // Helper method to "project" a position onto the ground.
     private Vector3 GetGroundPosition(Vector3 originalPos)
     {
