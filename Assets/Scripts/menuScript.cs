@@ -29,8 +29,8 @@ public class menuScript : MonoBehaviour
             ToggleMenu();
         }
 
-        // When the menu is active and R is pressed, display the list of routes.
-        if (menuActive && Input.GetKeyDown(KeyCode.R))
+        // When the menu is active and T is pressed, display the list of routes.
+        if (menuActive && Input.GetKeyDown(KeyCode.T))
         {
             DisplayRoutes();
         }
