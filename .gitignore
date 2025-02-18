@@ -6,6 +6,7 @@
 [Bb]uilds/
 [Ll]ogs/
 UserSettings/
+Assets/Resources/Routes
 
 # Visual Studio
 *.csproj
