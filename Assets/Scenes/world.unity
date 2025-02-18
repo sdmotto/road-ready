@@ -628,7 +628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _showCreditsOnScreen: 1
   _tilesetSource: 1
-  _url: 
+  _url: https://tile.googleapis.com/v1/3dtiles/root.json?key=AIzaSyA1Y0geRq_zenRt_DFkd6AzTDya9t4to2Y
   _ionAssetID: 0
   _ionAccessToken: 
   _ionServer: {fileID: 11400000, guid: 16b4fdb5d40ea1f43b187462ec3a6f7c, type: 2}
@@ -651,7 +651,7 @@ MonoBehaviour:
     _maximumAttenuation: 0
     _baseResolution: 0
   _suspendUpdate: 0
-  _showTilesInHierarchy: 0
+  _showTilesInHierarchy: 1
   _updateInEditor: 1
   _logSelectionStats: 0
   _createPhysicsMeshes: 1
