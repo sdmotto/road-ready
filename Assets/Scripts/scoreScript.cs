@@ -15,12 +15,16 @@ public class scoreScript : MonoBehaviour
     [Tooltip("Starting (maximum) score.")]
     public float maxScore = 100f;
 
+    // Reference to the speed manager (assumes speedScript exposes currentSpeed and speedLimitText).
+    public speedScript speedManager;
+
     // Internal tracking variables.
     private float totalCollisionPenalty = 0f;
+    private float totalSpeedingPenalty = 0f;
     private int collisionCount = 0;
     private float currentScore;
 
-    // Flag to control whether collisions affect the score.
+    // Flag to control whether scoring is active.
     private bool gradingActive = false;
 
     void Start()
@@ -29,8 +33,58 @@ public class scoreScript : MonoBehaviour
         currentScore = maxScore;
     }
 
+    void Update()
+    {
+        if (!gradingActive)
+            return;
+
+        // Check if speedManager is assigned and the speed limit is valid.
+        if (speedManager != null && speedManager.speedLimitText != null)
+        {
+            string limitText = speedManager.speedLimitText.text;
+            if (limitText != "API Error")
+            {
+                // Remove " MPH" from the text (if present) and try to parse the speed limit.
+                string limitStr = limitText.Replace(" MPH", "").Trim();
+                float currentSpeed;
+                if (float.TryParse(limitStr, out float speedLimit) 
+                && float.TryParse(speedManager.speedText.text, out currentSpeed))
+                {
+                    // Access currentSpeed from the speedManager (ensure speedScript exposes this property).
+                    
+                    if (currentSpeed > speedLimit)
+                    {
+                        float overSpeed = currentSpeed - speedLimit;
+                        float penaltyPerSecond = 0f;
+                        
+                        if (overSpeed <= 5f)
+                        {
+                            penaltyPerSecond = 1f;
+                        }
+                        else if (overSpeed <= 10f)
+                        {
+                            penaltyPerSecond = 5f;
+                        }
+                        else // overSpeed >= 11
+                        {
+                            penaltyPerSecond = 15f;
+                        }
+
+                        // Apply the penalty scaled by the time elapsed this frame.
+                        float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
+                        totalSpeedingPenalty += penaltyThisFrame;
+                        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty);
+                        Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
+                                  " | Total Speeding Penalty: " + totalSpeedingPenalty +
+                                  " | Current Score: " + currentScore);
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>
-    /// Activates collision scoring.
+    /// Activates collision and speeding scoring.
     /// Call this method (e.g., from your start marker trigger) to begin grading.
     /// </summary>
     public void StartGrading()
@@ -41,7 +95,7 @@ public class scoreScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Deactivates collision scoring.
+    /// Deactivates scoring.
     /// Call this method (e.g., from your end marker trigger) to end grading.
     /// </summary>
     public void EndGrading()
@@ -66,18 +120,18 @@ public class scoreScript : MonoBehaviour
         // if (collision.collider.CompareTag("Wheel"))
         //     return;
 
-        // Get the collision severity based on the relative velocity.
+        // Calculate collision severity based on relative velocity.
         float collisionSeverity = collision.relativeVelocity.magnitude;
 
         // Calculate the penalty for this collision.
         float penalty = collisionBasePenalty + (collisionSeverity * collisionSeverityMultiplier);
 
-        // Update our collision counters.
+        // Update collision counters.
         totalCollisionPenalty += penalty;
         collisionCount++;
 
-        // Subtract the penalty from the current score.
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty);
+        // Update the current score by subtracting both collision and speeding penalties.
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty);
 
         Debug.Log("Collision #" + collisionCount +
                   " | Severity: " + collisionSeverity +
@@ -94,11 +148,12 @@ public class scoreScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Resets the score and collision counters.
+    /// Resets the score and penalty counters.
     /// </summary>
     public void ResetScore()
     {
         totalCollisionPenalty = 0f;
+        totalSpeedingPenalty = 0f;
         collisionCount = 0;
         currentScore = maxScore;
     }

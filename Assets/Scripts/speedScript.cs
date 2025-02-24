@@ -12,12 +12,12 @@ using Newtonsoft.Json.Linq;
 public class speedScript : MonoBehaviour
 {
     [SerializeField] private CesiumGeoreference cesiumGeoreference;
-    [SerializeField] private TMP_Text speedText;
+    [SerializeField] public TMP_Text speedText;
     
     // How often (in seconds) to update the speed reading.
     [SerializeField] private float updateInterval = 0.5f;
 
-    [SerializeField] private TMP_Text speedLimitText;
+    [SerializeField] public TMP_Text speedLimitText;
 
     private float speedLimitInterval = 5f;
 
