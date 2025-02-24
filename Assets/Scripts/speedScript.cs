@@ -5,6 +5,9 @@ using TMPro;
 using CesiumForUnity;    // Or whatever namespace Cesium uses in your setup
 using Unity.Mathematics; // For double3, math.sin, etc.
 using System;            // For Math.Sqrt, Math.Sin, etc.
+using UnityEngine.Networking;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class speedScript : MonoBehaviour
 {
@@ -12,12 +15,20 @@ public class speedScript : MonoBehaviour
     [SerializeField] private TMP_Text speedText;
     
     // How often (in seconds) to update the speed reading.
-    [SerializeField] private float updateInterval = 0.5f; 
+    [SerializeField] private float updateInterval = 0.5f;
+
+    [SerializeField] private TMP_Text speedLimitText;
+
+    private float speedLimitInterval = 5f;
 
     // We'll store the previous latitude/longitude and time 
     private double lastLat;
     private double lastLon;
     private float lastTime;
+
+    private int counter = 0;
+
+    private string overpassUrl = "https://overpass-api.de/api/interpreter?data=";
 
     void Start()
     {
@@ -48,10 +59,26 @@ public class speedScript : MonoBehaviour
             // Display speed to one decimal place
             speedText.text = speedMph.ToString("F1") + " MPH";
 
+
+            if (counter >= 20) {
+                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (limit) => {
+                    if (limit != null)
+                    {
+                        speedLimitText.text = limit;
+                    }
+                    else
+                    {
+                        speedLimitText.text = "N/A";
+                    }
+                }));
+                counter = 0;
+            }
+
             // Update for next interval
             lastLat = currentLat;
             lastLon = currentLon;
             lastTime = Time.time;
+            counter++;
         }
     }
 
@@ -100,5 +127,54 @@ public class speedScript : MonoBehaviour
 
         // Distance in meters on Earth's surface
         return R * c;
+    }
+
+    private IEnumerator GetSpeedDataCoroutine(double lat, double lon, Action<string> callback)
+    {
+        string query = $@"
+                        [out:json];
+                        way(around:100,{lat},{lon})
+                        ['highway'~'primary|secondary|tertiary|motorway|trunk|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link|residential'];
+                        out geom;
+                        ";
+
+        // It is a good idea to URL-escape the query string.
+        string url = overpassUrl + UnityWebRequest.EscapeURL(query);
+
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                string jsonResponse = request.downloadHandler.text;
+                JObject json = JObject.Parse(jsonResponse);
+                JArray elements = (JArray)json["elements"];
+
+                if (elements != null && elements.Count > 0)
+                {
+                    JObject firstElement = (JObject)elements[0];
+                    JObject tags = (JObject)firstElement["tags"];
+                    if (tags != null && tags.ContainsKey("maxspeed"))
+                    {
+                        string maxSpeedStr = (string)tags["maxspeed"];
+                        callback(maxSpeedStr);
+                    }
+                    else
+                    {
+                        callback(null);
+                    }
+                }
+                else
+                {
+                    callback(null);
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to fetch road data: " + request.error);
+                callback(null);
+            }
+        }
     }
 }
