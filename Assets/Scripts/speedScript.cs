@@ -26,7 +26,7 @@ public class speedScript : MonoBehaviour
     private double lastLon;
     private float lastTime;
 
-    private int counter = 0;
+    private int counter = 20;
 
     private string overpassUrl = "https://overpass-api.de/api/interpreter?data=";
 
@@ -59,16 +59,17 @@ public class speedScript : MonoBehaviour
             // Display speed to one decimal place
             speedText.text = speedMph.ToString("F1") + " MPH";
 
-
-            if (counter >= 20) {
+            if (counter >= 10)
+            {
                 StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (limit) => {
-                    if (limit != null)
+                    // If limit is null or equals "NA" (ignoring case), set default of 25 MPH.
+                    if (!string.IsNullOrEmpty(limit) && !limit.Equals("NA", StringComparison.OrdinalIgnoreCase))
                     {
                         speedLimitText.text = limit;
                     }
                     else
                     {
-                        speedLimitText.text = "N/A";
+                        speedLimitText.text = "API Error";
                     }
                 }));
                 counter = 0;
