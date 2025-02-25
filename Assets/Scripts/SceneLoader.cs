@@ -8,6 +8,11 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("routes");
     }
 
+    public void LoadMenuScene()
+    {
+        SceneManager.LoadScene("menu");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
