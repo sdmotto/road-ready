@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
+
 
 public class scoreScript : MonoBehaviour
 {
@@ -42,13 +44,17 @@ public class scoreScript : MonoBehaviour
         if (speedManager != null && speedManager.speedLimitText != null)
         {
             string limitText = speedManager.speedLimitText.text;
+            string currentSpeedString = speedManager.speedText.text;
+
             if (limitText != "API Error")
             {
                 // Remove " MPH" from the text (if present) and try to parse the speed limit.
-                string limitStr = limitText.Replace(" MPH", "").Trim();
-                float currentSpeed;
+                string limitStr    = Regex.Replace(speedManager.speedLimitText.text, @"[^0-9.\-]+", "");
+                string currentStr  = Regex.Replace(speedManager.speedText.text, @"[^0-9.\-]+", "");
+
+
                 if (float.TryParse(limitStr, out float speedLimit) 
-                && float.TryParse(speedManager.speedText.text, out currentSpeed))
+                && float.TryParse(currentStr, out float currentSpeed))
                 {
                     // Access currentSpeed from the speedManager (ensure speedScript exposes this property).
                     
