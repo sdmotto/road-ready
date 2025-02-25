@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class scoreScript : MonoBehaviour
@@ -108,6 +109,9 @@ public class scoreScript : MonoBehaviour
     {
         gradingActive = false;
         Debug.Log("Grading ended. Final Score: " + currentScore);
+
+        Data.Instance.score = currentScore;
+        SceneManager.LoadScene("results");
     }
 
     /// <summary>
