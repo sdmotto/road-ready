@@ -94,6 +94,8 @@ public class RoadGenerator : MonoBehaviour
                 Vector3 worldPosition = toVector3(unityPos);
                 roadPoints.Add(worldPosition);
 
+                Data.Instance.roadPoints.Add(worldPosition);
+
                 if (roadPoints.Count > 1)
                 {
                     DrawRoad(roadPoints);
@@ -118,17 +120,17 @@ public class RoadGenerator : MonoBehaviour
         lineRenderer.positionCount = road.Count;
         lineRenderer.SetPositions(road.ToArray());
 
-        // Customize LineRenderer
-        lineRenderer.startWidth = 5f;
-        lineRenderer.endWidth = 5f;
-        lineRenderer.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended"));
-        lineRenderer.useWorldSpace = true;
-        lineRenderer.sortingOrder = 5;
+        // // Customize LineRenderer
+        // lineRenderer.startWidth = 5f;
+        // lineRenderer.endWidth = 5f;
+        // lineRenderer.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended"));
+        // lineRenderer.useWorldSpace = true;
+        // lineRenderer.sortingOrder = 5;
 
-        // Make it pink
-        Material pinkMaterial = new Material(Shader.Find("Unlit/Color"));
-        pinkMaterial.color = Color.magenta;
-        lineRenderer.material = pinkMaterial;
+        // // Make it pink
+        // Material pinkMaterial = new Material(Shader.Find("Unlit/Color"));
+        // pinkMaterial.color = Color.magenta;
+        // lineRenderer.material = pinkMaterial;
     }
 
     private static Vector3 toVector3(double3 x) {

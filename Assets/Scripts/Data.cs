@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Data : MonoBehaviour
@@ -10,6 +12,8 @@ public class Data : MonoBehaviour
     public float maxSpeed;
     public float elapsedTime;
     public float score;
+    public List<Vector3> sidewalkPoints = new List<Vector3>();
+    public List<Vector3> roadPoints = new List<Vector3>();
 
     void Awake()
     {
