@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
+using TMPro;
 
 public class scoreScript : MonoBehaviour
 {
@@ -21,11 +22,16 @@ public class scoreScript : MonoBehaviour
     // Reference to the speed manager (assumes speedScript exposes currentSpeed and speedLimitText).
     public speedScript speedManager;
 
+    [Header("Stop Sign Detection")]
+    [Tooltip("Reference to the UI Image for the stop sign indicator (invisible by default).")]
+    public Image stopSignImage;
+
     // Internal tracking variables.
     private float totalCollisionPenalty = 0f;
     private float totalSpeedingPenalty = 0f;
     private int collisionCount = 0;
     private float currentScore;
+    private float stopPenalty = 0;
 
     // Flag to control whether scoring is active.
     private bool gradingActive = false;
@@ -41,7 +47,7 @@ public class scoreScript : MonoBehaviour
         if (!gradingActive)
             return;
 
-        // Check if speedManager is assigned and the speed limit is valid.
+        // Check speeding penalty as before.
         if (speedManager != null && speedManager.speedLimitText != null)
         {
             string limitText = speedManager.speedLimitText.text;
@@ -49,16 +55,13 @@ public class scoreScript : MonoBehaviour
 
             if (limitText != "API Error")
             {
-                // Remove " MPH" from the text (if present) and try to parse the speed limit.
+                // Remove non-numeric characters from the text.
                 string limitStr    = Regex.Replace(speedManager.speedLimitText.text, @"[^0-9.\-]+", "");
                 string currentStr  = Regex.Replace(speedManager.speedText.text, @"[^0-9.\-]+", "");
 
-
                 if (float.TryParse(limitStr, out float speedLimit) 
-                && float.TryParse(currentStr, out float currentSpeed))
+                    && float.TryParse(currentStr, out float currentSpeed))
                 {
-                    // Access currentSpeed from the speedManager (ensure speedScript exposes this property).
-                    
                     if (currentSpeed > speedLimit)
                     {
                         float overSpeed = currentSpeed - speedLimit;
@@ -77,10 +80,10 @@ public class scoreScript : MonoBehaviour
                             penaltyPerSecond = 15f;
                         }
 
-                        // Apply the penalty scaled by the time elapsed this frame.
+                        // Apply the penalty scaled by time.
                         float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
                         totalSpeedingPenalty += penaltyThisFrame;
-                        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty);
+                        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty);
                         Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
                                   " | Total Speeding Penalty: " + totalSpeedingPenalty +
                                   " | Current Score: " + currentScore);
@@ -118,36 +121,30 @@ public class scoreScript : MonoBehaviour
     /// Called automatically by Unity when this GameObject collides with another.
     /// Only processes collisions when grading is active.
     /// </summary>
-    /// <param name="collision">Collision data.</param>
     void OnCollisionEnter(Collision collision)
     {
-        // Only process collisions if grading is active.
         if (!gradingActive)
             return;
 
-        // Optionally: Ignore collisions from parts like wheels if needed.
-        // Example:
-        // if (collision.collider.CompareTag("Wheel"))
-        //     return;
-
         // Calculate collision severity based on relative velocity.
         float collisionSeverity = collision.relativeVelocity.magnitude;
-
-        // Calculate the penalty for this collision.
         float penalty = collisionBasePenalty + (collisionSeverity * collisionSeverityMultiplier);
 
-        // Update collision counters.
         totalCollisionPenalty += penalty;
         collisionCount++;
-
-        // Update the current score by subtracting both collision and speeding penalties.
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty);
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty);
 
         Debug.Log("Collision #" + collisionCount +
                   " | Severity: " + collisionSeverity +
                   " | Penalty: " + penalty +
                   " | Current Score: " + currentScore);
     }
+
+    /// <summary>
+    /// Detect stop sign zone violations.
+    /// When the player leaves a stop sign zone (tagged "StopSignZone") while the stop sign image is still active,
+    /// it means they did not come to a complete stop and are penalized 10 points.
+    /// </summary>
 
     /// <summary>
     /// Returns the current score.
@@ -166,5 +163,15 @@ public class scoreScript : MonoBehaviour
         totalSpeedingPenalty = 0f;
         collisionCount = 0;
         currentScore = maxScore;
+    }
+
+    public void noStop()
+    {
+        stopPenalty += 10;
+
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty);
+
+        Debug.Log("Player did not stop fully!" +
+            " | Current Score: " + currentScore);
     }
 }
