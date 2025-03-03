@@ -242,24 +242,29 @@ public class PrometeoCarController : MonoBehaviour
         // Read Logitech G920 Steering Input
         float wheelSteeringInput = Input.GetAxis("Steering"); // G920 X-axis (-1 to 1)
 
+        
+
         // Read Logitech G920 Pedal Inputs
         float gasPedalInput = Input.GetAxis("Gas");   // G920 Gas Pedal (0 to 1)
         float brakePedalInput = Input.GetAxis("Brake"); // G920 Brake Pedal (0 to 1)
 
-        // Normalize pedal inputs (if inverted)
-        gasPedalInput = -1f * gasPedalInput + 1f;
+        // Normalize pedal inputs - maybe dont need? this code breaks acceleration if pedals aren't plugged in 
+        gasPedalInput = -1f * gasPedalInput + 1f; 
         brakePedalInput = -1f * brakePedalInput + 1f;
+
+        // Check if pedals are plugged in
+        bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
 
         // Keyboard Inputs
         bool wKey = Input.GetKey(KeyCode.W);
         bool sKey = Input.GetKey(KeyCode.S);
         bool spaceKey = Input.GetKey(KeyCode.Space);
 
-        // Combine Gas Inputs (Pedal OR W key)
-        float gasInput = Mathf.Max(gasPedalInput, wKey ? 1f : 0f); // Prioritize strongest input
+        // Use W key for gas if pedals are unplugged
+        float gasInput = pedalsConnected ? gasPedalInput : (wKey ? 1f : 0f);
 
-        // Combine Brake Inputs (Pedal OR Space key)
-        float brakeInput = Mathf.Max(brakePedalInput, spaceKey ? 1f : 0f);
+        // Use Space or brake pedal for braking
+        float brakeInput = pedalsConnected ? brakePedalInput : (spaceKey ? 1f : 0f);
 
         // Smooth Steering Transition
         float steeringAngle = 7.5f * wheelSteeringInput * maxSteeringAngle;
