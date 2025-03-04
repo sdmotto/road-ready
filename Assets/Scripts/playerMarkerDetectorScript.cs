@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class playerMarkerDetectorScript : MonoBehaviour
 {
-    // Flags to ensure we only print the message once per marker.
+    // Flags to ensure we only trigger the markers once.
     private bool startMarkerHit = false;
     private bool endMarkerHit = false;
 
-    // Ensure your player GameObject has a Rigidbody and Collider
-    // (with the collider NOT set as trigger) for proper collision detection.
-    // The marker objects should have a Collider with "Is Trigger" enabled.
+    // Reference to the scoreScript attached to the same GameObject (xcar).
+    private scoreScript scoring;
+
+    private void Awake()
+    {
+        scoring = GetComponent<scoreScript>();
+        if (scoring == null)
+        {
+            Debug.LogError("scoreScript not found on the xcar!");
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -19,12 +27,14 @@ public class playerMarkerDetectorScript : MonoBehaviour
         {
             Debug.Log("Player has driven over the START marker!");
             startMarkerHit = true;
+            scoring?.StartGrading();
         }
         // Check if we hit the end marker.
         else if (other.CompareTag("EndMarker") && !endMarkerHit)
         {
             Debug.Log("Player has driven over the END marker!");
             endMarkerHit = true;
+            scoring?.EndGrading();
         }
     }
 }

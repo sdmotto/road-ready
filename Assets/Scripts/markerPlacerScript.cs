@@ -10,10 +10,11 @@ using UnityEditor;
 public class markerPlacerScript : MonoBehaviour
 {
     [Header("References")]
-    // Assign your cameraRig (or player rig) transform here
+    // (Optional) You can still assign a camera rig if needed for other purposes, 
+    // but for placement we'll use the main camera's mouse ray.
     public Transform cameraRig;
     
-    // Assign your marker prefab (the red cylinder prefab) in the Inspector
+    // Assign your marker prefab (e.g., the red cylinder prefab) in the Inspector
     public GameObject markerPrefab;
 
     // Assign the markerHolder GameObject (all markers will be parented here)
@@ -43,18 +44,19 @@ public class markerPlacerScript : MonoBehaviour
         // On left mouse click, place a marker.
         if (Input.GetMouseButtonDown(0))
         {
-            // Calculate marker position using cameraRig's x and z, and adjust y by raycasting.
-            Vector3 markerPosition = new Vector3(cameraRig.position.x, 0f, cameraRig.position.z);
-            Ray ray = new Ray(new Vector3(cameraRig.position.x, 1000f, cameraRig.position.z), Vector3.down);
+            Vector3 markerPosition = Vector3.zero;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
+            // Raycast from the mouse pointer into the world using the ground layer.
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer))
             {
-                markerPosition.y = hit.point.y + groundOffset;
+                markerPosition = hit.point + new Vector3(0, groundOffset, 0);
             }
             else
             {
-                markerPosition.y = groundOffset;
+                // Fallback: if nothing is hit, use a default position at y=groundOffset.
+                markerPosition = new Vector3(0, groundOffset, 0);
             }
 
             // Instantiate the marker as a child of markerHolder.
@@ -69,7 +71,7 @@ public class markerPlacerScript : MonoBehaviour
         }
     }
 
-void CreateRouteMap()
+    void CreateRouteMap()
     {
         // Make sure there are markers in the markerHolder.
         if (markerHolder.childCount == 0)
@@ -94,7 +96,7 @@ void CreateRouteMap()
             AssetDatabase.CreateFolder("Assets/Resources", "Routes");
         }
         // Count the existing routeMap prefabs in the folder.
-        string[] files = Directory.GetFiles(folderPath, "routeMap*.prefab", SearchOption.TopDirectoryOnly);
+        string[] files = Directory.GetFiles(folderPath, "routeMap*.prefab", System.IO.SearchOption.TopDirectoryOnly);
         routeNumber = files.Length + 1;
 #else
         routeNumber = 1;
@@ -185,6 +187,7 @@ void CreateRouteMap()
         Debug.Log("RouteMap prefab saved to: " + prefabPath);
 #endif
     }
+
     // Helper method to "project" a position onto the ground.
     private Vector3 GetGroundPosition(Vector3 originalPos)
     {
