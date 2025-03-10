@@ -23,7 +23,7 @@ public class keyScript : MonoBehaviour
         }
         else
         {
-            Debug.Log($"keyScript: 'apiKey' successfully retrieved: {apiKey}");
+            // Debug.Log($"keyScript: 'apiKey' successfully retrieved: {apiKey}");
         }
 
         // Check if we have a valid Cesium3DTileset and valid apiKey

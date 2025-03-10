@@ -19,7 +19,7 @@ public class speedScript : MonoBehaviour
 
     [SerializeField] public TMP_Text speedLimitText;
 
-    private float speedLimitInterval = 5f;
+    // private float speedLimitInterval = 5f;
 
     // We'll store the previous latitude/longitude and time 
     private double lastLat;

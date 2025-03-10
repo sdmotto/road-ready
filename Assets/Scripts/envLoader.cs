@@ -50,7 +50,7 @@ public class EnvLoader : MonoBehaviour
             string key = line.Substring(0, separatorIndex).Trim();
             string value = line.Substring(separatorIndex + 1).Trim();
 
-            Debug.Log($"EnvLoader: Found key='{key}', value='{value}'");
+            // Debug.Log($"EnvLoader: Found key='{key}', value='{value}'");
             EnvVariables[key] = value;
         }
 

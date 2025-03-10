@@ -900,6 +900,7 @@ MonoBehaviour:
   baseLat: 41.65962
   baseLon: -91.53464
   queryRadius: 1000
+  overpassUrl: https://overpass-api.de/api/interpreter?data=
   stopSignImage: {fileID: 619109861}
   speedText: {fileID: 0}
   zoneRadius: 20
@@ -1418,7 +1419,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 757152072}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7569b4d9ad1eefa40ae4e8f7ec1d4c5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 087982948e94a5d438f27cca96c3bce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   menuPanel: {fileID: 389828523}
@@ -1510,7 +1511,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 792647109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b3e461e5551c234abe41c0c34bb2fd1, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c36dd799dcc12e4e934dfe595f5f463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &792647117
@@ -1522,7 +1523,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 792647109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daa5ed5d2907091468353284b851f131, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d836d379d6970e4690623445e060b8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 898003705}
@@ -1594,7 +1595,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 792647109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c96359e009b7fcb47a389d94869f006d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d398904904cb944e8e960768eff9340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collisionBasePenalty: 5
@@ -1611,7 +1612,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 792647109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbbf2b862116b5e419db3afe9d4bb9a9, type: 3}
+  m_Script: {fileID: 11500000, guid: b840dc4a6c74e6d43877f9976d063781, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cesiumGeoreference: {fileID: 191879169}
@@ -2541,7 +2542,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1468713324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bacbf7c51064bb74ca72b58c2a9ce00a, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ecea9e023795cf4fa142f50a20a41bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cesiumGeoreference: {fileID: 191879169}
