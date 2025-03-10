@@ -5,7 +5,6 @@ public class displayScore : MonoBehaviour
 {
     [SerializeField] private TMP_Text hudText;            // Assign via the Inspector
     // [SerializeField] private speedScript speedScriptRef;    // Reference to your speedScript instance
-    [SerializeField] private scoreScript scoreScriptRef;    // Reference to your scoreScript instance
 
     void Update()
     {

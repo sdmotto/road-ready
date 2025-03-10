@@ -360,7 +360,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 437682817}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4040d4d2ed707db4480cb19b100d2e1b, type: 3}
+  m_Script: {fileID: 11500000, guid: d6d4b8be3c2580d4d940250376f90730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cesiumGeoreference: {fileID: 437682820}
@@ -395,7 +395,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639617308}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1.2458985e-16, z: 0.000017414575, w: 1}
+  m_LocalRotation: {x: 0, y: 1.3419437e-16, z: 0.000017414575, w: 1}
   m_LocalPosition: {x: -278.7342, y: 200, z: 77.295}
   m_LocalScale: {x: 1, y: 0.999997, z: 0.999997}
   m_ConstrainProportionsScale: 0
@@ -526,8 +526,8 @@ MonoBehaviour:
   _localToGlobeFixedMatrix:
     c0:
       x: 0.9996406207861621
-      y: -0.026807251598852864
-      z: 0.00002315107717389325
+      y: -0.026807251598852878
+      z: 0.000023151077173878977
       w: 0
     c1:
       x: -0.020043202686396654
@@ -535,7 +535,7 @@ MonoBehaviour:
       z: 0.6647020615807154
       w: 0
     c2:
-      x: 0.017801545353443818
+      x: 0.01780154535344384
       y: 0.6644636454981203
       z: 0.7471045498046321
       w: 0
@@ -704,7 +704,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 639617308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe3d45a8f2314f54fb07320f1b6a4aa9, type: 3}
+  m_Script: {fileID: 11500000, guid: e9c26c28673b2574689bcfe582a7e032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTarget: {fileID: 803324825}
@@ -750,7 +750,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 803324824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 298340b689ca80a4f91218ce71195f46, type: 3}
+  m_Script: {fileID: 11500000, guid: b808fb65d9a43a8458582a0b293a9f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   baseMaxMoveSpeed: 250
@@ -919,7 +919,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 943212745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8097dbb4534832b4f937711cf7c7dae5, type: 3}
+  m_Script: {fileID: 11500000, guid: 436a746a373093243b7829562fc74c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cameraRig: {fileID: 803324825}
@@ -956,7 +956,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 943212745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3ffa4fd9ec9e094790a33db3dc8cad5, type: 3}
+  m_Script: {fileID: 11500000, guid: fec47f4985c63b546b93891df602bbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   deletionRayDistance: 1000000
