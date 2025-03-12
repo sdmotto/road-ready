@@ -229,7 +229,7 @@ public class StopSignGenerator : MonoBehaviour
                 if (scoreManager != null)
                 {
                     Debug.Log("subtracting or supposedly");
-                    scoreManager.noStop();
+                    scoreManager.noStop(10);
                 }
             }
             SetAlpha(stopSignImage, 0f);
