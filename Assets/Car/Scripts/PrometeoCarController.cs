@@ -34,8 +34,8 @@ public class PrometeoCarController : MonoBehaviour
       [Range(0.1f, 1f)]
       public float steeringSpeed = 0.2f; // How fast the steering wheel turns.
       [Space(10)]
-      [Range(100, 600)]
-      public int brakeForce = 350; // The strength of the wheel brakes.
+      [Range(100, 1000)]
+      public int brakeForce = 600; // The strength of the wheel brakes.
       [Range(1, 10)]
       public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
       [Range(1, 10)]
@@ -131,7 +131,7 @@ public class PrometeoCarController : MonoBehaviour
       float localVelocityZ;
       float localVelocityX;
       bool deceleratingCar;
-      // bool touchControlsSetup = false;
+      bool touchControlsSetup = false;
       /*
       The following variables are used to store information about sideways friction of the wheels (such as
       extremumSlip,extremumValue, asymptoteSlip, asymptoteValue and stiffness). We change this values to
@@ -249,8 +249,8 @@ public class PrometeoCarController : MonoBehaviour
         float brakePedalInput = Input.GetAxis("Brake"); // G920 Brake Pedal (0 to 1)
 
         // Normalize pedal inputs - maybe dont need? this code breaks acceleration if pedals aren't plugged in 
-        // gasPedalInput = -1f * gasPedalInput + 1f; 
-        // brakePedalInput = -1f * brakePedalInput + 1f;
+        gasPedalInput = -1f * gasPedalInput + 1f; 
+        brakePedalInput = -1f * brakePedalInput + 1f;
 
         // Check if pedals are plugged in
         bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
@@ -341,7 +341,7 @@ public class PrometeoCarController : MonoBehaviour
         }
 
         // Animate Wheel Meshes
-        // AnimateWheelMeshes();
+        AnimateWheelMeshes();
 
         // Debugging
         Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
