@@ -23,17 +23,6 @@ public class menuScript : MonoBehaviour
 
     void Update()
     {
-        // Toggle the menu visibility when M is pressed.
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ToggleMenu();
-        }
-
-        // When the menu is active and T is pressed, display the list of routes.
-        if (menuActive && Input.GetKeyDown(KeyCode.T))
-        {
-            DisplayRoutes();
-        }
 
         // If the menu is open and the routes are displayed, use the arrow keys and Enter for navigation.
         if (menuActive && routesDisplayed)
@@ -87,7 +76,7 @@ public class menuScript : MonoBehaviour
     /// <summary>
     /// Toggles the visibility of the menu panel.
     /// </summary>
-    void ToggleMenu()
+    public void ToggleMenu()
     {
         menuActive = !menuActive;
         if (menuPanel != null)
@@ -106,39 +95,43 @@ public class menuScript : MonoBehaviour
     /// <summary>
     /// Reads the Routes folder and displays the list of route prefab names.
     /// </summary>
-    void DisplayRoutes()
+    public void DisplayRoutes()
     {
-        // Load all route prefabs from the Resources/Routes folder.
-        GameObject[] routePrefabs = Resources.LoadAll<GameObject>("Routes");
-
-        // Clear any existing route names.
-        routeNames.Clear();
-
-        // Loop through each loaded prefab and add its name to the list.
-        foreach (GameObject routePrefab in routePrefabs)
+        if(menuActive)
         {
-            routeNames.Add(routePrefab.name);
-        }
+            // Load all route prefabs from the Resources/Routes folder.
+            GameObject[] routePrefabs = Resources.LoadAll<GameObject>("Routes");
 
-        // Check if any routes were found.
-        if (routeNames.Count == 0)
-        {
-            Debug.LogWarning("No route prefabs found in Resources/Routes folder.");
-            return;
-        }
+            // Clear any existing route names.
+            routeNames.Clear();
 
-        // Reset the selected index and mark that routes are displayed.
-        selectedIndex = 0;
-        routesDisplayed = true;
-        UpdateMenuDisplay();
+            // Loop through each loaded prefab and add its name to the list.
+            foreach (GameObject routePrefab in routePrefabs)
+            {
+                routeNames.Add(routePrefab.name);
+            }
 
-        // Optionally, print all available routes to the console.
-        string debugInfo = "Available Routes:\n";
-        foreach (string route in routeNames)
-        {
-            debugInfo += route + "\n";
+            // Check if any routes were found.
+            if (routeNames.Count == 0)
+            {
+                Debug.LogWarning("No route prefabs found in Resources/Routes folder.");
+                return;
+            }
+
+            // Reset the selected index and mark that routes are displayed.
+            selectedIndex = 0;
+            routesDisplayed = true;
+            UpdateMenuDisplay();
+
+            // Optionally, print all available routes to the console.
+            string debugInfo = "Available Routes:\n";
+            foreach (string route in routeNames)
+            {
+                debugInfo += route + "\n";
+            }
+            Debug.Log(debugInfo);
         }
-        Debug.Log(debugInfo);
+        
     }
 
     /// <summary>
