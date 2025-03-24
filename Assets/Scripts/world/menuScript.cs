@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class menuScript : MonoBehaviour
 {
@@ -131,6 +132,8 @@ public class menuScript : MonoBehaviour
             }
             Debug.Log(debugInfo);
         }
+
+        EventSystem.current.SetSelectedGameObject(null);
         
     }
 
