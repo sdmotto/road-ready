@@ -32,9 +32,7 @@ public class timerScript : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Call this to start the timer.
-    /// </summary>
+    // Call this to start the timer.
     public void StartTimer()
     {
         elapsedTime = 0f;
@@ -42,9 +40,8 @@ public class timerScript : MonoBehaviour
         Debug.Log("Route Timer started.");
     }
 
-    /// <summary>
-    /// Call this to stop the timer.
-    /// </summary>
+   
+    // Call this to stop the timer.
     public void StopTimer()
     {
         timerRunning = false;
@@ -71,4 +68,10 @@ public class timerScript : MonoBehaviour
             }
         }
     }
+
+    // getter for elapsed time
+    public float GetElapsedTime() {
+        return elapsedTime;
+    }
+
 }

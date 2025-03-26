@@ -34,6 +34,10 @@ public class scoreScript : MonoBehaviour
     private float stopPenalty = 0;
     private float trafficSigPenalty = 0;
 
+    // references to speedScript and timerScript
+    public speedScript speedScriptRef;
+    public timerScript timerScriptRef;
+
     // Flag to control whether scoring is active.
     private bool gradingActive = false;
 
@@ -94,10 +98,8 @@ public class scoreScript : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Activates collision and speeding scoring.
-    /// Call this method (e.g., from your start marker trigger) to begin grading.
-    /// </summary>
+    //Activates collision and speeding scoring.
+    //Call this method (e.g., from your start marker trigger) to begin grading.
     public void StartGrading()
     {
         gradingActive = true;
@@ -105,23 +107,22 @@ public class scoreScript : MonoBehaviour
         Debug.Log("Grading started. Score reset to: " + currentScore);
     }
 
-    /// <summary>
-    /// Deactivates scoring.
-    /// Call this method (e.g., from your end marker trigger) to end grading.
-    /// </summary>
-    public void EndGrading()
-    {
+    // Deactivates scoring.
+    //Call this method o end grading.
+    public void EndGrading(){
         gradingActive = false;
         Debug.Log("Grading ended. Final Score: " + currentScore);
 
         Data.Instance.score = currentScore;
+        Data.Instance.maxSpeed = speedScriptRef.maxSpeed;
+        Data.Instance.elapsedTime = timerScriptRef.GetElapsedTime();
         SceneManager.LoadScene("results");
     }
 
-    /// <summary>
-    /// Called automatically by Unity when this GameObject collides with another.
-    /// Only processes collisions when grading is active.
-    /// </summary>
+
+    // Called automatically by Unity when this GameObject collides with another.
+    //Only processes collisions when grading is active.
+
     void OnCollisionEnter(Collision collision)
     {
         if (!gradingActive)
@@ -141,23 +142,21 @@ public class scoreScript : MonoBehaviour
                   " | Current Score: " + currentScore);
     }
 
-    /// <summary>
-    /// Detect stop sign zone violations.
-    /// When the player leaves a stop sign zone (tagged "StopSignZone") while the stop sign image is still active,
-    /// it means they did not come to a complete stop and are penalized 10 points.
-    /// </summary>
+   
+    // Detect stop sign zone violations.
+    // When the player leaves a stop sign zone (tagged "StopSignZone") while the stop sign image is still active,
+    // it means they did not come to a complete stop and are penalized 10 points.
+  
 
-    /// <summary>
-    /// Returns the current score.
-    /// </summary>
+    // Returns the current score.
     public float GetCurrentScore()
     {
         return currentScore;
     }
 
-    /// <summary>
-    /// Resets the score and penalty counters.
-    /// </summary>
+
+    // Resets the score and penalty counters.
+
     public void ResetScore()
     {
         totalCollisionPenalty = 0f;
