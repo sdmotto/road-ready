@@ -48,12 +48,6 @@ public class TurnSignalController : MonoBehaviour
             SetAlpha(rightArrow, 0f); // Hide right arrow
         }
 
-         // Reset car position when "R" is pressed
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            transform.position = startPosition;
-            transform.rotation = startRotation;
-        }
     }
 
     IEnumerator Blink(Image arrow)

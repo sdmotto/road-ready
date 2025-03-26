@@ -146,6 +146,10 @@ public class PrometeoCarController : MonoBehaviour
       WheelFrictionCurve RRwheelFriction;
       float RRWextremumSlip;
 
+    // alex stuff
+      private Vector3 startPosition;  // Store the car's initial position
+      private Quaternion startRotation; // Store the car's initial rotation
+
     // Start is called before the first frame update
     void Start()
     {
@@ -154,6 +158,9 @@ public class PrometeoCarController : MonoBehaviour
       //in the inspector.
       carRigidbody = gameObject.GetComponent<Rigidbody>();
       carRigidbody.centerOfMass = bodyMassCenter;
+
+      startPosition = transform.position;
+      startRotation = transform.rotation;
 
       //Initial setup to calculate the drift value of the car. This part could look a bit
       //complicated, but do not be afraid, the only thing we're doing here is to save the default
@@ -357,6 +364,16 @@ public class PrometeoCarController : MonoBehaviour
       }
 
 
+
+    // alex stuff
+
+    public void resetPosition()
+    {
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+        carRigidbody.velocity = Vector3.zero;
+        carRigidbody.angularVelocity = Vector3.zero;
+    }
     // Helper funtions to allow for a gradient of pedal inputs
     // Apply motor torque to all wheels (proportional to gas input)
       void ApplyMotorTorque(float torque)
