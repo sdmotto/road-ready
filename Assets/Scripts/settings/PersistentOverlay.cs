@@ -10,7 +10,9 @@ public class PersistentOverlay : MonoBehaviour
     public Image brightnessOverlay;
 
     // A stored brightness value (0 to 1), so we can restore it if needed
-    private float currentBrightness = 0.5f;
+    private float currentBrightness = 1f;
+
+    private float currentVolume = 1f;
 
     private void Awake()
     {
@@ -45,8 +47,14 @@ public class PersistentOverlay : MonoBehaviour
         return currentBrightness;
     }
 
-    public void BackButton()
+    public void SetVolume(float volume)
     {
-       SceneManager.LoadScene("menu");
+        currentVolume = volume;
+        AudioListener.volume = volume;
+    }
+
+    public float GetVolume()
+    {
+        return currentVolume;
     }
 }
