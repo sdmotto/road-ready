@@ -14,7 +14,7 @@ public class displayScore : MonoBehaviour
         float maxSpeed  = Data.Instance.maxSpeed;
         float totalTime = Data.Instance.elapsedTime;
 
-        hudText.text = $"Average Speed: {avgSpeed:F1} MPH\n" +
+        hudText.text = $"Avg Speed: {avgSpeed:F1} MPH\n" +
                        $"Max Speed: {maxSpeed:F1} MPH\n" +
                        $"Time: {totalTime:F2} sec\n" +
                        $"Score: {score:F1}";

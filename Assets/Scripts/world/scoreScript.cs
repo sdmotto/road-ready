@@ -116,6 +116,9 @@ public class scoreScript : MonoBehaviour
         Data.Instance.score = currentScore;
         Data.Instance.maxSpeed = speedScriptRef.maxSpeed;
         Data.Instance.elapsedTime = timerScriptRef.GetElapsedTime();
+        Data.Instance.averageSpeed = speedScriptRef.GetAverageSpeed();
+        Debug.Log("Samples: " + speedScriptRef.speedSamples); // print number of samples
+        Debug.Log("Avg Speed: " + speedScriptRef.GetAverageSpeed()); // print avg speed
         SceneManager.LoadScene("results");
     }
 
