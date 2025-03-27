@@ -14,6 +14,8 @@ public class menuScript : MonoBehaviour
     // Assign the UI Text element (using TextMeshPro) that will display the menu options.
     public TMP_Text menuText;
 
+    public GameObject notifPanel;
+
     private bool menuActive = false;
     private bool routesDisplayed = false;
 
@@ -61,6 +63,7 @@ public class menuScript : MonoBehaviour
                     GameObject routePrefab = Resources.Load<GameObject>("Routes/" + selectedRouteName);
                     if (routePrefab != null)
                     {
+                        StartCoroutine(FlashNotification());
                         // Instantiate the prefab into the world.
                         // Adjust the spawn position and rotation as needed.
                         Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
@@ -74,6 +77,13 @@ public class menuScript : MonoBehaviour
         }
     }
 
+    private IEnumerator FlashNotification()
+    {
+        notifPanel.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        notifPanel.SetActive(false);
+    }
+
     /// <summary>
     /// Toggles the visibility of the menu panel.
     /// </summary>
@@ -83,6 +93,7 @@ public class menuScript : MonoBehaviour
         if (menuPanel != null)
         {
             menuPanel.SetActive(menuActive);
+            DisplayRoutes();
         }
 
         // When closing the menu, clear any displayed text.
@@ -125,7 +136,7 @@ public class menuScript : MonoBehaviour
             UpdateMenuDisplay();
 
             // Optionally, print all available routes to the console.
-            string debugInfo = "Available Routes:\n";
+            string debugInfo = "";
             foreach (string route in routeNames)
             {
                 debugInfo += route + "\n";
@@ -145,7 +156,7 @@ public class menuScript : MonoBehaviour
         if (menuText == null)
             return;
 
-        string displayText = "Available Routes:\n\n";
+        string displayText = "";
         for (int i = 0; i < routeNames.Count; i++)
         {
             if (i == selectedIndex)
