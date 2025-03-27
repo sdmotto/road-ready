@@ -30,6 +30,15 @@ public class speedScript : MonoBehaviour
 
     private string overpassUrl = "https://overpass-api.de/api/interpreter?data=";
 
+    public float maxSpeed = 0f;
+    public float totalSpeed = 0f;
+    public int speedSamples = 0;
+
+    public float GetAverageSpeed() {
+        return speedSamples > 0 ? totalSpeed / speedSamples : 0f;
+    }
+
+
     void Start()
     {
         // Initialize lat/lon from the car's starting position
@@ -59,6 +68,16 @@ public class speedScript : MonoBehaviour
             // Display speed to one decimal place
             speedText.text = speedMph.ToString("F1") + " MPH";
 
+            // Update max speed
+            if ((float)speedMph > maxSpeed){
+                maxSpeed = (float)speedMph;
+            }
+
+            // Track total speed and number of samples
+            totalSpeed += (float)speedMph;
+            speedSamples++;
+
+
             if (counter >= 10)
             {
                 StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (limit) => {
@@ -81,14 +100,15 @@ public class speedScript : MonoBehaviour
             lastTime = Time.time;
             counter++;
         }
+
+        
     }
 
-    /// <summary>
-    /// The "opposite" of LatLongToUnityPosition:
-    /// 1) Transform the given Unity world position to Earth-Centered Earth-Fixed (ECEF).
-    /// 2) Convert ECEF to (longitude, latitude, height).
-    /// 3) Reorder that to (latitude, longitude, height) in a double3.
-    /// </summary>
+ 
+    //The "opposite" of LatLongToUnityPosition:
+    // 1) Transform the given Unity world position to Earth-Centered Earth-Fixed (ECEF).
+    // 2) Convert ECEF to (longitude, latitude, height).
+    // 3) Reorder that to (latitude, longitude, height) in a double3.
     private double3 UnityPositionToLatLongHeight(Vector3 unityPos)
     {
         // 1) Unity -> ECEF.  Wrap the Vector3 into a double3 for proper type matching.
@@ -101,10 +121,10 @@ public class speedScript : MonoBehaviour
         return new double3(lonLatHeight.y, lonLatHeight.x, lonLatHeight.z);
     }
 
-    /// <summary>
-    /// Returns the 2D "surface" distance (in meters) between two lat/lon points
-    /// using the Haversine formula. Assumes Earth is a sphere with radius ~6371 km.
-    /// </summary>
+
+    // Returns the 2D "surface" distance (in meters) between two lat/lon points
+    // using the Haversine formula. Assumes Earth is a sphere with radius ~6371 km.
+
     private double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
     {
         // Earth radius in meters
