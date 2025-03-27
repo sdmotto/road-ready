@@ -1935,8 +1935,8 @@ MonoBehaviour:
   maxScore: 100
   speedManager: {fileID: 792647121}
   stopSignImage: {fileID: 0}
-  speedScriptRef: {fileID: 0}
-  timerScriptRef: {fileID: 0}
+  speedScriptRef: {fileID: 792647121}
+  timerScriptRef: {fileID: 792647117}
 --- !u!114 &792647121
 MonoBehaviour:
   m_ObjectHideFlags: 0
