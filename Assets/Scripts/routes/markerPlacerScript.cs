@@ -63,15 +63,9 @@ public class markerPlacerScript : MonoBehaviour
             GameObject newMarker = Instantiate(markerPrefab, markerPosition, Quaternion.identity, markerHolder);
             markerList.Add(newMarker);
         }
-
-        // When the user presses C, create the route map.
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            CreateRouteMap();
-        }
     }
 
-    void CreateRouteMap()
+    public void CreateRouteMap()
     {
         // Make sure there are markers in the markerHolder.
         if (markerHolder.childCount == 0)
