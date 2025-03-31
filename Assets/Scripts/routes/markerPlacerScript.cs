@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO; // For directory/file operations
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -41,8 +42,17 @@ public class markerPlacerScript : MonoBehaviour
     // (Optional) List to track markers in the order placed.
     private List<GameObject> markerList = new List<GameObject>();
 
+    public GameObject routeNamerPanel;
+    public TMP_InputField routeNameInput;
+
+    private string name;
+
+    public static bool locked = false;
+
     void Update()
     {
+        if (locked) return;
+
         // On left mouse click, place a marker.
         if (Input.GetMouseButtonDown(0))
         {
@@ -101,7 +111,7 @@ public class markerPlacerScript : MonoBehaviour
         routeNumber = 1;
 #endif
         // Format the route map name as routeMapXXXXX (5 digits).
-        string routeMapName = "routeMap" + routeNumber.ToString("D5");
+        string routeMapName = name;
 
         // Create the routeMap GameObject.
         GameObject routeMap = new GameObject(routeMapName);
@@ -221,5 +231,22 @@ public class markerPlacerScript : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void ShowRouteNamer()
+    {
+        routeNamerPanel.SetActive(true);
+        routeNameInput.text = "";
+        routeNameInput.ActivateInputField();
+        locked = true;
+    }
+
+    public void Name() {
+        Debug.Log("User entered route name: " + routeNameInput.text);
+        routeNamerPanel.SetActive(false);
+
+        name = routeNameInput.text;
+        CreateRouteMap();
+        locked = false;
     }
 }
