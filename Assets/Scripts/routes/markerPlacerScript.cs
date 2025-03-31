@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO; // For directory/file operations
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,6 +46,9 @@ public class markerPlacerScript : MonoBehaviour
         // On left mouse click, place a marker.
         if (Input.GetMouseButtonDown(0))
         {
+            // If clicking over an interactive UI element, do nothing.
+            if (IsPointerOverInteractiveUI()) return;
+
             Vector3 markerPosition = Vector3.zero;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -193,5 +198,28 @@ public class markerPlacerScript : MonoBehaviour
             pos.y = hit.point.y + groundOffset;
         }
         return pos;
+    }
+
+    // Updated method: Using GetComponentInParent to check for interactive UI.
+    private bool IsPointerOverInteractiveUI()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        // Check if any result is part of an interactive UI element.
+        foreach (RaycastResult result in results)
+        {
+            // Use GetComponentInParent to catch buttons where the actual hit object is a child.
+            Button btn = result.gameObject.GetComponentInParent<Button>();
+            if (btn != null && btn.interactable)
+                return true;
+        }
+
+        return false;
     }
 }

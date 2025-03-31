@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using TMPro;
+using UnityEngine.UI;
 
 public class MarkerDeleterScript : MonoBehaviour
 {
@@ -13,6 +16,8 @@ public class MarkerDeleterScript : MonoBehaviour
         // Check for right mouse button click (button index 1)
         if (Input.GetMouseButtonDown(1))
         {
+            if (IsPointerOverInteractiveUI()) return;
+
             // Create a ray from the main camera using the current mouse position.
             Ray deletionRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -40,5 +45,28 @@ public class MarkerDeleterScript : MonoBehaviour
                 Debug.Log("Ray did not hit any object.");
             }
         }
+    }
+
+    private bool IsPointerOverInteractiveUI()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        // Check if any result is part of an interactive UI element.
+        foreach (RaycastResult result in results)
+        {
+            // Using GetComponentInParent ensures that even if the hit UI element is a child,
+            // it will still detect the button parent.
+            Button btn = result.gameObject.GetComponentInParent<Button>();
+            if (btn != null && btn.interactable)
+                return true;
+        }
+
+        return false;
     }
 }

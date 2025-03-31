@@ -9,13 +9,8 @@ public class sceneRoutesToGame : MonoBehaviour
     [Tooltip("Enter the name of the game scene to load.")]
     public string gameSceneName = "world";
 
-    void Update()
+    public void toGame()
     {
-        // Check if the user presses the G key
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            // Load the scene specified by gameSceneName
-            SceneManager.LoadScene(gameSceneName);
-        }
+        SceneManager.LoadScene(gameSceneName);
     }
 }
