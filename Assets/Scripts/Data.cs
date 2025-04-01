@@ -11,6 +11,16 @@ public class Data : MonoBehaviour
     public float elapsedTime;
     public float score;
 
+
+    public int stopSignStops;
+    public int stopLightStops;
+    public int totalCollisions;
+
+    public float stopSignPenalty;
+    public float stopLightPenalty;
+    public float collisionPenalty;
+    public float speedingPenalty;
+
     void Awake()
     {
         // Ensure only one instance exists.

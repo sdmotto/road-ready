@@ -99,7 +99,7 @@ public class scoreScript : MonoBehaviour
     }
 
     //Activates collision and speeding scoring.
-    //Call this method (e.g., from your start marker trigger) to begin grading.
+    //Call this method to begin grading.
     public void StartGrading()
     {
         gradingActive = true;
@@ -117,8 +117,20 @@ public class scoreScript : MonoBehaviour
         Data.Instance.maxSpeed = speedScriptRef.maxSpeed;
         Data.Instance.elapsedTime = timerScriptRef.GetElapsedTime();
         Data.Instance.averageSpeed = speedScriptRef.GetAverageSpeed();
-        Debug.Log("Samples: " + speedScriptRef.speedSamples); // print number of samples
-        Debug.Log("Avg Speed: " + speedScriptRef.GetAverageSpeed()); // print avg speed
+
+        // Penalty breakdowns
+        Data.Instance.collisionPenalty = totalCollisionPenalty;
+        Data.Instance.speedingPenalty = totalSpeedingPenalty;
+        Data.Instance.stopSignPenalty = stopPenalty;
+        Data.Instance.stopLightPenalty = trafficSigPenalty;
+
+        // Event counts
+        Data.Instance.totalCollisions = collisionCount;
+
+        // Optional: If you're tracking successful stops
+        // Data.Instance.stopSignStops = stopSignStopCount;
+        // Data.Instance.stopLightStops = stopLightStopCount;
+
         SceneManager.LoadScene("results");
     }
 

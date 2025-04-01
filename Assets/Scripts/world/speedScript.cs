@@ -68,14 +68,17 @@ public class speedScript : MonoBehaviour
             // Display speed to one decimal place
             speedText.text = speedMph.ToString("F1") + " MPH";
 
-            // Update max speed
-            if ((float)speedMph > maxSpeed){
+            // Update max speed, limit it to less than 200 mph because resetting the car can create an abnoramlly high speed
+            if ((float)speedMph <= 200f && (float)speedMph > maxSpeed){
                 maxSpeed = (float)speedMph;
             }
 
-            // Track total speed and number of samples
-            totalSpeed += (float)speedMph;
-            speedSamples++;
+            // Track total speed and number of samples, only include if below 200mph
+            if((float)speedMph <= 200f) {
+                totalSpeed += (float)speedMph;
+                speedSamples++;
+            }
+            
 
 
             if (counter >= 10)

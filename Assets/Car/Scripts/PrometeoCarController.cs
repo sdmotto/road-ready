@@ -351,7 +351,7 @@ public class PrometeoCarController : MonoBehaviour
         AnimateWheelMeshes();
 
         // Debugging
-        Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
+        //Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
         // Print joystick button for debugging
         if (Input.anyKeyDown) {
           for (int i = 0; i < 20; i++) {

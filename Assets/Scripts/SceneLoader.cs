@@ -18,6 +18,10 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("settings");
     }
 
+    public void LoadMoreResultsScene() {
+        SceneManager.LoadScene("moreresults");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
