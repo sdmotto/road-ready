@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO; // For directory/file operations
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -39,11 +42,23 @@ public class markerPlacerScript : MonoBehaviour
     // (Optional) List to track markers in the order placed.
     private List<GameObject> markerList = new List<GameObject>();
 
+    public GameObject routeNamerPanel;
+    public TMP_InputField routeNameInput;
+
+    private string name;
+
+    public static bool locked = false;
+
     void Update()
     {
+        if (locked) return;
+
         // On left mouse click, place a marker.
         if (Input.GetMouseButtonDown(0))
         {
+            // If clicking over an interactive UI element, do nothing.
+            if (IsPointerOverInteractiveUI()) return;
+
             Vector3 markerPosition = Vector3.zero;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -63,15 +78,9 @@ public class markerPlacerScript : MonoBehaviour
             GameObject newMarker = Instantiate(markerPrefab, markerPosition, Quaternion.identity, markerHolder);
             markerList.Add(newMarker);
         }
-
-        // When the user presses C, create the route map.
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            CreateRouteMap();
-        }
     }
 
-    void CreateRouteMap()
+    public void CreateRouteMap()
     {
         // Make sure there are markers in the markerHolder.
         if (markerHolder.childCount == 0)
@@ -102,7 +111,7 @@ public class markerPlacerScript : MonoBehaviour
         routeNumber = 1;
 #endif
         // Format the route map name as routeMapXXXXX (5 digits).
-        string routeMapName = "routeMap" + routeNumber.ToString("D5");
+        string routeMapName = name;
 
         // Create the routeMap GameObject.
         GameObject routeMap = new GameObject(routeMapName);
@@ -199,5 +208,45 @@ public class markerPlacerScript : MonoBehaviour
             pos.y = hit.point.y + groundOffset;
         }
         return pos;
+    }
+
+    // Updated method: Using GetComponentInParent to check for interactive UI.
+    private bool IsPointerOverInteractiveUI()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        // Check if any result is part of an interactive UI element.
+        foreach (RaycastResult result in results)
+        {
+            // Use GetComponentInParent to catch buttons where the actual hit object is a child.
+            Button btn = result.gameObject.GetComponentInParent<Button>();
+            if (btn != null && btn.interactable)
+                return true;
+        }
+
+        return false;
+    }
+
+    public void ShowRouteNamer()
+    {
+        routeNamerPanel.SetActive(true);
+        routeNameInput.text = "";
+        routeNameInput.ActivateInputField();
+        locked = true;
+    }
+
+    public void Name() {
+        Debug.Log("User entered route name: " + routeNameInput.text);
+        routeNamerPanel.SetActive(false);
+
+        name = routeNameInput.text;
+        CreateRouteMap();
+        locked = false;
     }
 }
