@@ -1858,6 +1858,8 @@ MonoBehaviour:
   menuPanel: {fileID: 1913504023}
   menuText: {fileID: 1934473149}
   notifPanel: {fileID: 766517793}
+  car: {fileID: 792647110}
+  prometeoCarController: {fileID: 792647118}
 --- !u!4 &757152074
 Transform:
   m_ObjectHideFlags: 0

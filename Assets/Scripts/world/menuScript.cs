@@ -24,6 +24,10 @@ public class menuScript : MonoBehaviour
     // Tracks which route is currently selected.
     private int selectedIndex = 0;
 
+    public Transform car;
+
+    public PrometeoCarController prometeoCarController;
+
     void Update()
     {
 
@@ -64,9 +68,51 @@ public class menuScript : MonoBehaviour
                     if (routePrefab != null)
                     {
                         StartCoroutine(FlashNotification());
-                        // Instantiate the prefab into the world.
-                        // Adjust the spawn position and rotation as needed.
-                        Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
+
+                        // Instantiate the route prefab
+                        GameObject routeInstance = Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
+
+                        // Find the "StartMarker" inside the new instance
+                        Transform startMarker = routeInstance.transform.Find("Cylinder(Clone)"); // fallback in case you don't tag yet
+
+                        // Better: find by tag
+                        foreach (Transform child in routeInstance.GetComponentsInChildren<Transform>())
+                        {
+                            if (child.CompareTag("StartMarker"))
+                            {
+                                startMarker = child;
+                                break;
+                            }
+                        }
+
+                        if (startMarker != null && car != null)
+                        {
+                            // Try to find the LineRenderer inside the route
+                            LineRenderer line = routeInstance.GetComponentInChildren<LineRenderer>();
+
+                            if (line != null && line.positionCount > 1)
+                            {
+                                Vector3 start = line.GetPosition(0);
+                                Vector3 next = line.GetPosition(1);
+                                Vector3 direction = (next - start).normalized;
+
+                                float spawnOffset = 10f; // how far behind the marker to spawn
+                                Vector3 offsetPosition = startMarker.position - direction * spawnOffset + Vector3.up * 2.5f;
+                                car.position = offsetPosition;
+                                prometeoCarController.resetRotation();
+
+                                // Make the car face the direction from start to next point
+                                if (direction != Vector3.zero)
+                                {
+                                    car.rotation = Quaternion.LookRotation(direction);
+                                }
+                            }
+                            else
+                            {
+                                // Fallback: just use the start marker's rotation
+                                car.rotation = startMarker.rotation;
+                            }
+                        }
                     }
                     else
                     {
