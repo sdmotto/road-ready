@@ -12,6 +12,9 @@ public class TurnSignalController : MonoBehaviour
     private Vector3 startPosition;  // Store the car's initial position
     private Quaternion startRotation; // Store the car's initial rotation
 
+    public static bool leftActive;
+    public static bool rightActive;
+
     void Start()
     {
         // Store the car's starting position and rotation
@@ -25,8 +28,8 @@ public class TurnSignalController : MonoBehaviour
 
     void Update()
     {
-        bool leftActive = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton1);
-        bool rightActive = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton0);
+        leftActive = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton1);
+        rightActive = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton0);
 
         if (leftActive && leftCoroutine == null)
             leftCoroutine = StartCoroutine(Blink(leftArrow));
