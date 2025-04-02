@@ -75,6 +75,7 @@ public class menuScript : MonoBehaviour
                         }
 
                         StartCoroutine(FlashNotification());
+                        ToggleMenu();
 
                         // Instantiate the route prefab
                         currentRouteInstance = Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
