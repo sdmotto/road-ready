@@ -28,6 +28,8 @@ public class menuScript : MonoBehaviour
 
     public PrometeoCarController prometeoCarController;
 
+    private GameObject currentRouteInstance;
+
     void Update()
     {
 
@@ -67,16 +69,21 @@ public class menuScript : MonoBehaviour
                     GameObject routePrefab = Resources.Load<GameObject>("Routes/" + selectedRouteName);
                     if (routePrefab != null)
                     {
+                        if (currentRouteInstance != null)
+                        {
+                            Destroy(currentRouteInstance);
+                        }
+
                         StartCoroutine(FlashNotification());
 
                         // Instantiate the route prefab
-                        GameObject routeInstance = Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
+                        currentRouteInstance = Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
 
                         // Find the "StartMarker" inside the new instance
-                        Transform startMarker = routeInstance.transform.Find("Cylinder(Clone)"); // fallback in case you don't tag yet
+                        Transform startMarker = currentRouteInstance.transform.Find("Cylinder(Clone)"); // fallback in case you don't tag yet
 
                         // Better: find by tag
-                        foreach (Transform child in routeInstance.GetComponentsInChildren<Transform>())
+                        foreach (Transform child in currentRouteInstance.GetComponentsInChildren<Transform>())
                         {
                             if (child.CompareTag("StartMarker"))
                             {
@@ -88,7 +95,7 @@ public class menuScript : MonoBehaviour
                         if (startMarker != null && car != null)
                         {
                             // Try to find the LineRenderer inside the route
-                            LineRenderer line = routeInstance.GetComponentInChildren<LineRenderer>();
+                            LineRenderer line = currentRouteInstance.GetComponentInChildren<LineRenderer>();
 
                             if (line != null && line.positionCount > 1)
                             {
