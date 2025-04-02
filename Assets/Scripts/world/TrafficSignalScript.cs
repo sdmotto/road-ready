@@ -64,7 +64,7 @@ public class TrafficSignalGenerator : MonoBehaviour
             out geom;
         ";
 
-        Debug.Log($"Fetching traffic signal data for lat: {lat}, lon: {lon}");
+        //Debug.Log($"Fetching traffic signal data for lat: {lat}, lon: {lon}");
         yield return StartCoroutine(FetchTrafficSignalData(overpassUrl + query));
     }
 
@@ -156,7 +156,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         zoneVisual.GetComponent<MeshRenderer>().material = visualMat;
         Destroy(zoneVisual.GetComponent<Collider>());
 
-        Debug.Log($"Created traffic signal zone at position: {position}");
+        //Debug.Log($"Created traffic signal zone at position: {position}");
 
         // Add the trigger component to handle zone events and light cycling.
         ZoneTrigger trigger = zone.AddComponent<ZoneTrigger>();
