@@ -31,6 +31,8 @@ public class scoreScript : MonoBehaviour
     private float totalSpeedingPenalty = 0f;
     private int collisionCount = 0;
     private float currentScore;
+    private float trafficSigPenalty = 0;
+    private float turnSigPenalty = 0;
     private float stopSignPenalty = 0;
     private float redPenalty = 0;
     private float yellowPenalty = 0;
@@ -38,14 +40,12 @@ public class scoreScript : MonoBehaviour
     private int stopSignStopCount = 0;
     private int lightSuccessCount = 0;
 
-
-
     // references to speedScript and timerScript
     public speedScript speedScriptRef;
     public timerScript timerScriptRef;
 
     // Flag to control whether scoring is active.
-    private bool gradingActive = false;
+    public static bool gradingActive = false;
 
     void Start()
     {
@@ -200,7 +200,7 @@ public class scoreScript : MonoBehaviour
         }
 
 
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
+        currentScore = calculateScore();
 
         Debug.Log("Player did not stop fully!" +
             " | Current Score: " + currentScore);
@@ -208,6 +208,20 @@ public class scoreScript : MonoBehaviour
 
     public void RegisterStopSignStop() {
         stopSignStopCount++;
+    }
+
+    public void noSignal(int penalty)
+    {
+        turnSigPenalty += penalty;
+        Debug.Log("Turn Signal Penalty: " + penalty);
+        calculateScore();
+    }
+
+    private float calculateScore()
+    {
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - turnSigPenalty - redPenalty - yellowPenalty);
+        Debug.Log("Current Score: " + currentScore);
+        return currentScore;
     }
 
     public void RegisterTrafficLightSuccess() {

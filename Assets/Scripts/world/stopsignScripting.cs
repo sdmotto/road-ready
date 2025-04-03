@@ -59,7 +59,7 @@ public class StopSignGenerator : MonoBehaviour
             out geom;
         ";
 
-        Debug.Log($"Fetching stop sign data for lat: {lat}, lon: {lon}");
+        //Debug.Log($"Fetching stop sign data for lat: {lat}, lon: {lon}");
         yield return StartCoroutine(FetchStopSignData(overpassUrl + query));
     }
 
@@ -152,7 +152,7 @@ public class StopSignGenerator : MonoBehaviour
         // Remove the collider from the visual, as it's only for debugging.
         Destroy(zoneVisual.GetComponent<Collider>());
 
-        Debug.Log($"Created stop sign zone at position: {position}");
+        //Debug.Log($"Created stop sign zone at position: {position}");
 
         // Add the trigger component to handle zone events.
         ZoneTrigger trigger = zone.AddComponent<ZoneTrigger>();
