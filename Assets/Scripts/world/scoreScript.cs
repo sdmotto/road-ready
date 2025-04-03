@@ -94,7 +94,7 @@ public class scoreScript : MonoBehaviour
                         // Apply the penalty scaled by time.
                         float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
                         totalSpeedingPenalty += penaltyThisFrame;
-                        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
+                        currentScore = calculateScore();
                         Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
                                   " | Total Speeding Penalty: " + totalSpeedingPenalty +
                                   " | Current Score: " + currentScore);
@@ -156,7 +156,7 @@ public class scoreScript : MonoBehaviour
 
         totalCollisionPenalty += penalty;
         collisionCount++;
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
+        currentScore = calculateScore();
 
         Debug.Log("Collision #" + collisionCount +
                   " | Severity: " + collisionSeverity +
