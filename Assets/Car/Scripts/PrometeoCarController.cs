@@ -370,10 +370,15 @@ public class PrometeoCarController : MonoBehaviour
     public void resetPosition()
     {
         transform.position = startPosition;
-        transform.rotation = startRotation;
-        carRigidbody.velocity = Vector3.zero;
-        carRigidbody.angularVelocity = Vector3.zero;
+        resetRotation();
     }
+
+    public void resetRotation() {
+      transform.rotation = startRotation;
+      carRigidbody.velocity = Vector3.zero;
+      carRigidbody.angularVelocity = Vector3.zero;
+    }
+
     // Helper funtions to allow for a gradient of pedal inputs
     // Apply motor torque to all wheels (proportional to gas input)
       void ApplyMotorTorque(float torque)
