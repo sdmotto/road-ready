@@ -47,7 +47,7 @@ public class RoadDetector : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             string json = request.downloadHandler.text;
-            Debug.Log("Raw response: " + json);
+            //Debug.Log("Raw response: " + json);
 
             try
             {
@@ -65,7 +65,7 @@ public class RoadDetector : MonoBehaviour
                             if (t.ToString() == "route")
                             {
                                 string road = comp["long_name"].ToString();
-                                Debug.Log($"You're currently on: {road}");
+                                //Debug.Log($"You're currently on: {road}");
 
                                 if (text != null)
                                 {
