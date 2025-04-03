@@ -13,11 +13,12 @@ public class Data : MonoBehaviour
 
 
     public int stopSignStops;
-    public int stopLightStops;
+    public int lightSuccessCount;
     public int totalCollisions;
 
     public float stopSignPenalty;
-    public float stopLightPenalty;
+    public float redPenalty;   
+    public float yellowPenalty;
     public float collisionPenalty;
     public float speedingPenalty;
 

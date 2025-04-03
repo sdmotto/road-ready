@@ -733,9 +733,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Total Stops: %s
 
-    At Stop Signs: %s
+    Stop Sign Stops: %
 
-    At Stop Lights: %s
+    Traffic Lights Obeyed: %s
 
     Total
     Collisions: %s'
@@ -889,10 +889,12 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'For Collisions : %s
 
-    Running Stop Signs: %s
+    Running Yellow: %s
 
-    Running Stop Lights:
-    %s
+    Running Red: %s
+
+    Running
+    Stop Signs: %s
 
     Speeding: %s'
   m_isRightToLeft: 0

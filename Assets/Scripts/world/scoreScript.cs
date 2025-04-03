@@ -31,8 +31,14 @@ public class scoreScript : MonoBehaviour
     private float totalSpeedingPenalty = 0f;
     private int collisionCount = 0;
     private float currentScore;
-    private float stopPenalty = 0;
-    private float trafficSigPenalty = 0;
+    private float stopSignPenalty = 0;
+    private float redPenalty = 0;
+    private float yellowPenalty = 0;
+    private int totalStopCount = 0;
+    private int stopSignStopCount = 0;
+    private int lightSuccessCount = 0;
+
+
 
     // references to speedScript and timerScript
     public speedScript speedScriptRef;
@@ -88,7 +94,7 @@ public class scoreScript : MonoBehaviour
                         // Apply the penalty scaled by time.
                         float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
                         totalSpeedingPenalty += penaltyThisFrame;
-                        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty);
+                        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
                         Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
                                   " | Total Speeding Penalty: " + totalSpeedingPenalty +
                                   " | Current Score: " + currentScore);
@@ -121,15 +127,16 @@ public class scoreScript : MonoBehaviour
         // Penalty breakdowns
         Data.Instance.collisionPenalty = totalCollisionPenalty;
         Data.Instance.speedingPenalty = totalSpeedingPenalty;
-        Data.Instance.stopSignPenalty = stopPenalty;
-        Data.Instance.stopLightPenalty = trafficSigPenalty;
+        Data.Instance.stopSignPenalty = stopSignPenalty;
+        Data.Instance.redPenalty = redPenalty;
+        Data.Instance.yellowPenalty = yellowPenalty;
 
         // Event counts
         Data.Instance.totalCollisions = collisionCount;
 
-        // Optional: If you're tracking successful stops
-        // Data.Instance.stopSignStops = stopSignStopCount;
-        // Data.Instance.stopLightStops = stopLightStopCount;
+        // For stops
+        Data.Instance.stopSignStops = stopSignStopCount;
+        Data.Instance.lightSuccessCount = lightSuccessCount;
 
         SceneManager.LoadScene("results");
     }
@@ -149,7 +156,7 @@ public class scoreScript : MonoBehaviour
 
         totalCollisionPenalty += penalty;
         collisionCount++;
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty);
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
 
         Debug.Log("Collision #" + collisionCount +
                   " | Severity: " + collisionSeverity +
@@ -182,21 +189,39 @@ public class scoreScript : MonoBehaviour
 
     public void noStop(int penalty)
     {
-        stopPenalty += penalty;
+        if(penalty == 5) {
+            redPenalty += 5;
+        }
+        if(penalty == 2) {
+            yellowPenalty +=2;
+        }
+        if(penalty == 10) {
+            stopSignPenalty += 10;
+        }
 
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty - trafficSigPenalty);
+
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
 
         Debug.Log("Player did not stop fully!" +
             " | Current Score: " + currentScore);
     } 
 
-    public void trafficSignal(int penalty)
-    {
-        trafficSigPenalty += penalty;
-
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopPenalty - trafficSigPenalty);
-
-        Debug.Log("Player did not obey traffic signal laws!" +
-            " | Current Score: " + currentScore);
+    public void RegisterStopSignStop() {
+        stopSignStopCount++;
     }
+
+    public void RegisterTrafficLightSuccess() {
+        lightSuccessCount++;   
+    }
+
+
+    // public void trafficSignal(int penalty)
+    // {
+        
+
+    //     currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
+
+    //     Debug.Log("Player did not obey traffic signal laws!" +
+    //         " | Current Score: " + currentScore);
+    // }
 }

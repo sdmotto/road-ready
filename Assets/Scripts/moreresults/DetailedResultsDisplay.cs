@@ -10,16 +10,17 @@ public class DetailedResultsDisplay : MonoBehaviour
     void Start() {
         // Stop counts + collisions
         stopInfoText.text =
-            $"Total Stops: {Data.Instance.stopSignStops + Data.Instance.stopLightStops}\n" +
-            $"At Stop Signs: {Data.Instance.stopSignStops}\n" +
-            $"At Stop Lights: {Data.Instance.stopLightStops}\n" +
+            $"Total Stops: not done!!!\n" +
+            $"Stop Sign Stops: {Data.Instance.stopSignStops}\n" +
+            $"Traffic Lights Obeyed: {Data.Instance.lightSuccessCount}\n" +
             $"Total Collisions: {Data.Instance.totalCollisions}";
 
         // Penalty summary
         penaltyBreakdownText.text =
             $"For Collisions : {Data.Instance.collisionPenalty:F1}\n" +
+            $"Running Yellow: {Data.Instance.yellowPenalty:F1}\n" +
+            $"Running Red: {Data.Instance.redPenalty:F1}\n" +
             $"Running Stop Signs: {Data.Instance.stopSignPenalty:F1}\n" +
-            $"Running Stop Lights: {Data.Instance.stopLightPenalty:F1}\n" +
             $"Speeding: {Data.Instance.speedingPenalty:F1}";
     }
 }
