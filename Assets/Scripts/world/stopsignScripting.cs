@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 public class StopSignGenerator : MonoBehaviour
 {
@@ -212,6 +213,7 @@ public class StopSignGenerator : MonoBehaviour
                 {
                     SetAlpha(stopSignImage, 0f);
                     stopSignActive = false;
+                    scoreManager.RegisterStopSignStop();
                     Debug.Log("Player stopped in zone: " + gameObject.name + " - Stop sign image deactivated.");
                 }
             }

@@ -256,8 +256,8 @@ public class PrometeoCarController : MonoBehaviour
         float brakePedalInput = Input.GetAxis("Brake"); // G920 Brake Pedal (0 to 1)
 
         // Normalize pedal inputs - maybe dont need? this code breaks acceleration if pedals aren't plugged in 
-        //gasPedalInput = -1f * gasPedalInput + 1f; 
-        //brakePedalInput = -1f * brakePedalInput + 1f;
+        gasPedalInput = -1f * gasPedalInput + 1f; 
+        brakePedalInput = -1f * brakePedalInput + 1f;
 
         // Check if pedals are plugged in
         bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
@@ -351,7 +351,7 @@ public class PrometeoCarController : MonoBehaviour
         AnimateWheelMeshes();
 
         // Debugging
-        Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
+        //Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
         // Print joystick button for debugging
         if (Input.anyKeyDown) {
           for (int i = 0; i < 20; i++) {

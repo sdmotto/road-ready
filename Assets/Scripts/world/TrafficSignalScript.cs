@@ -23,9 +23,10 @@ public class TrafficSignalGenerator : MonoBehaviour
     // (speedText is unused in this simplified version)
     public TMP_Text speedText;
     // The detection zone radius (Unity units)
-    public float zoneRadius = 20f;
+    public float zoneRadius = 10f;
     // Penalty for leaving the zone without stopping (unused here)
-    public int trafficSignalPenalty = 5;
+    public int redLightPenalty = 5;
+    public int yellowLightPenalty = 2;
 
     [Header("Scoring")]
     public scoreScript scoreManager;
@@ -161,7 +162,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         // Add the trigger component to handle zone events and light cycling.
         ZoneTrigger trigger = zone.AddComponent<ZoneTrigger>();
         trigger.speedText = speedText;
-        trigger.trafficSignalPenalty = trafficSignalPenalty;
+        trigger.redLightPenalty = redLightPenalty;
         trigger.scoreManager = scoreManager;
         trigger.zoneVisualRenderer = zoneVisual.GetComponent<MeshRenderer>();
 
@@ -192,7 +193,8 @@ public class TrafficSignalGenerator : MonoBehaviour
     public class ZoneTrigger : MonoBehaviour
 {
     public TMP_Text speedText;
-    public int trafficSignalPenalty = 5;
+    public int redLightPenalty = 5;
+    public int yellowLightPenalty = 2;
     public scoreScript scoreManager;
     public MeshRenderer zoneVisualRenderer;
 
@@ -262,13 +264,15 @@ public class TrafficSignalGenerator : MonoBehaviour
         Debug.Log("Player exited traffic signal zone: " + gameObject.name);
         HideAllLights();
 
-        if(currentLightStatus == LightStatus.Red)
-        {
-            scoreManager.noStop(trafficSignalPenalty);
+        if(currentLightStatus == LightStatus.Red) {
+            scoreManager.noStop(redLightPenalty); // call no stop function with 5 point penalty
         }
-        else if(currentLightStatus == LightStatus.Yellow)
-        {
-            scoreManager.noStop(2);
+        else if(currentLightStatus == LightStatus.Yellow) {
+            scoreManager.noStop(yellowLightPenalty); // call no stop function with 2 point penalty
+        } 
+        else if(currentLightStatus == LightStatus.Green) {
+            scoreManager.RegisterTrafficLightSuccess();
+            Debug.Log("OBEY");
         }
     }
 
