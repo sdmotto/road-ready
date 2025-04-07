@@ -23,7 +23,7 @@ public class TrafficSignalGenerator : MonoBehaviour
     // (speedText is unused in this simplified version)
     public TMP_Text speedText;
     // The detection zone radius (Unity units)
-    public float zoneRadius = 10f;
+    public float zoneRadius = 5f;
     // Penalty for leaving the zone without stopping (unused here)
     public int redLightPenalty = 5;
     public int yellowLightPenalty = 2;
@@ -70,29 +70,23 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Fetch traffic signal data using UnityWebRequest.
-    private IEnumerator FetchTrafficSignalData(string url)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
+    private IEnumerator FetchTrafficSignalData(string url) {
+        using (UnityWebRequest request = UnityWebRequest.Get(url)) {
             yield return request.SendWebRequest();
-            if (request.result == UnityWebRequest.Result.Success)
-            {
+            if (request.result == UnityWebRequest.Result.Success) {
                 string jsonResponse = request.downloadHandler.text;
                 ParseAndCreateZones(jsonResponse);
             }
-            else
-            {
+            else {
                 Debug.LogError("Failed to fetch traffic signal data: " + request.error);
             }
         }
     }
 
     // Parse the JSON response and create a detection zone for each traffic signal.
-    private void ParseAndCreateZones(string jsonResponse)
-    {
+    private void ParseAndCreateZones(string jsonResponse) {
         JObject json = JObject.Parse(jsonResponse);
-        foreach (var element in json["elements"])
-        {
+        foreach (var element in json["elements"]) {
             if ((string)element["type"] != "node")
                 continue;
 
@@ -115,8 +109,7 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Create a detection zone (with visual debugging) at the given position.
-    private void CreateTrafficSignalZone(Vector3 position)
-    {
+    private void CreateTrafficSignalZone(Vector3 position) {
         GameObject zone = new GameObject("TrafficSignalZone");
         zone.transform.position = position;
         // Tag the zone so it can be detected later.
@@ -124,8 +117,7 @@ public class TrafficSignalGenerator : MonoBehaviour
 
         // Parent all zones under "trafficSignalZones".
         GameObject parent = GameObject.Find("trafficSignalZones");
-        if (parent == null)
-        {
+        if (parent == null) {
             parent = new GameObject("trafficSignalZones");
         }
         zone.transform.parent = parent.transform;
@@ -133,18 +125,19 @@ public class TrafficSignalGenerator : MonoBehaviour
         // Add a CapsuleCollider to simulate a vertical cylinder.
         CapsuleCollider collider = zone.AddComponent<CapsuleCollider>();
         collider.radius = zoneRadius;
-        collider.height = 10000f; // Effectively infinite height.
+        collider.height = 10000f; // basically infinite height.
         collider.direction = 1; // Y-axis.
         collider.isTrigger = true;
 
         // Create a visual representation: a transparent cylinder (for debugging).
         GameObject zoneVisual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        zoneVisual.transform.parent = zone.transform;
+        zoneVisual.transform.parent = zone.transform;   
         zoneVisual.transform.localPosition = Vector3.zero;
         zoneVisual.transform.localRotation = Quaternion.identity;
         float scaleY = 10000f / 2f;
         zoneVisual.transform.localScale = new Vector3(zoneRadius * 2f, scaleY, zoneRadius * 2f);
         Material visualMat = new Material(Shader.Find("Standard"));
+
         // Initial debug tint (red); this will update as the light cycles.
         visualMat.color = new Color(1f, 0f, 0f, 0.3f);
         visualMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -173,14 +166,12 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Helper to convert from double3 to Unity's Vector3.
-    private static Vector3 ToVector3(double3 d)
-    {
+    private static Vector3 ToVector3(double3 d) {
         return new Vector3((float)d.x, (float)d.y, (float)d.z);
     }
 
     // Helper method to set the alpha value of a UI Image.
-    private void SetAlpha(Image img, float alpha)
-    {
+    private void SetAlpha(Image img, float alpha) {
         if (img != null)
         {
             Color c = img.color;
@@ -190,8 +181,7 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Nested class to handle trigger events and light cycling for a traffic signal zone.
-    public class ZoneTrigger : MonoBehaviour
-{
+    public class ZoneTrigger : MonoBehaviour {
     public TMP_Text speedText;
     public int redLightPenalty = 5;
     public int yellowLightPenalty = 2;

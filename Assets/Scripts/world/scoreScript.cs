@@ -55,8 +55,7 @@ public class scoreScript : MonoBehaviour
 
     void Update()
     {
-        if (!gradingActive)
-            return;
+        if (!gradingActive) return;
 
         // Check speeding penalty as before.
         if (speedManager != null && speedManager.speedLimitText != null)
@@ -95,9 +94,9 @@ public class scoreScript : MonoBehaviour
                         float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
                         totalSpeedingPenalty += penaltyThisFrame;
                         currentScore = calculateScore();
-                        Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
-                                  " | Total Speeding Penalty: " + totalSpeedingPenalty +
-                                  " | Current Score: " + currentScore);
+                        // Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
+                        //           " | Total Speeding Penalty: " + totalSpeedingPenalty +
+                        //           " | Current Score: " + currentScore);
                     }
                 }
             }
