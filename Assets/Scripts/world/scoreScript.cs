@@ -55,8 +55,7 @@ public class scoreScript : MonoBehaviour
 
     void Update()
     {
-        if (!gradingActive)
-            return;
+        if (!gradingActive) return;
 
         // Check speeding penalty as before.
         if (speedManager != null && speedManager.speedLimitText != null)
@@ -95,9 +94,9 @@ public class scoreScript : MonoBehaviour
                         float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
                         totalSpeedingPenalty += penaltyThisFrame;
                         currentScore = calculateScore();
-                        Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
-                                  " | Total Speeding Penalty: " + totalSpeedingPenalty +
-                                  " | Current Score: " + currentScore);
+                        // Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
+                        //           " | Total Speeding Penalty: " + totalSpeedingPenalty +
+                        //           " | Current Score: " + currentScore);
                     }
                 }
             }
@@ -145,10 +144,8 @@ public class scoreScript : MonoBehaviour
     // Called automatically by Unity when this GameObject collides with another.
     //Only processes collisions when grading is active.
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (!gradingActive)
-            return;
+    void OnCollisionEnter(Collision collision) {
+        if (!gradingActive) return;
 
         // Calculate collision severity based on relative velocity.
         float collisionSeverity = collision.relativeVelocity.magnitude;
@@ -171,24 +168,24 @@ public class scoreScript : MonoBehaviour
   
 
     // Returns the current score.
-    public float GetCurrentScore()
-    {
+    public float GetCurrentScore() {
         return currentScore;
     }
 
 
     // Resets the score and penalty counters.
 
-    public void ResetScore()
-    {
+    public void ResetScore() {
         totalCollisionPenalty = 0f;
         totalSpeedingPenalty = 0f;
         collisionCount = 0;
+        yellowPenalty = 0f;
+        redPenalty = 0f;
         currentScore = maxScore;
     }
 
-    public void noStop(int penalty)
-    {
+    public void noStop(int penalty) {
+        if (!gradingActive) return;
         if(penalty == 5) {
             redPenalty += 5;
         }
@@ -207,6 +204,7 @@ public class scoreScript : MonoBehaviour
     } 
 
     public void RegisterStopSignStop() {
+        if (!gradingActive) return;
         stopSignStopCount++;
     }
 
@@ -225,6 +223,7 @@ public class scoreScript : MonoBehaviour
     }
 
     public void RegisterTrafficLightSuccess() {
+        if (!gradingActive) return;
         lightSuccessCount++;   
     }
 

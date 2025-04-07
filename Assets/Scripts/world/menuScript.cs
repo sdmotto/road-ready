@@ -138,9 +138,7 @@ public class menuScript : MonoBehaviour
         notifPanel.SetActive(false);
     }
 
-    /// <summary>
-    /// Toggles the visibility of the menu panel.
-    /// </summary>
+    // Toggles the visibility of the menu panel.
     public void ToggleMenu()
     {
         menuActive = !menuActive;
@@ -158,9 +156,8 @@ public class menuScript : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Reads the Routes folder and displays the list of route prefab names.
-    /// </summary>
+
+    // Reads the Routes folder and displays the list of route prefab names.
     public void DisplayRoutes()
     {
         if(menuActive)
@@ -189,7 +186,7 @@ public class menuScript : MonoBehaviour
             routesDisplayed = true;
             UpdateMenuDisplay();
 
-            // Optionally, print all available routes to the console.
+            // print all available routes to the console.
             string debugInfo = "";
             foreach (string route in routeNames)
             {
@@ -202,9 +199,8 @@ public class menuScript : MonoBehaviour
         
     }
 
-    /// <summary>
-    /// Updates the menu text display to show available routes and an arrow next to the currently selected one.
-    /// </summary>
+
+    // Updates the menu text display to show available routes and an arrow next to the currently selected one.
     void UpdateMenuDisplay()
     {
         if (menuText == null)
