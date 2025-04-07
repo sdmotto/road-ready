@@ -155,6 +155,14 @@ MonoBehaviour:
   maxSpeed: 0
   elapsedTime: 0
   score: 0
+  stopSignStops: 0
+  lightSuccessCount: 0
+  totalCollisions: 0
+  stopSignPenalty: 0
+  redPenalty: 0
+  yellowPenalty: 0
+  collisionPenalty: 0
+  speedingPenalty: 0
 --- !u!4 &35694747
 Transform:
   m_ObjectHideFlags: 0
@@ -786,11 +794,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 5
-    m_Right: 0
+    m_Left: 0
+    m_Right: 5
     m_Top: 0
     m_Bottom: 5
-  m_ChildAlignment: 6
+  m_ChildAlignment: 8
   m_Spacing: 5
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -3964,7 +3972,8 @@ MonoBehaviour:
   queryRadius: 1000
   speedText: {fileID: 1679836319}
   zoneRadius: 20
-  trafficSignalPenalty: 5
+  redLightPenalty: 5
+  yellowLightPenalty: 2
   scoreManager: {fileID: 792647120}
   redLightImage: {fileID: 1398872882}
   yellowLightImage: {fileID: 741871486}
