@@ -215,7 +215,7 @@ public class TrafficSignalGenerator : MonoBehaviour
             switch (currentLightStatus)
             {
                 case LightStatus.Yellow:
-                    waitTime = 10f;
+                    waitTime = 10f;  
                     currentLightStatus = LightStatus.Red;
                     break;
                 case LightStatus.Red:
@@ -223,7 +223,7 @@ public class TrafficSignalGenerator : MonoBehaviour
                     currentLightStatus = LightStatus.Green;
                     break;
                 case LightStatus.Green:
-                    waitTime = 10f;
+                    waitTime = 3f;
                     currentLightStatus = LightStatus.Yellow;
                     break;
             }
