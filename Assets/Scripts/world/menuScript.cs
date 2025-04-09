@@ -115,6 +115,14 @@ public class menuScript : MonoBehaviour
                             if (direction != Vector3.zero)
                                 car.rotation = Quaternion.LookRotation(direction);
                         }
+
+                        // start checker
+                        RouteProximityChecker checker = car.GetComponent<RouteProximityChecker>();
+                        if (checker != null)
+                        {
+                            checker.SetCurrentRoute(currentRouteInstance);
+                            checker.enabled = false; // Disable checking until StartMarker is hit
+                        }
                     }
                     else
                     {
