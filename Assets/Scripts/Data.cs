@@ -15,12 +15,16 @@ public class Data : MonoBehaviour
     public int stopSignStops;
     public int lightSuccessCount;
     public int totalCollisions;
+    public int numLeftTurns;
+    public int numRightTurns;
 
     public float stopSignPenalty;
     public float redPenalty;   
     public float yellowPenalty;
     public float collisionPenalty;
     public float speedingPenalty;
+    public float turnSigPenalty;
+
 
     void Awake()
     {
@@ -32,7 +36,7 @@ public class Data : MonoBehaviour
         else
         {
             Instance = this;
-            // Optional: Persist across scenes
+            // Persist across scenes
             DontDestroyOnLoad(gameObject);
         }
     }

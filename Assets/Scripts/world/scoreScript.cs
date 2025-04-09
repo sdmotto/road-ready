@@ -39,6 +39,8 @@ public class scoreScript : MonoBehaviour
     private int totalStopCount = 0;
     private int stopSignStopCount = 0;
     private int lightSuccessCount = 0;
+    private int numLeftTurns = 0;
+    private int numRightTurns = 0;
 
     // references to speedScript and timerScript
     public speedScript speedScriptRef;
@@ -129,6 +131,7 @@ public class scoreScript : MonoBehaviour
         Data.Instance.stopSignPenalty = stopSignPenalty;
         Data.Instance.redPenalty = redPenalty;
         Data.Instance.yellowPenalty = yellowPenalty;
+        Data.Instance.turnSigPenalty = turnSigPenalty;
 
         // Event counts
         Data.Instance.totalCollisions = collisionCount;
@@ -136,6 +139,10 @@ public class scoreScript : MonoBehaviour
         // For stops
         Data.Instance.stopSignStops = stopSignStopCount;
         Data.Instance.lightSuccessCount = lightSuccessCount;
+        
+        // For number of turns
+        Data.Instance.numLeftTurns = numLeftTurns;
+        Data.Instance.numRightTurns = numRightTurns; 
 
         SceneManager.LoadScene("results");
     }
@@ -170,6 +177,11 @@ public class scoreScript : MonoBehaviour
     // Returns the current score.
     public float GetCurrentScore() {
         return currentScore;
+    }
+
+    public void registerTurnCounts(int left, int right) {
+        numLeftTurns = left;
+        numRightTurns = right;
     }
 
 
@@ -226,15 +238,4 @@ public class scoreScript : MonoBehaviour
         if (!gradingActive) return;
         lightSuccessCount++;   
     }
-
-
-    // public void trafficSignal(int penalty)
-    // {
-        
-
-    //     currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty);
-
-    //     Debug.Log("Player did not obey traffic signal laws!" +
-    //         " | Current Score: " + currentScore);
-    // }
 }
