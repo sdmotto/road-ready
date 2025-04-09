@@ -17,18 +17,30 @@ public class VehicleHeadingTurnDetector : MonoBehaviour
     // Number of consecutive samples below threshold required to end a turn event.
     public int consecutiveStraightSamplesToEnd = 5;
 
+    public Rigidbody carRigidbody; // car rigidbody
+
+    public int numLeftTurns = 0;
+    public int numRightTurns = 0;
+
     // State variables.
     private bool isTurning = false;
     private float cumulativeTurn = 0f;  // Total yaw change accumulated during a turn event.
     private int consecutiveTurnCount = 0; // Counts consecutive samples above threshold before turn event.
     private int consecutiveStraightCount = 0; // Counts consecutive samples below threshold during an event.
     private float tempAccumulatedTurn = 0f; // Accumulates yaw changes before a turn event officially begins.
+
     
     // Timer for custom sampling.
     private float sampleTimer = 0f;
     
     // Store the previous sample's yaw (Y rotation) value.
     private float lastYaw;
+
+    private bool IsReversing() {
+        // Convert world velocity to local space
+        Vector3 localVelocity = transform.InverseTransformDirection(carRigidbody.velocity);
+        return localVelocity.z < -0.1f; // Negative z = reversing
+    }
 
     public scoreScript scoreScript;
 
@@ -40,6 +52,10 @@ public class VehicleHeadingTurnDetector : MonoBehaviour
 
     void Update()
     {
+        if (IsReversing()) {
+            // Skip turn detection if reversing
+            return;
+        }
         // Increase the sample timer.
         sampleTimer += Time.deltaTime;
         if (sampleTimer < samplingInterval)
@@ -103,20 +119,24 @@ public class VehicleHeadingTurnDetector : MonoBehaviour
                 // Evaluate if the total accumulated yaw change qualifies as a turn.
                 if (Mathf.Abs(cumulativeTurn) >= cumulativeTurnThreshold)
                 {
-                    if (cumulativeTurn > 0)
+                    if (cumulativeTurn > 0) {
                         Debug.Log("Detected turn right.");
+                        numRightTurns++;
                         if (!TurnSignalController.rightActive && scoreScript.gradingActive)
                         {
                             Debug.Log("Player did not have right signal active!");
                             scoreScript.noSignal(3);
                         }
-                    else
+                    }
+                    else {
                         Debug.Log("Detected turn left.");
+                        numLeftTurns++;
                         if (!TurnSignalController.leftActive && scoreScript.gradingActive)
                         {
                             Debug.Log("Player did not have left signal active!");
                             scoreScript.noSignal(3);
                         }
+                    }
                 }
                 // Reset all state variables for the next event.
                 isTurning = false;
@@ -126,5 +146,6 @@ public class VehicleHeadingTurnDetector : MonoBehaviour
                 consecutiveStraightCount = 0;
             }
         }
+        scoreScript.registerTurnCounts(numLeftTurns, numRightTurns);
     }
 }

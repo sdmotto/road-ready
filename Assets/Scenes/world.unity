@@ -2344,6 +2344,7 @@ MonoBehaviour:
   samplingInterval: 0.1
   consecutiveTurnSamplesToStart: 3
   consecutiveStraightSamplesToEnd: 5
+  carRigidbody: {fileID: 792647112}
   scoreScript: {fileID: 792647120}
 --- !u!1 &806031374
 GameObject:
