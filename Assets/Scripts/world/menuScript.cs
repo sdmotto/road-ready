@@ -9,122 +9,116 @@ using UnityEngine.EventSystems;
 public class menuScript : MonoBehaviour
 {
     [Header("UI References")]
-    // Assign the UI Panel that will serve as your drop‑down menu.
     public GameObject menuPanel;
-    // Assign the UI Text element (using TextMeshPro) that will display the menu options.
     public TMP_Text menuText;
-
     public GameObject notifPanel;
 
     private bool menuActive = false;
     private bool routesDisplayed = false;
 
-    // List of route names (extracted from the Routes folder).
     private List<string> routeNames = new List<string>();
-    // Tracks which route is currently selected.
     private int selectedIndex = 0;
 
     public Transform car;
-
     public PrometeoCarController prometeoCarController;
 
     private GameObject currentRouteInstance;
 
     void Update()
     {
-
-        // If the menu is open and the routes are displayed, use the arrow keys and Enter for navigation.
         if (menuActive && routesDisplayed)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                // Move selection up.
                 selectedIndex--;
                 if (selectedIndex < 0)
-                {
                     selectedIndex = routeNames.Count - 1;
-                }
+
                 UpdateMenuDisplay();
-                Debug.Log("Up Arrow pressed. Selected index: " + selectedIndex);
             }
+
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                // Move selection down.
                 selectedIndex++;
                 if (selectedIndex >= routeNames.Count)
-                {
                     selectedIndex = 0;
-                }
+
                 UpdateMenuDisplay();
-                Debug.Log("Down Arrow pressed. Selected index: " + selectedIndex);
             }
+
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 if (routeNames.Count > 0)
                 {
                     string selectedRouteName = routeNames[selectedIndex];
-                    Debug.Log("Enter pressed. Route selected: " + selectedRouteName);
-                    
-                    // Load the prefab from the Resources/Routes folder.
-                    GameObject routePrefab = Resources.Load<GameObject>("Routes/" + selectedRouteName);
-                    if (routePrefab != null)
+                    List<Route> allRoutes = Route.LoadAll();
+                    Route selectedRoute = allRoutes.Find(r => r.routeName == selectedRouteName);
+                    if (selectedRoute != null)
                     {
                         if (currentRouteInstance != null)
-                        {
                             Destroy(currentRouteInstance);
-                        }
 
                         StartCoroutine(FlashNotification());
                         ToggleMenu();
 
-                        // Instantiate the route prefab
-                        currentRouteInstance = Instantiate(routePrefab, Vector3.zero, Quaternion.identity);
+                        currentRouteInstance = new GameObject("Route_" + selectedRoute.routeName);
 
-                        // Find the "StartMarker" inside the new instance
-                        Transform startMarker = currentRouteInstance.transform.Find("Cylinder(Clone)"); // fallback in case you don't tag yet
+                        // Create red line
+                        GameObject lineObj = new GameObject("LineRenderer_" + selectedRoute.routeName);
+                        lineObj.transform.SetParent(currentRouteInstance.transform);
 
-                        // Better: find by tag
-                        foreach (Transform child in currentRouteInstance.GetComponentsInChildren<Transform>())
+                        LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+                        lr.material = new Material(Shader.Find("Sprites/Default")); // Basic material
+                        lr.material.color = Color.red;
+                        lr.widthMultiplier = 0.2f;
+                        lr.useWorldSpace = true;
+                        lr.positionCount = selectedRoute.linePoints.Count;
+
+                        for (int i = 0; i < selectedRoute.linePoints.Count; i++)
                         {
-                            if (child.CompareTag("StartMarker"))
-                            {
-                                startMarker = child;
-                                break;
-                            }
+                            lr.SetPosition(i, selectedRoute.linePoints[i]);
                         }
 
-                        if (startMarker != null && car != null)
+                        // Recreate red cylinders for markers
+                        for (int i = 0; i < selectedRoute.markerPositions.Count; i++)
                         {
-                            // Try to find the LineRenderer inside the route
-                            LineRenderer line = currentRouteInstance.GetComponentInChildren<LineRenderer>();
+                            Vector3 pos = selectedRoute.markerPositions[i];
+                            GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                            marker.transform.position = pos;
+                            marker.transform.localScale = new Vector3(1f, 0.1f, 1f);
+                            marker.GetComponent<Renderer>().material.color = Color.red;
+                            marker.transform.SetParent(currentRouteInstance.transform);
 
-                            if (line != null && line.positionCount > 1)
-                            {
-                                Vector3 start = line.GetPosition(0);
-                                Vector3 next = line.GetPosition(1);
-                                Vector3 direction = (next - start).normalized;
+                            Collider markerCollider = marker.GetComponent<Collider>();
+                            if (markerCollider != null)
+                                markerCollider.isTrigger = true;
 
-                                float spawnOffset = 10f; // how far behind the marker to spawn
-                                Vector3 offsetPosition = startMarker.position - direction * spawnOffset + Vector3.up * 2.5f;
-                                car.position = offsetPosition;
-                                prometeoCarController.resetRotation();
+                            // Tag the first and last marker
+                            if (i == 0)
+                                marker.tag = "StartMarker";
+                            else if (i == selectedRoute.markerPositions.Count - 1)
+                                marker.tag = "EndMarker";
+                        }
 
-                                // Make the car face the direction from start to next point
-                                if (direction != Vector3.zero)
-                                {
-                                    car.rotation = Quaternion.LookRotation(direction);
-                                }
-                            }
-                            else
-                            {
-                                // Fallback: just use the start marker's rotation
-                                car.rotation = startMarker.rotation;
-                            }
+                        // Move car to start
+                        if (selectedRoute.linePoints.Count >= 2 && car != null)
+                        {
+                            Vector3 start = selectedRoute.linePoints[0];
+                            Vector3 next = selectedRoute.linePoints[1];
+                            Vector3 direction = (next - start).normalized;
+
+                            float spawnOffset = 10f;
+                            Vector3 offsetPosition = start - direction * spawnOffset + Vector3.up * 2.5f;
+                            car.position = offsetPosition;
+                            prometeoCarController.resetRotation();
+
+                            if (direction != Vector3.zero)
+                                car.rotation = Quaternion.LookRotation(direction);
                         }
                     }
                     else
                     {
-                        Debug.LogError("Could not load route prefab: " + selectedRouteName);
+                        Debug.LogError("Route data not found for: " + selectedRouteName);
                     }
                 }
             }
@@ -138,7 +132,6 @@ public class menuScript : MonoBehaviour
         notifPanel.SetActive(false);
     }
 
-    // Toggles the visibility of the menu panel.
     public void ToggleMenu()
     {
         menuActive = !menuActive;
@@ -148,7 +141,6 @@ public class menuScript : MonoBehaviour
             DisplayRoutes();
         }
 
-        // When closing the menu, clear any displayed text.
         if (!menuActive && menuText != null)
         {
             menuText.text = "";
@@ -156,51 +148,38 @@ public class menuScript : MonoBehaviour
         }
     }
 
-
-    // Reads the Routes folder and displays the list of route prefab names.
     public void DisplayRoutes()
     {
-        if(menuActive)
+        if (!menuActive) return;
+
+        routeNames.Clear();
+
+        List<Route> loadedRoutes = Route.LoadAll();
+        if (loadedRoutes.Count == 0)
         {
-            // Load all route prefabs from the Resources/Routes folder.
-            GameObject[] routePrefabs = Resources.LoadAll<GameObject>("Routes");
-
-            // Clear any existing route names.
-            routeNames.Clear();
-
-            // Loop through each loaded prefab and add its name to the list.
-            foreach (GameObject routePrefab in routePrefabs)
-            {
-                routeNames.Add(routePrefab.name);
-            }
-
-            // Check if any routes were found.
-            if (routeNames.Count == 0)
-            {
-                Debug.LogWarning("No route prefabs found in Resources/Routes folder.");
-                return;
-            }
-
-            // Reset the selected index and mark that routes are displayed.
-            selectedIndex = 0;
-            routesDisplayed = true;
-            UpdateMenuDisplay();
-
-            // print all available routes to the console.
-            string debugInfo = "";
-            foreach (string route in routeNames)
-            {
-                debugInfo += route + "\n";
-            }
-            Debug.Log(debugInfo);
+            Debug.LogWarning("No saved routes found in persistentDataPath.");
+            return;
         }
 
+        foreach (Route route in loadedRoutes)
+        {
+            routeNames.Add(route.routeName);
+        }
+
+        selectedIndex = 0;
+        routesDisplayed = true;
+        UpdateMenuDisplay();
+
+        string debugInfo = "Loaded Routes:\n";
+        foreach (string route in routeNames)
+        {
+            debugInfo += route + "\n";
+        }
+        Debug.Log(debugInfo);
+
         EventSystem.current.SetSelectedGameObject(null);
-        
     }
 
-
-    // Updates the menu text display to show available routes and an arrow next to the currently selected one.
     void UpdateMenuDisplay()
     {
         if (menuText == null)
@@ -210,15 +189,11 @@ public class menuScript : MonoBehaviour
         for (int i = 0; i < routeNames.Count; i++)
         {
             if (i == selectedIndex)
-            {
-                // Add an arrow (or any visual indicator) before the selected route.
                 displayText += "-> " + routeNames[i] + "\n";
-            }
             else
-            {
                 displayText += "   " + routeNames[i] + "\n";
-            }
         }
+
         menuText.text = displayText;
     }
 }

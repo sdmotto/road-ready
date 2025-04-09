@@ -22,6 +22,8 @@ public class playerMarkerDetectorScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"Triggered with object: {other.name}, tag: {other.tag}");
+
         // Check if we hit the start marker.
         if (other.CompareTag("StartMarker") && !startMarkerHit)
         {
