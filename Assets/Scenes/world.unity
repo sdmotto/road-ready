@@ -2346,6 +2346,20 @@ MonoBehaviour:
   consecutiveStraightSamplesToEnd: 5
   carRigidbody: {fileID: 792647112}
   scoreScript: {fileID: 792647120}
+--- !u!114 &792647124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792647109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72aa850f382301d448ae8d0f7e16fc54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDistanceFromRoute: 5
+  checkInterval: 0.5
 --- !u!1 &806031374
 GameObject:
   m_ObjectHideFlags: 0
@@ -2974,6 +2988,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1332896982454310, guid: 7ecf74b289b28f246bfea1ee3e275c26, type: 3}
       insertIndex: -1
       addedObject: {fileID: 792647123}
+    - targetCorrespondingSourceObject: {fileID: 1332896982454310, guid: 7ecf74b289b28f246bfea1ee3e275c26, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 792647124}
     - targetCorrespondingSourceObject: {fileID: 1461920120334874, guid: 7ecf74b289b28f246bfea1ee3e275c26, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1130427690}

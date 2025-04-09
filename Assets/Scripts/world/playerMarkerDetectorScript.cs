@@ -22,21 +22,31 @@ public class playerMarkerDetectorScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Triggered with object: {other.name}, tag: {other.tag}");
-
-        // Check if we hit the start marker.
         if (other.CompareTag("StartMarker") && !startMarkerHit)
         {
             Debug.Log("Player has driven over the START marker!");
             startMarkerHit = true;
             scoring?.StartGrading();
+
+            // ✅ Enable the proximity checker when the route starts
+            RouteProximityChecker checker = GetComponent<RouteProximityChecker>();
+            if (checker != null)
+            {
+                checker.enabled = true;
+            }
         }
-        // Check if we hit the end marker.
         else if (other.CompareTag("EndMarker") && !endMarkerHit)
         {
             Debug.Log("Player has driven over the END marker!");
             endMarkerHit = true;
             scoring?.EndGrading();
+
+            // ✅ Optionally disable it after the route is complete
+            RouteProximityChecker checker = GetComponent<RouteProximityChecker>();
+            if (checker != null)
+            {
+                checker.enabled = false;
+            }
         }
     }
 }
