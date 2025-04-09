@@ -3,7 +3,7 @@ using UnityEngine;
 public class RouteProximityChecker : MonoBehaviour
 {
     [Header("Proximity Settings")]
-    public float maxDistanceFromRoute = 5f;
+    public float maxDistanceFromRoute = 15f;
     public float checkInterval = 0.5f;
 
     private Transform currentRoute;
@@ -59,6 +59,7 @@ public class RouteProximityChecker : MonoBehaviour
                     float spawnOffset = 10f;
                     Vector3 offsetPosition = start - direction * spawnOffset + Vector3.up * 2.5f;
                     transform.position = offsetPosition;
+                    GetComponent<PrometeoCarController>()?.resetRotation();
 
                     if (direction != Vector3.zero)
                     {
@@ -79,7 +80,6 @@ public class RouteProximityChecker : MonoBehaviour
                 }
 
                 // Reset car state
-                GetComponent<PrometeoCarController>()?.resetRotation();
 
                 // Reset grading
                 scoreScript scoring = GetComponent<scoreScript>();
