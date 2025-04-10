@@ -155,6 +155,7 @@ MonoBehaviour:
   maxSpeed: 0
   elapsedTime: 0
   score: 0
+  totalStopCount: 0
   stopSignStops: 0
   lightSuccessCount: 0
   totalCollisions: 0
@@ -2295,6 +2296,7 @@ MonoBehaviour:
   stopSignImage: {fileID: 0}
   speedScriptRef: {fileID: 792647121}
   timerScriptRef: {fileID: 792647117}
+  carRigidbody: {fileID: 792647112}
 --- !u!114 &792647121
 MonoBehaviour:
   m_ObjectHideFlags: 0

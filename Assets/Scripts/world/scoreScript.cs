@@ -41,6 +41,7 @@ public class scoreScript : MonoBehaviour
     private int lightSuccessCount = 0;
     private int numLeftTurns = 0;
     private int numRightTurns = 0;
+    private bool wasMovingLastFrame = false;
 
     // references to speedScript and timerScript
     public speedScript speedScriptRef;
@@ -48,6 +49,9 @@ public class scoreScript : MonoBehaviour
 
     // Flag to control whether scoring is active.
     public static bool gradingActive = false;
+
+    public Rigidbody carRigidbody;  
+
 
     void Start()
     {
@@ -58,6 +62,22 @@ public class scoreScript : MonoBehaviour
     void Update()
     {
         if (!gradingActive) return;
+
+        // check if car is stopped and increment stop counter
+        if (gradingActive && carRigidbody != null) {
+            float currentSpeed = carRigidbody.velocity.magnitude;
+
+            if (currentSpeed < 0.1f && wasMovingLastFrame)
+            {
+                totalStopCount++;
+                Debug.Log($"Stop detected. Total stops: {totalStopCount}");
+                wasMovingLastFrame = false;
+            }
+            else if (currentSpeed >= 0.1f)
+            {
+                wasMovingLastFrame = true;
+            }
+        }
 
         // Check speeding penalty as before.
         if (speedManager != null && speedManager.speedLimitText != null)
@@ -139,6 +159,7 @@ public class scoreScript : MonoBehaviour
         // For stops
         Data.Instance.stopSignStops = stopSignStopCount;
         Data.Instance.lightSuccessCount = lightSuccessCount;
+        Data.Instance.totalStopCount = totalStopCount;
         
         // For number of turns
         Data.Instance.numLeftTurns = numLeftTurns;
@@ -230,7 +251,7 @@ public class scoreScript : MonoBehaviour
     private float calculateScore()
     {
         currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - turnSigPenalty - redPenalty - yellowPenalty);
-        Debug.Log("Current Score: " + currentScore);
+        // Debug.Log("Current Score: " + currentScore);
         return currentScore;
     }
 

@@ -10,8 +10,7 @@ public class DetailedResultsDisplay : MonoBehaviour
     void Start() {
         // General info
         generalInfoText.text =
-            $"POINT DEDUCTIONS\n" +
-            $"Total Stops: not done!!!\n" +
+            $"Total Stops: {Data.Instance.totalStopCount}\n" +
             $"Stop Sign Stops: {Data.Instance.stopSignStops}\n" +
             $"Traffic Lights Obeyed: {Data.Instance.lightSuccessCount}\n" +
             $"Total Collisions: {Data.Instance.totalCollisions}\n" +
@@ -20,6 +19,7 @@ public class DetailedResultsDisplay : MonoBehaviour
 
         // Penalty summary
         penaltyBreakdownText.text =
+            $"POINT DEDUCTIONS\n" +
             $"For Collisions : {Data.Instance.collisionPenalty:F1}\n" +
             $"Running Yellow: {Data.Instance.yellowPenalty:F1}\n" +
             $"Running Red: {Data.Instance.redPenalty:F1}\n" +
