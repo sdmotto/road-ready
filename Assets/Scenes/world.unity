@@ -158,11 +158,14 @@ MonoBehaviour:
   stopSignStops: 0
   lightSuccessCount: 0
   totalCollisions: 0
+  numLeftTurns: 0
+  numRightTurns: 0
   stopSignPenalty: 0
   redPenalty: 0
   yellowPenalty: 0
   collisionPenalty: 0
   speedingPenalty: 0
+  turnSigPenalty: 0
 --- !u!4 &35694747
 Transform:
   m_ObjectHideFlags: 0
@@ -2345,6 +2348,8 @@ MonoBehaviour:
   consecutiveTurnSamplesToStart: 3
   consecutiveStraightSamplesToEnd: 5
   carRigidbody: {fileID: 792647112}
+  numLeftTurns: 0
+  numRightTurns: 0
   scoreScript: {fileID: 792647120}
 --- !u!114 &792647124
 MonoBehaviour:
@@ -2358,7 +2363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72aa850f382301d448ae8d0f7e16fc54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistanceFromRoute: 5
+  maxDistanceFromRoute: 15
   checkInterval: 0.5
 --- !u!1 &806031374
 GameObject:
