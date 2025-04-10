@@ -11,7 +11,7 @@ public class Data : MonoBehaviour
     public float elapsedTime;
     public float score;
 
-
+    public int totalStopCount;
     public int stopSignStops;
     public int lightSuccessCount;
     public int totalCollisions;
