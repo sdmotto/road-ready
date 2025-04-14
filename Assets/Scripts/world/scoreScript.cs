@@ -144,7 +144,7 @@ public class scoreScript : MonoBehaviour
         Data.Instance.numLeftTurns = numLeftTurns;
         Data.Instance.numRightTurns = numRightTurns; 
 
-        SceneManager.LoadScene("results");
+        SceneManager.Instance.LoadResultsScene();
     }
 
 

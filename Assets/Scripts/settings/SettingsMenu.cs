@@ -28,10 +28,6 @@ public class SettingsMenu : MonoBehaviour
         PersistentOverlay.instance.SetVolume(value);
     }
 
-    public void BackToMenu() {
-        SceneManager.LoadScene("menu");
-    }
-
     public void PlayTestAudio() {
         audioSource.PlayOneShot(backButtonClip);
     }
