@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 public class Data : MonoBehaviour
 {
     // Static instance accessible from anywhere.
     public static Data Instance { get; private set; }
+
+    public Route route;
 
     // Shared data fields
     public float averageSpeed;
@@ -24,6 +27,30 @@ public class Data : MonoBehaviour
     public float collisionPenalty;
     public float speedingPenalty;
     public float turnSigPenalty;
+
+    public RouteStats ToRouteStatsModel()
+    {
+        return new RouteStats
+        {
+            AverageSpeed = averageSpeed,
+            MaxSpeed = maxSpeed,
+            ElapsedTime = elapsedTime,
+            Score = score,
+            StopSignStops = stopSignStops,
+            LightSuccessCount = lightSuccessCount,
+            TotalCollisions = totalCollisions,
+            NumLeftTurns = numLeftTurns,
+            NumRightTurns = numRightTurns,
+            StopSignPenalty = stopSignPenalty,
+            RedPenalty = redPenalty,
+            YellowPenalty = yellowPenalty,
+            CollisionPenalty = collisionPenalty,
+            SpeedingPenalty = speedingPenalty,
+            TurnSigPenalty = turnSigPenalty,
+            UserId = Guid.Parse(SupabaseManager.Instance.UserId),
+            RouteId = route.Id
+        };
+    }
 
 
     void Awake()

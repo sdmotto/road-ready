@@ -43,7 +43,7 @@ public class markerPlacerScript : MonoBehaviour
         }
     }
 
-    public void CreateRouteMap()
+    public async void CreateRouteMap()
     {
         if (markerHolder.childCount == 0)
         {
@@ -82,7 +82,7 @@ public class markerPlacerScript : MonoBehaviour
         // Save Route data to persistentDataPath
         Route route = new Route
         {
-            routeName = routeName,
+            RouteName = routeName,
             linePoints = groundPoints
         };
 
@@ -91,13 +91,13 @@ public class markerPlacerScript : MonoBehaviour
             route.markerPositions.Add(marker.position);
         }
 
-        route.Save();
+        await RouteManager.Instance.SaveRouteAsync(route);
 
         // Create a parent object to hold the route line and markers
-        lastRouteObject = new GameObject("Route_" + route.routeName);
+        lastRouteObject = new GameObject("Route_" + route.RouteName);
 
         // Create the line object
-        GameObject lineObj = new GameObject("LineRenderer_" + route.routeName);
+        GameObject lineObj = new GameObject("LineRenderer_" + route.RouteName);
         lineObj.transform.SetParent(lastRouteObject.transform);
 
         LineRenderer lr = lineObj.AddComponent<LineRenderer>();
