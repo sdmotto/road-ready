@@ -13,7 +13,7 @@ public class SupabaseManager : MonoBehaviour
     private static string SupabaseAnonKey = EnvManager.Get("SUPABASE_KEY");
 
     private const string CredsFile = "supabase_anon_credentials.json";
-    private const string SessionFile = "supabase_session.json";
+    public static bool IsAuthenticated => Instance.GetClient()?.Auth.CurrentUser != null;
 
     private Supabase.Client supabaseClient;
 
@@ -22,32 +22,6 @@ public class SupabaseManager : MonoBehaviour
         public string Email;
         public string Password;
     }
-
-    [Serializable]
-    public class SerializableSession
-    {
-        public string access_token;
-        public string refresh_token;
-
-        public SerializableSession() { }
-
-        public SerializableSession(Session session)
-        {
-            access_token = session.AccessToken;
-            refresh_token = session.RefreshToken;
-        }
-
-        public Session ToSession()
-        {
-            return new Session
-            {
-                AccessToken = access_token,
-                RefreshToken = refresh_token
-            };
-        }
-    }
-
-    public string UserId => supabaseClient.Auth.CurrentUser?.Id;
 
     async void Awake()
     {
@@ -72,75 +46,80 @@ public class SupabaseManager : MonoBehaviour
 
         await supabaseClient.InitializeAsync();
 
-        Session saved = LoadSession();
-        if (saved != null)
-        {
-            await supabaseClient.Auth.SetSession(saved.AccessToken, saved.RefreshToken);
-        }
-
-        if (supabaseClient.Auth.CurrentSession == null)
-        {
-            await SignInOrCreateAnonymousUser();
-        }
-        else
-        {
-            Debug.Log($"Session restored: {UserId}");
-        }
-    }
-
-    private async Task SignInOrCreateAnonymousUser()
-    {
         string path = Path.Combine(Application.persistentDataPath, CredsFile);
-        LocalCreds creds;
-
         if (File.Exists(path))
         {
-            creds = JsonUtility.FromJson<LocalCreds>(File.ReadAllText(path));
-        }
-        else
-        {
-            creds = new LocalCreds
+            var creds = JsonUtility.FromJson<LocalCreds>(File.ReadAllText(path));
+            bool success = await SignInOrSignUpAsync(creds.Email, creds.Password, remember: true);
+
+            if (success)
             {
-                Email = $"{Guid.NewGuid()}@anon.supabase",
-                Password = Guid.NewGuid().ToString()
-            };
-            File.WriteAllText(path, JsonUtility.ToJson(creds));
+                Debug.Log($"[SupabaseManager] Auto-signed in as {supabaseClient.Auth.CurrentUser?.Email}");
+                return;
+            }
+
+            Debug.LogWarning("[SupabaseManager] Failed to sign in with stored credentials.");
         }
+
+        // If no creds or login failed, go to auth scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("auth");
+    }
+
+    public async Task<bool> SignInOrSignUpAsync(string email, string password, bool remember = true)
+    {
+        email = email.Trim().ToLower();
+        password = password.Trim();
 
         try
         {
-            var session = await supabaseClient.Auth.SignIn(creds.Email, creds.Password);
-            Debug.Log($"Signed in anonymously: {session.User.Id}");
-            SaveSession(session);
+            var session = await supabaseClient.Auth.SignIn(email, password);
+            Debug.Log($"[SupabaseManager] Signed in as: {session.User.Email}");
+
+            if (remember)
+                SaveCredentials(email, password);
+
+            return true;
         }
-        catch
+        catch (Exception signInEx)
         {
+            Debug.LogWarning($"[SupabaseManager] Sign-in failed: {signInEx.Message}");
+
             try
             {
-                var session = await supabaseClient.Auth.SignUp(creds.Email, creds.Password);
-                Debug.Log($"Anonymous user created: {session.User.Id}");
-                SaveSession(session);
+                var session = await supabaseClient.Auth.SignUp(email, password);
+                Debug.Log($"[SupabaseManager] Signed up new user: {session.User.Email}");
+
+                if (remember)
+                    SaveCredentials(email, password);
+
+                return true;
             }
-            catch (Exception ex)
+            catch (Exception signUpEx)
             {
-                Debug.LogError($"Anonymous sign-up failed: {ex.Message}");
+                Debug.LogError($"[SupabaseManager] Sign-up failed: {signUpEx.Message}");
+                return false;
             }
         }
     }
 
-    private void SaveSession(Session session)
+    public void ForgetCredentials()
     {
-        string path = Path.Combine(Application.persistentDataPath, SessionFile);
-        File.WriteAllText(path, JsonUtility.ToJson(new SerializableSession(session)));
+        string path = Path.Combine(Application.persistentDataPath, CredsFile);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("[SupabaseManager] Credentials cleared.");
+        }
     }
 
-    private Session LoadSession()
+    private void SaveCredentials(string email, string password)
     {
-        string path = Path.Combine(Application.persistentDataPath, SessionFile);
-        if (!File.Exists(path)) return null;
-
-        return JsonUtility.FromJson<SerializableSession>(File.ReadAllText(path)).ToSession();
+        var creds = new LocalCreds { Email = email, Password = password };
+        string path = Path.Combine(Application.persistentDataPath, CredsFile);
+        File.WriteAllText(path, JsonUtility.ToJson(creds));
+        Debug.Log("[SupabaseManager] Credentials saved.");
     }
 
     public Supabase.Client GetClient() => supabaseClient;
+    public string UserId => supabaseClient.Auth.CurrentUser?.Id;
 }

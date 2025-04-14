@@ -23,4 +23,6 @@ public class SceneManager : MonoBehaviour
     public void LoadSettingsScene() => UnitySceneManager.LoadScene("settings");
     public void LoadMoreResultsScene() => UnitySceneManager.LoadScene("moreresults");
     public void LoadResultsScene() => UnitySceneManager.LoadScene("results");
+    public void LoadAuthScene() => UnitySceneManager.LoadScene("auth");
+    public void LoadScene(string name) => UnitySceneManager.LoadScene(name);
 }
