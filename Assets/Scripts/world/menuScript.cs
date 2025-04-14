@@ -24,6 +24,13 @@ public class menuScript : MonoBehaviour
 
     private GameObject currentRouteInstance;
 
+    private List<Route> loadedRoutes;
+
+    async void Start()
+    {
+        loadedRoutes = await RouteManager.Instance.GetAllRoutesForUserAsync();
+    }
+
     void Update()
     {
         if (menuActive && routesDisplayed)
@@ -51,8 +58,7 @@ public class menuScript : MonoBehaviour
                 if (routeNames.Count > 0)
                 {
                     string selectedRouteName = routeNames[selectedIndex];
-                    List<Route> allRoutes = Route.LoadAll();
-                    Route selectedRoute = allRoutes.Find(r => r.routeName == selectedRouteName);
+                    Route selectedRoute = loadedRoutes.Find(r => r.RouteName == selectedRouteName);
                     if (selectedRoute != null)
                     {
                         if (currentRouteInstance != null)
@@ -61,10 +67,10 @@ public class menuScript : MonoBehaviour
                         StartCoroutine(FlashNotification());
                         ToggleMenu();
 
-                        currentRouteInstance = new GameObject("Route_" + selectedRoute.routeName);
+                        currentRouteInstance = new GameObject("Route_" + selectedRoute.RouteName);
 
                         // Create red line
-                        GameObject lineObj = new GameObject("LineRenderer_" + selectedRoute.routeName);
+                        GameObject lineObj = new GameObject("LineRenderer_" + selectedRoute.RouteName);
                         lineObj.transform.SetParent(currentRouteInstance.transform);
 
                         LineRenderer lr = lineObj.AddComponent<LineRenderer>();
@@ -162,7 +168,6 @@ public class menuScript : MonoBehaviour
 
         routeNames.Clear();
 
-        List<Route> loadedRoutes = Route.LoadAll();
         if (loadedRoutes.Count == 0)
         {
             Debug.LogWarning("No saved routes found in persistentDataPath.");
@@ -171,7 +176,7 @@ public class menuScript : MonoBehaviour
 
         foreach (Route route in loadedRoutes)
         {
-            routeNames.Add(route.routeName);
+            routeNames.Add(route.RouteName);
         }
 
         selectedIndex = 0;

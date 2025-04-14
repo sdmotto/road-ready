@@ -19,7 +19,7 @@ public class RoadDetector : MonoBehaviour
 
     void Start()
     {
-        googleMapsApiKey = EnvLoader.GetEnv("GOOGLE_API_KEY");
+        googleMapsApiKey = EnvManager.Get("GOOGLE_API_KEY");
         StartCoroutine(GetRoadLoop());
     }
 
