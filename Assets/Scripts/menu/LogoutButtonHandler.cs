@@ -19,7 +19,7 @@ public class LogoutButtonHandler : MonoBehaviour
             await client.Auth.SignOut();
             SupabaseManager.Instance.ForgetCredentials();
             Debug.Log("[Logout] User signed out.");
-            SceneManager.Instance.LoadScene("auth");
+            SceneManager.LoadScene("auth");
         }
         else
         {

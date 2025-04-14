@@ -39,7 +39,7 @@ public class AuthUIManager : MonoBehaviour
         bool success = await SupabaseManager.Instance.SignInOrSignUpAsync(email, password, remember);
         if (success)
         {
-            SceneManager.Instance.LoadScene("menu");
+            SceneManager.LoadScene("menu");
         }
         else
         {
@@ -62,7 +62,7 @@ public class AuthUIManager : MonoBehaviour
         bool success = await SupabaseManager.Instance.SignInOrSignUpAsync(email, password, remember);
         if (success)
         {
-            SceneManager.Instance.LoadScene("menu");
+            SceneManager.LoadScene("menu");
         }
         else
         {

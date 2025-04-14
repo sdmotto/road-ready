@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class playerMarkerDetectorScript : MonoBehaviour
@@ -20,7 +21,7 @@ public class playerMarkerDetectorScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private async Task OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("StartMarker") && !startMarkerHit)
         {
@@ -40,6 +41,8 @@ public class playerMarkerDetectorScript : MonoBehaviour
             Debug.Log("Player has driven over the END marker!");
             endMarkerHit = true;
             scoring?.EndGrading();
+
+            await RouteStatsManager.Instance.SaveRouteStatsAsync(Data.Instance.ToRouteStatsModel());
 
             // ✅ Optionally disable it after the route is complete
             RouteProximityChecker checker = GetComponent<RouteProximityChecker>();

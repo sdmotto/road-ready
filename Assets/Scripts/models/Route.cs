@@ -3,12 +3,13 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
+using System;
 
 [Table("routes")]
 public class Route : BaseModel
 {
-    [PrimaryKey("id", false)] public string Id { get; set; }
-    [Column("user_id")] public string UserId { get; set; }
+    [PrimaryKey("id", false)] public Guid Id { get; set; }
+    [Column("user_id")] public Guid UserId { get; set; }
     [Column("route_name")] public string RouteName { get; set; }
 
     [Column("marker_positions")]

@@ -12,7 +12,7 @@ public class InitializeManagers : MonoBehaviour
 
         EnsureManager<SupabaseManager>("SupabaseManager");
         EnsureManager<RouteManager>("RouteManager");
-        EnsureManager<SceneManager>("SceneManager");
+        EnsureManager<RouteStatsManager>("RouteStatsManager");
     }
 
     private void EnsureManager<T>(string name) where T : MonoBehaviour

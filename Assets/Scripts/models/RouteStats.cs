@@ -1,10 +1,14 @@
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
+using System;
 
 [Table("route_stats")]
 public class RouteStats : BaseModel
 {
-    [PrimaryKey("id", false)] public int Id { get; set; }
+    [PrimaryKey("id", false)] public Guid Id { get; set; }
+
+    [Column("user_id")] public Guid UserId { get; set; }
+    [Column("route_id")] public Guid RouteId { get; set; }
 
     [Column("average_speed")] public float AverageSpeed { get; set; }
     [Column("max_speed")] public float MaxSpeed { get; set; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -48,7 +49,7 @@ public class RouteManager : MonoBehaviour
             return false;
         }
 
-        route.UserId = userId;
+        route.UserId = Guid.Parse(userId);
 
         try
         {

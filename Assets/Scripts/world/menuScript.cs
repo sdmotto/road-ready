@@ -61,6 +61,8 @@ public class menuScript : MonoBehaviour
                     Route selectedRoute = loadedRoutes.Find(r => r.RouteName == selectedRouteName);
                     if (selectedRoute != null)
                     {
+                        Data.Instance.route = selectedRoute;
+
                         if (currentRouteInstance != null)
                             Destroy(currentRouteInstance);
 
