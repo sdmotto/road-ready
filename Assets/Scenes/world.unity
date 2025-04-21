@@ -2314,6 +2314,7 @@ MonoBehaviour:
   speedText: {fileID: 1679836319}
   updateInterval: 0.5
   speedLimitText: {fileID: 230820874}
+  text: {fileID: 0}
   maxSpeed: 0
   totalSpeed: 0
   speedSamples: 0

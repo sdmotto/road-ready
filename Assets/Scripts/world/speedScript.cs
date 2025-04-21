@@ -9,6 +9,13 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+public struct RoadData
+{
+    public string name;
+    public string maxspeed;
+}
+
+
 public class speedScript : MonoBehaviour
 {
     [SerializeField] private CesiumGeoreference cesiumGeoreference;
@@ -18,6 +25,7 @@ public class speedScript : MonoBehaviour
     [SerializeField] private float updateInterval = 0.5f;
 
     [SerializeField] public TMP_Text speedLimitText;
+    [SerializeField] public TMP_Text text;
 
     // private float speedLimitInterval = 5f;
 
@@ -83,11 +91,11 @@ public class speedScript : MonoBehaviour
 
             if (counter >= 10)
             {
-                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (limit) => {
-                    // If limit is null or equals "NA" (ignoring case), set default of 25 MPH.
-                    if (!string.IsNullOrEmpty(limit) && !limit.Equals("NA", StringComparison.OrdinalIgnoreCase))
+                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) => {
+                    if (!string.IsNullOrEmpty(roadData.maxspeed) && !roadData.maxspeed.Equals("NA", StringComparison.OrdinalIgnoreCase))
                     {
-                        speedLimitText.text = limit;
+                        speedLimitText.text = roadData.maxspeed;
+                        text.text = roadData.name;
                     }
                     else
                     {
@@ -153,8 +161,9 @@ public class speedScript : MonoBehaviour
         return R * c;
     }
 
-    private IEnumerator GetSpeedDataCoroutine(double lat, double lon, Action<string> callback)
+    private IEnumerator GetSpeedDataCoroutine(double lat, double lon, Action<RoadData> callback)
     {
+        RoadData roadData = new RoadData();
         string query = $@"
                         [out:json];
                         way(around:100,{lat},{lon})
@@ -174,31 +183,34 @@ public class speedScript : MonoBehaviour
                 string jsonResponse = request.downloadHandler.text;
                 JObject json = JObject.Parse(jsonResponse);
                 JArray elements = (JArray)json["elements"];
+                
 
                 if (elements != null && elements.Count > 0)
                 {
                     JObject firstElement = (JObject)elements[0];
                     JObject tags = (JObject)firstElement["tags"];
-                    if (tags != null && tags.ContainsKey("maxspeed"))
+                    if (tags != null && tags.ContainsKey("maxspeed")) {
+                        roadData.maxspeed = (string)tags["maxspeed"];
+                    } 
+                    if (tags != null && tags.ContainsKey("name")){
+                        roadData.name = (string)tags["name"];
+                    } else
                     {
-                        string maxSpeedStr = (string)tags["maxspeed"];
-                        callback(maxSpeedStr);
-                    }
-                    else
-                    {
-                        callback(null);
+                        callback(new RoadData { name = "Unknown Road", maxspeed = null });
                     }
                 }
                 else
                 {
-                    callback(null);
+                    callback(new RoadData { name = "Unknown Road", maxspeed = null });
                 }
             }
             else
             {
                 Debug.LogError("Failed to fetch road data: " + request.error);
-                callback(null);
+                callback(new RoadData { name = "Unknown Road", maxspeed = null });
             }
         }
+
+        callback(roadData);
     }
 }

@@ -43,7 +43,6 @@ public class RoadDetector : MonoBehaviour
 
                 yield return StartCoroutine(GetRoadName(lat, lon));
             }
-            Debug.Log("sent response");
             yield return new WaitForSeconds(updateInterval);
         }
     }
@@ -74,7 +73,6 @@ public class RoadDetector : MonoBehaviour
                             if (t.ToString() == "route")
                             {
                                 string roadDirection = GetCardinalDirection(travelDirection) + " on " + comp["long_name"].ToString();
-                                Debug.Log("Recieved response");
 
                                 if (text != null)
                                 {
