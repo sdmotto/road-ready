@@ -8,6 +8,11 @@ P.S: If you need more cars, you can check my other vehicle assets on the Unity A
 something useful for your game. Best regards, Mena.
 */
 
+/*
+Removed any touchscreen-related controls from this script since we do not plan on implementing any touch screen controls. 
+The Update() method was modified to accomodate the wheel and pedal inputs.
+*/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -248,8 +253,6 @@ public class PrometeoCarController : MonoBehaviour
       void Update() {
         // Read Logitech G920 Steering Input
         float wheelSteeringInput = Input.GetAxis("Steering"); // G920 X-axis (-1 to 1)
-
-        
 
         // Read Logitech G920 Pedal Inputs
         float gasPedalInput = Input.GetAxis("Gas");   // G920 Gas Pedal (0 to 1)
