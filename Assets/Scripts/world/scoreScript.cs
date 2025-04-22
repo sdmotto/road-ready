@@ -19,7 +19,7 @@ public class scoreScript : MonoBehaviour
     [Tooltip("Starting (maximum) score.")]
     public float maxScore = 100f;
 
-    // Reference to the speed manager (assumes speedScript exposes currentSpeed and speedLimitText).
+    // Reference to the speed manager
     public speedScript speedManager;
 
     [Header("Stop Sign Detection")]
@@ -53,17 +53,15 @@ public class scoreScript : MonoBehaviour
     public Rigidbody carRigidbody;  
 
 
-    void Start()
-    {
-        // Initialize the score at the beginning of the run.
-        currentScore = maxScore;
+    void Start() {
+        // init the score at the beginning of the run.
+        currentScore = maxScore; 
     }
 
-    void Update()
-    {
+    void Update() {
         if (!gradingActive) return;
 
-        // check if car is stopped and increment stop counter
+        // check if car is stopped and increment stop counter, wasMovingLast frame prevents counting additional stops if the car is just sitting there
         if (gradingActive && carRigidbody != null) {
             float currentSpeed = carRigidbody.velocity.magnitude;
 
@@ -79,7 +77,7 @@ public class scoreScript : MonoBehaviour
             }
         }
 
-        // Check speeding penalty as before.
+        // check if player is speeding
         if (speedManager != null && speedManager.speedLimitText != null)
         {
             string limitText = speedManager.speedLimitText.text;
@@ -87,7 +85,7 @@ public class scoreScript : MonoBehaviour
 
             if (limitText != "API Error")
             {
-                // Remove non-numeric characters from the text.
+                // Remove non-numeric characters from the text speed limit
                 string limitStr    = Regex.Replace(speedManager.speedLimitText.text, @"[^0-9.\-]+", "");
                 string currentStr  = Regex.Replace(speedManager.speedText.text, @"[^0-9.\-]+", "");
 
@@ -112,34 +110,60 @@ public class scoreScript : MonoBehaviour
                             penaltyPerSecond = 15f;
                         }
 
-                        // Apply the penalty scaled by time.
+                        // Apply the penalty scaled by amount of time spent speeding
                         float penaltyThisFrame = penaltyPerSecond * Time.deltaTime;
                         totalSpeedingPenalty += penaltyThisFrame;
                         currentScore = calculateScore();
                         // Debug.Log("Speeding penalty applied: " + penaltyThisFrame +
                         //           " | Total Speeding Penalty: " + totalSpeedingPenalty +
-                        //           " | Current Score: " + currentScore);
+                        //           " | Current Score: " + currentScore); annoying debug lol
                     }
                 }
             }
         }
     }
 
-    //Activates collision and speeding scoring.
-    //Call this method to begin grading.
-    public void StartGrading()
-    {
+    // method to intiate grading
+    public void StartGrading() {
         gradingActive = true;
         ResetScore();  // Reset score at the start if needed.
         Debug.Log("Grading started. Score reset to: " + currentScore);
     }
 
-    // Deactivates scoring.
-    //Call this method o end grading.
+    public void resetEverything() {
+        currentScore = 0;
+        speedScriptRef.maxSpeed = 0;
+        speedScriptRef.setAverageSpeed(); 
+
+        // Penalty breakdowns
+        totalCollisionPenalty = 0;
+        totalSpeedingPenalty = 0;
+        stopSignPenalty = 0;
+        redPenalty = 0;
+        yellowPenalty = 0;
+        turnSigPenalty = 0;
+
+        // collision count
+        collisionCount = 0;
+
+        // For stops
+        stopSignStopCount = 0;
+        lightSuccessCount = 0;
+        totalStopCount = 0;
+
+        // For number of turns
+        numLeftTurns = 0;
+        numRightTurns = 0;
+        Debug.Log("Reset everything");
+    }
+
+
+    // ends scoring
     public void EndGrading(){
         gradingActive = false;
         Debug.Log("Grading ended. Final Score: " + currentScore);
 
+        // score, speed, time, averageSpeed
         Data.Instance.score = currentScore;
         Data.Instance.maxSpeed = speedScriptRef.maxSpeed;
         Data.Instance.elapsedTime = timerScriptRef.GetElapsedTime();
@@ -153,7 +177,7 @@ public class scoreScript : MonoBehaviour
         Data.Instance.yellowPenalty = yellowPenalty;
         Data.Instance.turnSigPenalty = turnSigPenalty;
 
-        // Event counts
+        // collision count
         Data.Instance.totalCollisions = collisionCount;
 
         // For stops
@@ -169,9 +193,8 @@ public class scoreScript : MonoBehaviour
     }
 
 
-    // Called automatically by Unity when this GameObject collides with another.
-    //Only processes collisions when grading is active.
-
+    // Called automatically by Unity when this GameObject collides with another
+    // Only processes collisions when grading is active
     void OnCollisionEnter(Collision collision) {
         if (!gradingActive) return;
 
@@ -188,18 +211,12 @@ public class scoreScript : MonoBehaviour
                   " | Penalty: " + penalty +
                   " | Current Score: " + currentScore);
     }
-
-   
-    // Detect stop sign zone violations.
-    // When the player leaves a stop sign zone (tagged "StopSignZone") while the stop sign image is still active,
-    // it means they did not come to a complete stop and are penalized 10 points.
-  
-
     // Returns the current score.
     public float GetCurrentScore() {
         return currentScore;
     }
 
+    // used in turnScript to get the number of left and right turns
     public void registerTurnCounts(int left, int right) {
         numLeftTurns = left;
         numRightTurns = right;
@@ -207,16 +224,19 @@ public class scoreScript : MonoBehaviour
 
 
     // Resets the score and penalty counters.
-
     public void ResetScore() {
         totalCollisionPenalty = 0f;
         totalSpeedingPenalty = 0f;
+        stopSignPenalty = 0f;
         collisionCount = 0;
         yellowPenalty = 0f;
         redPenalty = 0f;
+        turnSigPenalty = 0f;
         currentScore = maxScore;
+
     }
 
+    // checks the penalty to determine if the lack of a stop was at a red light, yellow light, or stop sign
     public void noStop(int penalty) {
         if (!gradingActive) return;
         if(penalty == 5) {
@@ -229,18 +249,19 @@ public class scoreScript : MonoBehaviour
             stopSignPenalty += 10;
         }
 
-
         currentScore = calculateScore();
 
         Debug.Log("Player did not stop fully!" +
             " | Current Score: " + currentScore);
     } 
 
+    // increments total stop sign stops
     public void RegisterStopSignStop() {
         if (!gradingActive) return;
         stopSignStopCount++;
     }
 
+    // adds penalty for not having turn signal on 
     public void noSignal(int penalty)
     {
         turnSigPenalty += penalty;
@@ -248,13 +269,15 @@ public class scoreScript : MonoBehaviour
         calculateScore();
     }
 
+    // calculates current score based on all of the current penalities
     private float calculateScore()
     {
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - turnSigPenalty - redPenalty - yellowPenalty);
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty - turnSigPenalty);
         // Debug.Log("Current Score: " + currentScore);
         return currentScore;
     }
 
+    // increments number of successful traffic lights
     public void RegisterTrafficLightSuccess() {
         if (!gradingActive) return;
         lightSuccessCount++;   

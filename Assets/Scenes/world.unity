@@ -2022,6 +2022,9 @@ MonoBehaviour:
   notifPanel: {fileID: 766517793}
   car: {fileID: 792647110}
   prometeoCarController: {fileID: 792647118}
+  timerScript: {fileID: 792647117}
+  scoreScript: {fileID: 792647120}
+  playerMarkerDetectorScript: {fileID: 792647116}
 --- !u!4 &757152074
 Transform:
   m_ObjectHideFlags: 0
@@ -2204,6 +2207,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c36dd799dcc12e4e934dfe595f5f463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMarkerHit: 0
+  endMarkerHit: 0
+  scoreScript: {fileID: 792647120}
 --- !u!114 &792647117
 MonoBehaviour:
   m_ObjectHideFlags: 0

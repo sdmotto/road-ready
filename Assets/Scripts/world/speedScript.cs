@@ -50,6 +50,10 @@ public class speedScript : MonoBehaviour
         return speedSamples > 0 ? totalSpeed / speedSamples : 0f;
     }
 
+    public void setAverageSpeed() {
+        speedSamples = 0;
+        totalSpeed = 0f;
+    }
 
     void Start()
     {

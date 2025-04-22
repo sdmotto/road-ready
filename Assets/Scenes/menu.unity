@@ -345,7 +345,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 479.99994, y: -485.44928}
+  m_AnchoredPosition: {x: 591.25073, y: -349.74725}
   m_SizeDelta: {x: 60, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179358116
@@ -494,7 +494,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 369.99994, y: -485.44928}
+  m_AnchoredPosition: {x: 481.25073, y: -349.74725}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &227031390
@@ -2187,6 +2187,9 @@ MonoBehaviour:
   startButton: {fileID: 1973079099}
   parentalButton: {fileID: 575260531}
   settingsButton: {fileID: 2079029752}
+  parentalPanel: {fileID: 1775397050}
+  passwordInput: {fileID: 227031391}
+  goButton: {fileID: 179358117}
 --- !u!1 &1326348688
 GameObject:
   m_ObjectHideFlags: 0
