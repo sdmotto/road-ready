@@ -124,12 +124,39 @@ public class scoreScript : MonoBehaviour
     }
 
     // method to intiate grading
-    public void StartGrading()
-    {
+    public void StartGrading() {
         gradingActive = true;
         ResetScore();  // Reset score at the start if needed.
         Debug.Log("Grading started. Score reset to: " + currentScore);
     }
+
+    public void resetEverything() {
+        currentScore = 0;
+        speedScriptRef.maxSpeed = 0;
+        speedScriptRef.setAverageSpeed(); 
+
+        // Penalty breakdowns
+        totalCollisionPenalty = 0;
+        totalSpeedingPenalty = 0;
+        stopSignPenalty = 0;
+        redPenalty = 0;
+        yellowPenalty = 0;
+        turnSigPenalty = 0;
+
+        // collision count
+        collisionCount = 0;
+
+        // For stops
+        stopSignStopCount = 0;
+        lightSuccessCount = 0;
+        totalStopCount = 0;
+
+        // For number of turns
+        numLeftTurns = 0;
+        numRightTurns = 0;
+        Debug.Log("Reset everything");
+    }
+
 
     // ends scoring
     public void EndGrading(){
@@ -200,10 +227,13 @@ public class scoreScript : MonoBehaviour
     public void ResetScore() {
         totalCollisionPenalty = 0f;
         totalSpeedingPenalty = 0f;
+        stopSignPenalty = 0f;
         collisionCount = 0;
         yellowPenalty = 0f;
         redPenalty = 0f;
+        turnSigPenalty = 0f;
         currentScore = maxScore;
+
     }
 
     // checks the penalty to determine if the lack of a stop was at a red light, yellow light, or stop sign
@@ -242,7 +272,7 @@ public class scoreScript : MonoBehaviour
     // calculates current score based on all of the current penalities
     private float calculateScore()
     {
-        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - turnSigPenalty - redPenalty - yellowPenalty - turnSigPenalty);
+        currentScore = Mathf.Max(0, maxScore - totalCollisionPenalty - totalSpeedingPenalty - stopSignPenalty - redPenalty - yellowPenalty - turnSigPenalty);
         // Debug.Log("Current Score: " + currentScore);
         return currentScore;
     }

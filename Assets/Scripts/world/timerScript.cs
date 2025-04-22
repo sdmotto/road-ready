@@ -23,7 +23,7 @@ public class timerScript : MonoBehaviour
         }
     }
 
-    void UpdateTimerDisplay()
+    public void UpdateTimerDisplay()
     {
         if (timerText != null)
         {
@@ -46,6 +46,12 @@ public class timerScript : MonoBehaviour
     {
         timerRunning = false;
         Debug.Log("Route Timer stopped. Final time: " + elapsedTime.ToString("0.00") + " sec");
+    }
+
+    public void ResetTimer() {
+        elapsedTime = 0;
+        timerRunning = false;
+        Debug.Log("Reset timer!!!");
     }
 
     // Detect trigger collisions with markers.

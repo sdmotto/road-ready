@@ -6,11 +6,13 @@ using UnityEngine;
 public class playerMarkerDetectorScript : MonoBehaviour
 {
     // Flags to ensure we only trigger the markers once.
-    private bool startMarkerHit = false;
-    private bool endMarkerHit = false;
+    public bool startMarkerHit = false;
+    public bool endMarkerHit = false;
 
     // Reference to the scoreScript attached to the same GameObject (xcar).
     private scoreScript scoring;
+
+    public scoreScript scoreScript;
 
     private void Awake()
     {
@@ -27,9 +29,10 @@ public class playerMarkerDetectorScript : MonoBehaviour
         {
             Debug.Log("Player has driven over the START marker!");
             startMarkerHit = true;
+            scoring.resetEverything();
             scoring?.StartGrading();
 
-            // ✅ Enable the proximity checker when the route starts
+            // Enable the proximity checker when the route starts
             RouteProximityChecker checker = GetComponent<RouteProximityChecker>();
             if (checker != null)
             {
@@ -44,7 +47,7 @@ public class playerMarkerDetectorScript : MonoBehaviour
 
             await RouteStatsManager.Instance.SaveRouteStatsAsync(Data.Instance.ToRouteStatsModel());
 
-            // ✅ Optionally disable it after the route is complete
+            // disable it after the route is complete
             RouteProximityChecker checker = GetComponent<RouteProximityChecker>();
             if (checker != null)
             {
