@@ -26,6 +26,10 @@ public class menuScript : MonoBehaviour
 
     private List<Route> loadedRoutes;
 
+    public timerScript timerScript;     
+    public scoreScript scoreScript;
+    public playerMarkerDetectorScript playerMarkerDetectorScript;
+
     async void Start()
     {
         loadedRoutes = await RouteManager.Instance.GetAllRoutesForUserAsync();
@@ -107,6 +111,12 @@ public class menuScript : MonoBehaviour
                             else if (i == selectedRoute.markerPositions.Count - 1)
                                 marker.tag = "EndMarker";
                         }
+
+                        // reset timer and start marker flag
+                        timerScript.ResetTimer();
+                        timerScript.UpdateTimerDisplay();
+                        playerMarkerDetectorScript.startMarkerHit = false; // reset flag
+                        
 
                         // Move car to start
                         if (selectedRoute.linePoints.Count >= 2 && car != null)
