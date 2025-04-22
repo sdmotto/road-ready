@@ -262,7 +262,6 @@ public class PrometeoCarController : MonoBehaviour
         //gasPedalInput = -1f * gasPedalInput + 1f; 
         //brakePedalInput = -1f * brakePedalInput + 1f;
 
-
         // Check if pedals are plugged in
         bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
 
