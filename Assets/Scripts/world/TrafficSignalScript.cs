@@ -129,7 +129,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         collider.direction = 1; // Y-axis.
         collider.isTrigger = true;
 
-        // Create a visual representation: a transparent cylinder (for debugging).
+        // Create a visual representation: a transparent cylinder 
         GameObject zoneVisual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         zoneVisual.transform.parent = zone.transform;   
         zoneVisual.transform.localPosition = Vector3.zero;
@@ -137,6 +137,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         float scaleY = 10000f / 2f;
         zoneVisual.transform.localScale = new Vector3(zoneRadius * 2f, scaleY, zoneRadius * 2f);
         Material visualMat = new Material(Shader.Find("Standard"));
+        visualMat.SetFloat("_Mode", 3); // important for fixing the opaque issue in the executable
 
         // Initial debug tint (red); this will update as the light cycles.
         visualMat.color = new Color(1f, 0f, 0f, 0.3f);
