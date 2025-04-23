@@ -9,6 +9,13 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+public struct RoadData
+{
+    public string name;
+    public string maxspeed;
+}
+
+
 public class speedScript : MonoBehaviour
 {
     [SerializeField] private CesiumGeoreference cesiumGeoreference;
@@ -18,6 +25,7 @@ public class speedScript : MonoBehaviour
     [SerializeField] private float updateInterval = 0.5f;
 
     [SerializeField] public TMP_Text speedLimitText;
+    [SerializeField] public TMP_Text roadNameText;
 
     // private float speedLimitInterval = 5f;
 
@@ -33,6 +41,10 @@ public class speedScript : MonoBehaviour
     public float maxSpeed = 0f;
     public float totalSpeed = 0f;
     public int speedSamples = 0;
+    public string directionTravelled = "";
+    private string speedLimit = "";
+    private string roadName = "";
+   
 
     public float GetAverageSpeed() {
         return speedSamples > 0 ? totalSpeed / speedSamples : 0f;
@@ -64,10 +76,14 @@ public class speedScript : MonoBehaviour
 
             // Compute distance (in meters) using the Haversine formula (2D on Earth's surface)
             double distanceMeters = HaversineDistance(lastLat, lastLon, currentLat, currentLon);
+            string direction = GetDirection(lastLat, lastLon, currentLat, currentLon);
 
             // Convert to speed in m/s, then mph
             double speedMps = distanceMeters / dt;
             double speedMph = speedMps * 2.23694; // 1 m/s ~ 2.23694 mph
+            if(speedMph > 0.5) {
+                directionTravelled = direction;
+            }
 
             // Display speed to one decimal place
             speedText.text = speedMph.ToString("F1") + " MPH";
@@ -83,15 +99,12 @@ public class speedScript : MonoBehaviour
                 speedSamples++;
             }
             
-
-
-            if (counter >= 10)
-            {
-                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (limit) => {
-                    // If limit is null or equals "NA" (ignoring case), set default of 25 MPH.
-                    if (!string.IsNullOrEmpty(limit) && !limit.Equals("NA", StringComparison.OrdinalIgnoreCase))
+            if (counter >= 10) {
+                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) => {
+                    if (!string.IsNullOrEmpty(roadData.maxspeed) && !roadData.maxspeed.Equals("NA", StringComparison.OrdinalIgnoreCase))
                     {
-                        speedLimitText.text = limit;
+                        speedLimit = roadData.maxspeed;
+                        roadName = roadData.name;
                     }
                     else
                     {
@@ -100,6 +113,10 @@ public class speedScript : MonoBehaviour
                 }));
                 counter = 0;
             }
+
+
+            speedLimitText.text = speedLimit;
+            roadNameText.text = directionTravelled + " on " + roadName;
 
             // Update for next interval
             lastLat = currentLat;
@@ -157,8 +174,9 @@ public class speedScript : MonoBehaviour
         return R * c;
     }
 
-    private IEnumerator GetSpeedDataCoroutine(double lat, double lon, Action<string> callback)
+    private IEnumerator GetSpeedDataCoroutine(double lat, double lon, Action<RoadData> callback)
     {
+        RoadData roadData = new RoadData();
         string query = $@"
                         [out:json];
                         way(around:100,{lat},{lon})
@@ -178,31 +196,70 @@ public class speedScript : MonoBehaviour
                 string jsonResponse = request.downloadHandler.text;
                 JObject json = JObject.Parse(jsonResponse);
                 JArray elements = (JArray)json["elements"];
+                JObject firstElement;
 
-                if (elements != null && elements.Count > 0)
-                {
-                    JObject firstElement = (JObject)elements[0];
-                    JObject tags = (JObject)firstElement["tags"];
-                    if (tags != null && tags.ContainsKey("maxspeed"))
-                    {
-                        string maxSpeedStr = (string)tags["maxspeed"];
-                        callback(maxSpeedStr);
+                if (elements != null && elements.Count > 0) {
+                    if(elements.Count > 1 && (directionTravelled == "E" || directionTravelled == "W")){
+                        firstElement = (JObject)elements[1]; 
+                        Debug.Log("pos 1: " + firstElement);
+                    } else {
+                        firstElement = (JObject)elements[0];
+                        Debug.Log("pos 0: " + firstElement);
                     }
-                    else
-                    {
-                        callback(null);
+                    
+                    JObject tags = (JObject)firstElement["tags"];
+                    if (tags != null && tags.ContainsKey("maxspeed")) {
+                        roadData.maxspeed = (string)tags["maxspeed"];
+                    } 
+                    if (tags != null && tags.ContainsKey("name")){
+                        roadData.name = (string)tags["name"];
+                    } else {
+                        callback(new RoadData { name = "Unknown Road", maxspeed = null });
                     }
                 }
-                else
-                {
-                    callback(null);
+                else {
+                    callback(new RoadData { name = "Unknown Road", maxspeed = null });
                 }
             }
             else
             {
                 Debug.LogError("Failed to fetch road data: " + request.error);
-                callback(null);
+                callback(new RoadData { name = "Unknown Road", maxspeed = null });
             }
         }
+
+        callback(roadData);
     }
+
+    // Returns the compass direction (e.g., North, South-East) from one lat/lon to another
+    private string GetDirection(double lat1, double lon1, double lat2, double lon2)
+    {
+        // Convert degrees to radians
+        double latRad1 = lat1 * Math.PI / 180.0;
+        double latRad2 = lat2 * Math.PI / 180.0;
+        double deltaLon = (lon2 - lon1) * Math.PI / 180.0;
+
+        // Compute initial bearing
+        double y = Math.Sin(deltaLon) * Math.Cos(latRad2);
+        double x = Math.Cos(latRad1) * Math.Sin(latRad2) -
+                Math.Sin(latRad1) * Math.Cos(latRad2) * Math.Cos(deltaLon);
+
+        double bearingRad = Math.Atan2(y, x);
+        double bearingDeg = (bearingRad * 180.0 / Math.PI + 360.0) % 360.0;
+
+        return BearingToCompass(bearingDeg);
+    }
+
+    // Converts a bearing in degrees to a compass direction
+    private string BearingToCompass(double bearing)
+    {
+        string[] directions = {
+            "N", "NE", "E", "SE",
+            "S", "SW", "W", "NW"
+        };
+
+        int index = (int)Math.Round(bearing / 45.0) % 8;
+        return directions[index];
+    }
+
 }
