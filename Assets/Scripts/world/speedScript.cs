@@ -184,7 +184,7 @@ public class speedScript : MonoBehaviour
                         out geom;
                         ";
 
-        // It is a good idea to URL-escape the query string.
+        // URL-escape the query string.
         string url = overpassUrl + UnityWebRequest.EscapeURL(query);
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
