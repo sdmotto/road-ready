@@ -137,7 +137,6 @@ public class TrafficSignalGenerator : MonoBehaviour
         float scaleY = 10000f / 2f;
         zoneVisual.transform.localScale = new Vector3(zoneRadius * 2f, scaleY, zoneRadius * 2f);
         Material visualMat = new Material(Shader.Find("Standard"));
-        visualMat.SetFloat("_Mode", 3); // important for fixing the opaque issue in the executable
 
         // Initial debug tint (red); this will update as the light cycles.
         visualMat.color = new Color(1f, 0f, 0f, 0.3f);

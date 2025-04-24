@@ -2327,12 +2327,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0fefceefe666bb4682b272ec8c5bdd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 160
+  maxSpeed: 90
   maxReverseSpeed: 45
   accelerationMultiplier: 8
   maxSteeringAngle: 20
   steeringSpeed: 0.2
-  brakeForce: 500
+  brakeForce: 600
   decelerationMultiplier: 2
   handbrakeDriftMultiplier: 5
   bodyMassCenter: {x: 0, y: -0.7, z: 0}
