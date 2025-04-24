@@ -129,7 +129,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         collider.direction = 1; // Y-axis.
         collider.isTrigger = true;
 
-        // Create a visual representation: a transparent cylinder (for debugging).
+        // Create a visual representation: a transparent cylinder 
         GameObject zoneVisual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         zoneVisual.transform.parent = zone.transform;   
         zoneVisual.transform.localPosition = Vector3.zero;

@@ -39,8 +39,8 @@ public class PrometeoCarController : MonoBehaviour
       [Range(0.1f, 1f)]
       public float steeringSpeed = 0.2f; // How fast the steering wheel turns.
       [Space(10)]
-      [Range(100, 1000)]
-      public int brakeForce = 600; // The strength of the wheel brakes.
+      [Range(100, 2000)]
+      public int brakeForce = 1000; // The strength of the wheel brakes.
       [Range(1, 10)]
       public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
       [Range(1, 10)]
@@ -246,7 +246,7 @@ public class PrometeoCarController : MonoBehaviour
       public enum GearState { Drive, Reverse }
 
       private GearState currentGear = GearState.Drive; // Default to Drive
-      private bool isCarStationary => Mathf.Abs(carRigidbody.velocity.magnitude) < 0.1f; // Check if car is stopped
+      private bool isCarStationary => Mathf.Abs(carRigidbody.velocity.magnitude) < 1f; // Check if car is stopped/slow
 
 
       // Update is called once per frame
@@ -259,8 +259,8 @@ public class PrometeoCarController : MonoBehaviour
         float brakePedalInput = Input.GetAxis("Brake"); // G920 Brake Pedal (0 to 1)
 
         // Normalize pedal inputs - maybe dont need? this code breaks acceleration if pedals aren't plugged in 
-        //gasPedalInput = -1f * gasPedalInput + 1f; 
-        //brakePedalInput = -1f * brakePedalInput + 1f;
+        gasPedalInput = -1f * gasPedalInput + 1f; 
+        brakePedalInput = (-1f * brakePedalInput + 1f) * 10;
 
         // Check if pedals are plugged in
         bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
@@ -281,8 +281,8 @@ public class PrometeoCarController : MonoBehaviour
         frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
         frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
 
-        // Gear Toggling with F key
-        if (isCarStationary && Input.GetKeyDown(KeyCode.F))
+        // Gear Toggling with F key or RSB button on wheel
+        if (isCarStationary && (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown("joystick button 8")))
         {
             currentGear = (currentGear == GearState.Drive) ? GearState.Reverse : GearState.Drive;
             Debug.Log($"Shifted to {currentGear}");
@@ -319,7 +319,7 @@ public class PrometeoCarController : MonoBehaviour
             CancelInvoke("DecelerateCar");
             deceleratingCar = false;
 
-            float appliedBrakeForce = brakeForce * brakeInput * 5;
+            float appliedBrakeForce = brakeForce * brakeInput * 100;
             ApplyBrakes(appliedBrakeForce);
         }
         else if (spaceKey) // Emergency brake

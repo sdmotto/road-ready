@@ -14,7 +14,9 @@ public class ButtonHandlerMenu : MonoBehaviour
     [Header("Parental Control Panel")]
     public GameObject parentalPanel;
     public TMP_InputField passwordInput;
-    public Button goButton; 
+    public Button goButton;
+
+    public Button exitButton;
 
     private string passwordFilePath;
     private string savedPassword;
@@ -41,6 +43,9 @@ public class ButtonHandlerMenu : MonoBehaviour
 
         if (goButton != null)
             goButton.onClick.AddListener(ValidateParentalPassword);
+
+        if (exitButton != null)
+            exitButton.onClick.AddListener(QuitApp);
     }
 
     private void ShowParentalPanel()
@@ -75,5 +80,16 @@ public class ButtonHandlerMenu : MonoBehaviour
         {
             Debug.LogWarning("Incorrect password.");
         }
+    }
+
+    private void QuitApp()
+    {
+        Debug.Log("Quitting application...");
+
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #else
+        Application.Quit();
+    #endif
     }
 }
