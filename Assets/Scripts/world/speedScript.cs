@@ -102,14 +102,15 @@ public class speedScript : MonoBehaviour
             if (counter >= 10) {
                 StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) => {
                     if (!string.IsNullOrEmpty(roadData.maxspeed) && !roadData.maxspeed.Equals("NA", StringComparison.OrdinalIgnoreCase))
-                    {
+                    { 
                         speedLimit = roadData.maxspeed;
-                        roadName = roadData.name;
                     }
                     else
                     {
-                        speedLimitText.text = "API Error";
+                        speedLimitText.text = "Unknown";
                     }
+                    roadName = roadData.name;
+
                 }));
                 counter = 0;
             }
@@ -179,7 +180,7 @@ public class speedScript : MonoBehaviour
         RoadData roadData = new RoadData();
         string query = $@"
                         [out:json];
-                        way(around:100,{lat},{lon})
+                        way(around:10,{lat},{lon})
                         ['highway'~'primary|secondary|tertiary|motorway|trunk|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link|residential'];
                         out geom;
                         ";
@@ -197,22 +198,21 @@ public class speedScript : MonoBehaviour
                 JObject json = JObject.Parse(jsonResponse);
                 JArray elements = (JArray)json["elements"];
                 JObject firstElement;
+                JObject test;
 
                 if (elements != null && elements.Count > 0) {
-                    if(elements.Count > 1 && (directionTravelled == "E" || directionTravelled == "W")){
-                        firstElement = (JObject)elements[1]; 
-                        Debug.Log("pos 1: " + firstElement);
-                    } else {
-                        firstElement = (JObject)elements[0];
-                        Debug.Log("pos 0: " + firstElement);
+                    firstElement = (JObject)elements[0];
+                    for (int i=0; i<elements.Count; i++){
+                        //Debug.Log("pos " + i + " " + elements[i]);
                     }
-                    
+
                     JObject tags = (JObject)firstElement["tags"];
                     if (tags != null && tags.ContainsKey("maxspeed")) {
                         roadData.maxspeed = (string)tags["maxspeed"];
                     } 
                     if (tags != null && tags.ContainsKey("name")){
                         roadData.name = (string)tags["name"];
+                        Debug.Log((string)tags["name"]);
                     } else {
                         callback(new RoadData { name = "Unknown Road", maxspeed = null });
                     }
