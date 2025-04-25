@@ -99,7 +99,7 @@ public class speedScript : MonoBehaviour
                 speedSamples++;
             }
             
-            if (counter >= 10) {
+            if (counter >= 4) {
                 StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) => {
                     if (!string.IsNullOrEmpty(roadData.maxspeed) && !roadData.maxspeed.Equals("NA", StringComparison.OrdinalIgnoreCase))
                     { 
