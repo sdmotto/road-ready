@@ -104,19 +104,20 @@ public class speedScript : MonoBehaviour
                 speedSamples++;
             }
 
-            if (counter >= 10)
+            if (counter >= 4)
             {
                 StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) =>
                 {
                     if (!string.IsNullOrEmpty(roadData.maxspeed) && !roadData.maxspeed.Equals("NA", StringComparison.OrdinalIgnoreCase))
                     {
                         speedLimit = roadData.maxspeed;
-                        roadName = roadData.name;
                     }
                     else
                     {
-                        speedLimitText.text = "API Error";
+                        speedLimitText.text = "Unknown";
                     }
+                    roadName = roadData.name;
+
                 }));
                 counter = 0;
             }
@@ -131,8 +132,6 @@ public class speedScript : MonoBehaviour
             lastTime = Time.time;
             counter++;
         }
-
-
     }
 
 
@@ -186,7 +185,7 @@ public class speedScript : MonoBehaviour
         RoadData roadData = new RoadData();
         string query = $@"
                         [out:json];
-                        way(around:100,{lat},{lon})
+                        way(around:10,{lat},{lon})
                         ['highway'~'primary|secondary|tertiary|motorway|trunk|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link|residential'];
                         out geom;
                         ";
@@ -204,7 +203,9 @@ public class speedScript : MonoBehaviour
                 JObject json = JObject.Parse(jsonResponse);
                 JArray elements = (JArray)json["elements"];
                 JObject firstElement;
+                JObject test;
 
+<<<<<<< HEAD
                 if (elements != null && elements.Count > 0)
                 {
                     if (elements.Count > 1 && (directionTravelled == "E" || directionTravelled == "W"))
@@ -216,6 +217,12 @@ public class speedScript : MonoBehaviour
                     {
                         firstElement = (JObject)elements[0];
                         Debug.Log("pos 0: " + firstElement);
+=======
+                if (elements != null && elements.Count > 0) {
+                    firstElement = (JObject)elements[0];
+                    for (int i=0; i<elements.Count; i++){
+                        //Debug.Log("pos " + i + " " + elements[i]);
+>>>>>>> origin/main
                     }
 
                     JObject tags = (JObject)firstElement["tags"];
@@ -226,9 +233,14 @@ public class speedScript : MonoBehaviour
                     if (tags != null && tags.ContainsKey("name"))
                     {
                         roadData.name = (string)tags["name"];
+<<<<<<< HEAD
                     }
                     else
                     {
+=======
+                        Debug.Log((string)tags["name"]);
+                    } else {
+>>>>>>> origin/main
                         callback(new RoadData { name = "Unknown Road", maxspeed = null });
                     }
                 }

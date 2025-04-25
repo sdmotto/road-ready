@@ -26,7 +26,7 @@ public class DayNightToggle : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown("joystick button 9"))
         {
             ToggleDayNight();
         }
