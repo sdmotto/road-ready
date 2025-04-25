@@ -138,24 +138,5 @@ public class RouteProximityChecker : MonoBehaviour
 
         // Try to find the LineRenderer in this GameObject or its children
         routeLine = route.GetComponentInChildren<LineRenderer>();
-
-        if (routeLine == null)
-        {
-            Debug.LogError("[RouteProximityChecker] No LineRenderer found in route object: " + route.name);
-
-            // Optional: log all children for debugging
-            foreach (Transform child in route.transform)
-            {
-                Debug.Log("[RouteProximityChecker] Child: " + child.name);
-                if (child.GetComponent<LineRenderer>() != null)
-                {
-                    Debug.Log("[RouteProximityChecker] FOUND LineRenderer on: " + child.name);
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("[RouteProximityChecker] Successfully set LineRenderer from: " + routeLine.gameObject.name);
-        }
     }
 }

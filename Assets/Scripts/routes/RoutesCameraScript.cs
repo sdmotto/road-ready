@@ -15,7 +15,7 @@ public class CameraScript : MonoBehaviour
     void Update()
     {
         if (markerPlacerScript.locked) return;
-        
+
         // --- Calculate scaling factor based on camera's distance from the ground ---
         float scalingFactor = 1f;
         Ray ray = new Ray(transform.position, Vector3.down);
@@ -50,6 +50,6 @@ public class CameraScript : MonoBehaviour
         transform.Translate(moveAmount, Space.World);
 
         // Debugging
-        Debug.Log($"Move: {moveDirection}, Scaling Factor: {scalingFactor}");
+        // Debug.Log($"Move: {moveDirection}, Scaling Factor: {scalingFactor}");
     }
 }

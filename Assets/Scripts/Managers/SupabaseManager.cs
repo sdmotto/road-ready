@@ -8,13 +8,10 @@ using UnityEngine;
 public class SupabaseManager : MonoBehaviour
 {
     public static SupabaseManager Instance;
-
     private static string SupabaseUrl = EnvManager.Get("SUPABASE_URL");
     private static string SupabaseAnonKey = EnvManager.Get("SUPABASE_KEY");
-
     private const string CredsFile = "supabase_anon_credentials.json";
     public static bool IsAuthenticated => Instance.GetClient()?.Auth.CurrentUser != null;
-
     private Supabase.Client supabaseClient;
 
     private class LocalCreds

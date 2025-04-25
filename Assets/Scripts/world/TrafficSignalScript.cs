@@ -70,23 +70,29 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Fetch traffic signal data using UnityWebRequest.
-    private IEnumerator FetchTrafficSignalData(string url) {
-        using (UnityWebRequest request = UnityWebRequest.Get(url)) {
+    private IEnumerator FetchTrafficSignalData(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
             yield return request.SendWebRequest();
-            if (request.result == UnityWebRequest.Result.Success) {
+            if (request.result == UnityWebRequest.Result.Success)
+            {
                 string jsonResponse = request.downloadHandler.text;
                 ParseAndCreateZones(jsonResponse);
             }
-            else {
+            else
+            {
                 Debug.LogError("Failed to fetch traffic signal data: " + request.error);
             }
         }
     }
 
     // Parse the JSON response and create a detection zone for each traffic signal.
-    private void ParseAndCreateZones(string jsonResponse) {
+    private void ParseAndCreateZones(string jsonResponse)
+    {
         JObject json = JObject.Parse(jsonResponse);
-        foreach (var element in json["elements"]) {
+        foreach (var element in json["elements"])
+        {
             if ((string)element["type"] != "node")
                 continue;
 
@@ -109,7 +115,8 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Create a detection zone (with visual debugging) at the given position.
-    private void CreateTrafficSignalZone(Vector3 position) {
+    private void CreateTrafficSignalZone(Vector3 position)
+    {
         GameObject zone = new GameObject("TrafficSignalZone");
         zone.transform.position = position;
         // Tag the zone so it can be detected later.
@@ -117,7 +124,8 @@ public class TrafficSignalGenerator : MonoBehaviour
 
         // Parent all zones under "trafficSignalZones".
         GameObject parent = GameObject.Find("trafficSignalZones");
-        if (parent == null) {
+        if (parent == null)
+        {
             parent = new GameObject("trafficSignalZones");
         }
         zone.transform.parent = parent.transform;
@@ -131,7 +139,7 @@ public class TrafficSignalGenerator : MonoBehaviour
 
         // Create a visual representation: a transparent cylinder 
         GameObject zoneVisual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        zoneVisual.transform.parent = zone.transform;   
+        zoneVisual.transform.parent = zone.transform;
         zoneVisual.transform.localPosition = Vector3.zero;
         zoneVisual.transform.localRotation = Quaternion.identity;
         float scaleY = 10000f / 2f;
@@ -166,155 +174,12 @@ public class TrafficSignalGenerator : MonoBehaviour
     }
 
     // Helper to convert from double3 to Unity's Vector3.
-    private static Vector3 ToVector3(double3 d) {
+    private static Vector3 ToVector3(double3 d)
+    {
         return new Vector3((float)d.x, (float)d.y, (float)d.z);
     }
 
     // Helper method to set the alpha value of a UI Image.
-    private void SetAlpha(Image img, float alpha) {
-        if (img != null)
-        {
-            Color c = img.color;
-            c.a = alpha;
-            img.color = c;
-        }
-    }
-
-    // Nested class to handle trigger events and light cycling for a traffic signal zone.
-    public class ZoneTrigger : MonoBehaviour {
-    public TMP_Text speedText;
-    public int redLightPenalty = 5;
-    public int yellowLightPenalty = 2;
-    public scoreScript scoreManager;
-    public MeshRenderer zoneVisualRenderer;
-
-    // UI Images for each light state (assign in the Inspector)
-    public Image redLightImage;
-    public Image yellowLightImage;
-    public Image greenLightImage;
-
-    public enum LightStatus { Red, Yellow, Green }
-    private LightStatus currentLightStatus;
-    private Coroutine cycleCoroutine;
-
-    private bool playerInside = false;
-
-    private void Start()
-    {
-        // Initialize with a random state so zones start out unsynchronized.
-        currentLightStatus = (LightStatus)UnityEngine.Random.Range(0, 3);
-        UpdateZoneVisual();
-        cycleCoroutine = StartCoroutine(CycleLights());
-    }
-
-    private IEnumerator CycleLights()
-    {
-        while (true)
-        {
-            float waitTime = 0f;
-            switch (currentLightStatus)
-            {
-                case LightStatus.Yellow:
-                    waitTime = 10f;  
-                    currentLightStatus = LightStatus.Red;
-                    break;
-                case LightStatus.Red:
-                    waitTime = 10f;
-                    currentLightStatus = LightStatus.Green;
-                    break;
-                case LightStatus.Green:
-                    waitTime = 3f;
-                    currentLightStatus = LightStatus.Yellow;
-                    break;
-            }
-            if (playerInside)
-            {
-                ShowLight();
-            }
-
-            UpdateZoneVisual();
-            yield return new WaitForSeconds(waitTime);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // Process only if the player enters.
-        if (other.CompareTag("Player")) return;
-        playerInside = true;
-        Debug.Log("Player entered traffic signal zone: " + gameObject.name);
-        ShowLight();
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        // Process only if the player exits.
-        if (other.CompareTag("Player")) return;
-        playerInside = false;
-        Debug.Log("Player exited traffic signal zone: " + gameObject.name);
-        HideAllLights();
-
-        if(currentLightStatus == LightStatus.Red) {
-            scoreManager.noStop(redLightPenalty); // call no stop function with 5 point penalty
-        }
-        else if(currentLightStatus == LightStatus.Yellow) {
-            scoreManager.noStop(yellowLightPenalty); // call no stop function with 2 point penalty
-        } 
-        else if(currentLightStatus == LightStatus.Green) {
-            scoreManager.RegisterTrafficLightSuccess();
-            Debug.Log("OBEY");
-        }
-    }
-
-    // Show only the UI image corresponding to the current light.
-    private void ShowLight()
-    {
-        HideAllLights(); // Ensure all images are hidden first.
-        switch (currentLightStatus)
-        {
-            case LightStatus.Red:
-                SetAlpha(redLightImage, 1f);
-                break;
-            case LightStatus.Yellow:
-                SetAlpha(yellowLightImage, 1f);
-                break;
-            case LightStatus.Green:
-                SetAlpha(greenLightImage, 1f);
-                break;
-        }
-    }
-
-    // Hide all traffic light images.
-    private void HideAllLights()
-    {
-        SetAlpha(redLightImage, 0f);
-        SetAlpha(yellowLightImage, 0f);
-        SetAlpha(greenLightImage, 0f);
-    }
-
-    // Update the zone's debug visual (the transparent cylinder) based on the current light.
-    private void UpdateZoneVisual()
-    {
-        if (zoneVisualRenderer != null)
-        {
-            Color debugColor = Color.red;
-            switch (currentLightStatus)
-            {
-                case LightStatus.Red:
-                    debugColor = new Color(1f, 0f, 0f, 0.3f);
-                    break;
-                case LightStatus.Yellow:
-                    debugColor = new Color(1f, 1f, 0f, 0.3f);
-                    break;
-                case LightStatus.Green:
-                    debugColor = new Color(0f, 1f, 0f, 0.3f);
-                    break;
-            }
-            zoneVisualRenderer.material.color = debugColor;
-        }
-    }
-
-    // Helper to set the alpha of a UI Image.
     private void SetAlpha(Image img, float alpha)
     {
         if (img != null)
@@ -324,5 +189,154 @@ public class TrafficSignalGenerator : MonoBehaviour
             img.color = c;
         }
     }
-}
+
+    // Nested class to handle trigger events and light cycling for a traffic signal zone.
+    public class ZoneTrigger : MonoBehaviour
+    {
+        public TMP_Text speedText;
+        public int redLightPenalty = 5;
+        public int yellowLightPenalty = 2;
+        public scoreScript scoreManager;
+        public MeshRenderer zoneVisualRenderer;
+
+        // UI Images for each light state (assign in the Inspector)
+        public Image redLightImage;
+        public Image yellowLightImage;
+        public Image greenLightImage;
+
+        public enum LightStatus { Red, Yellow, Green }
+        private LightStatus currentLightStatus;
+        private Coroutine cycleCoroutine;
+
+        private bool playerInside = false;
+
+        private void Start()
+        {
+            // Initialize with a random state so zones start out unsynchronized.
+            currentLightStatus = (LightStatus)UnityEngine.Random.Range(0, 3);
+            UpdateZoneVisual();
+            cycleCoroutine = StartCoroutine(CycleLights());
+        }
+
+        private IEnumerator CycleLights()
+        {
+            while (true)
+            {
+                float waitTime = 0f;
+                switch (currentLightStatus)
+                {
+                    case LightStatus.Yellow:
+                        waitTime = 10f;
+                        currentLightStatus = LightStatus.Red;
+                        break;
+                    case LightStatus.Red:
+                        waitTime = 10f;
+                        currentLightStatus = LightStatus.Green;
+                        break;
+                    case LightStatus.Green:
+                        waitTime = 3f;
+                        currentLightStatus = LightStatus.Yellow;
+                        break;
+                }
+                if (playerInside)
+                {
+                    ShowLight();
+                }
+
+                UpdateZoneVisual();
+                yield return new WaitForSeconds(waitTime);
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            // Process only if the player enters.
+            if (other.CompareTag("Player")) return;
+            playerInside = true;
+            // Debug.Log("Player entered traffic signal zone: " + gameObject.name);
+            ShowLight();
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            // Process only if the player exits.
+            if (other.CompareTag("Player")) return;
+            playerInside = false;
+            // Debug.Log("Player exited traffic signal zone: " + gameObject.name);
+            HideAllLights();
+
+            if (currentLightStatus == LightStatus.Red)
+            {
+                scoreManager.noStop(redLightPenalty); // call no stop function with 5 point penalty
+            }
+            else if (currentLightStatus == LightStatus.Yellow)
+            {
+                scoreManager.noStop(yellowLightPenalty); // call no stop function with 2 point penalty
+            }
+            else if (currentLightStatus == LightStatus.Green)
+            {
+                scoreManager.RegisterTrafficLightSuccess();
+                // Debug.Log("OBEY");
+            }
+        }
+
+        // Show only the UI image corresponding to the current light.
+        private void ShowLight()
+        {
+            HideAllLights(); // Ensure all images are hidden first.
+            switch (currentLightStatus)
+            {
+                case LightStatus.Red:
+                    SetAlpha(redLightImage, 1f);
+                    break;
+                case LightStatus.Yellow:
+                    SetAlpha(yellowLightImage, 1f);
+                    break;
+                case LightStatus.Green:
+                    SetAlpha(greenLightImage, 1f);
+                    break;
+            }
+        }
+
+        // Hide all traffic light images.
+        private void HideAllLights()
+        {
+            SetAlpha(redLightImage, 0f);
+            SetAlpha(yellowLightImage, 0f);
+            SetAlpha(greenLightImage, 0f);
+        }
+
+        // Update the zone's debug visual (the transparent cylinder) based on the current light.
+        private void UpdateZoneVisual()
+        {
+            if (zoneVisualRenderer != null)
+            {
+                Color debugColor = Color.red;
+                switch (currentLightStatus)
+                {
+                    case LightStatus.Red:
+                        debugColor = new Color(1f, 0f, 0f, 0.3f);
+                        break;
+                    case LightStatus.Yellow:
+                        debugColor = new Color(1f, 1f, 0f, 0.3f);
+                        break;
+                    case LightStatus.Green:
+                        debugColor = new Color(0f, 1f, 0f, 0.3f);
+                        break;
+                }
+                zoneVisualRenderer.material.color = debugColor;
+            }
+        }
+
+        // Helper to set the alpha of a UI Image.
+        private void SetAlpha(Image img, float alpha)
+        {
+            if (img != null)
+            {
+                Color c = img.color;
+                c.a = alpha;
+                img.color = c;
+            }
+        }
+    }
 }

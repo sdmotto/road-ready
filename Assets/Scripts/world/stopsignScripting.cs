@@ -196,7 +196,7 @@ public class StopSignGenerator : MonoBehaviour
             // Activate the stop sign indicator.
             SetAlpha(stopSignImage, 1f);
             stopSignActive = true;
-            Debug.Log("Player entered stop sign zone: " + gameObject.name + " - Stop sign image activated.");
+            // Debug.Log("Player entered stop sign zone: " + gameObject.name + " - Stop sign image activated.");
         }
 
         private void OnTriggerStay(Collider other)
@@ -214,7 +214,7 @@ public class StopSignGenerator : MonoBehaviour
                     SetAlpha(stopSignImage, 0f);
                     stopSignActive = false;
                     scoreManager.RegisterStopSignStop();
-                    Debug.Log("Player stopped in zone: " + gameObject.name + " - Stop sign image deactivated.");
+                    // Debug.Log("Player stopped in zone: " + gameObject.name + " - Stop sign image deactivated.");
                 }
             }
         }
@@ -227,16 +227,16 @@ public class StopSignGenerator : MonoBehaviour
             // If the player exits while the stop sign indicator is still active, apply a penalty.
             if (stopSignActive)
             {
-                Debug.Log("Player left stop sign zone without stopping: " + gameObject.name + " - 10 point penalty applied.");
+                // Debug.Log("Player left stop sign zone without stopping: " + gameObject.name + " - 10 point penalty applied.");
                 if (scoreManager != null)
                 {
-                    Debug.Log("subtracting or supposedly");
+                    // Debug.Log("subtracting or supposedly");
                     scoreManager.noStop(10);
                 }
             }
             SetAlpha(stopSignImage, 0f);
             stopSignActive = false;
-            Debug.Log("Player exited stop sign zone: " + gameObject.name + " - Stop sign image deactivated.");
+            // Debug.Log("Player exited stop sign zone: " + gameObject.name + " - Stop sign image deactivated.");
         }
 
         private void SetAlpha(Image img, float alpha)
