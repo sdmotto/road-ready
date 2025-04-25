@@ -32,12 +32,12 @@ public class MarkerDeleterScript : MonoBehaviour
                 // Check if the hit object is tagged as "Marker"
                 if (hit.collider.CompareTag("Marker"))
                 {
-                    Debug.Log("Deleting marker: " + hit.collider.gameObject.name);
+                    // Debug.Log("Deleting marker: " + hit.collider.gameObject.name);
                     Destroy(hit.collider.gameObject);
                 }
                 else
                 {
-                    Debug.Log("Hit object is not tagged as Marker.");
+                    // Debug.Log("Hit object is not tagged as Marker.");
                 }
             }
             else

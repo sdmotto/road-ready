@@ -86,7 +86,7 @@ public class VehicleHeadingTurnDetector : MonoBehaviour
                 // If there are enough consecutive samples, begin turn event
                 if (consecutiveTurnCount >= consecutiveTurnSamplesToStart)
                 {
-                    Debug.Log("begin turning event");
+                    // Debug.Log("begin turning event");
                     isTurning = true;
                     cumulativeTurn = tempAccumulatedTurn; // Start accumulating from the first turning sample
                     // Reset the straight sample counter 
@@ -124,21 +124,21 @@ public class VehicleHeadingTurnDetector : MonoBehaviour
                 {
                     if (cumulativeTurn > 0)
                     {
-                        Debug.Log("Detected turn right.");
+                        // Debug.Log("Detected turn right.");
                         numRightTurns++;
                         if (!TurnSignalController.rightActive && scoreScript.gradingActive)
                         {
-                            Debug.Log("Player did not have right signal active!");
+                            // Debug.Log("Player did not have right signal active!");
                             scoreScript.noSignal(3);
                         }
                     }
                     else
                     {
-                        Debug.Log("Detected turn left.");
+                        // Debug.Log("Detected turn left.");
                         numLeftTurns++;
                         if (!TurnSignalController.leftActive && scoreScript.gradingActive)
                         {
-                            Debug.Log("Player did not have left signal active!");
+                            // Debug.Log("Player did not have left signal active!");
                             scoreScript.noSignal(3);
                         }
                     }

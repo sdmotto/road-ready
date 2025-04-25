@@ -200,7 +200,7 @@ public class menuScript : MonoBehaviour
         {
             debugInfo += route + "\n";
         }
-        Debug.Log(debugInfo);
+        // Debug.Log(debugInfo);
 
         EventSystem.current.SetSelectedGameObject(null);
     }

@@ -50,6 +50,6 @@ public class CameraScript : MonoBehaviour
         transform.Translate(moveAmount, Space.World);
 
         // Debugging
-        Debug.Log($"Move: {moveDirection}, Scaling Factor: {scalingFactor}");
+        // Debug.Log($"Move: {moveDirection}, Scaling Factor: {scalingFactor}");
     }
 }

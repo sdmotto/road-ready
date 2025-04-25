@@ -70,7 +70,7 @@ public class scoreScript : MonoBehaviour
             if (currentSpeed < 0.1f && wasMovingLastFrame)
             {
                 totalStopCount++;
-                Debug.Log($"Stop detected. Total stops: {totalStopCount}");
+                // Debug.Log($"Stop detected. Total stops: {totalStopCount}");
                 wasMovingLastFrame = false;
             }
             else if (currentSpeed >= 0.1f)
@@ -209,10 +209,10 @@ public class scoreScript : MonoBehaviour
         collisionCount++;
         currentScore = calculateScore();
 
-        Debug.Log("Collision #" + collisionCount +
-                  " | Severity: " + collisionSeverity +
-                  " | Penalty: " + penalty +
-                  " | Current Score: " + currentScore);
+        // Debug.Log("Collision #" + collisionCount +
+        //           " | Severity: " + collisionSeverity +
+        //           " | Penalty: " + penalty +
+        //           " | Current Score: " + currentScore);
     }
     // Returns the current score.
     public float GetCurrentScore()
@@ -261,8 +261,7 @@ public class scoreScript : MonoBehaviour
 
         currentScore = calculateScore();
 
-        Debug.Log("Player did not stop fully!" +
-            " | Current Score: " + currentScore);
+        // Debug.Log("Player did not stop fully!" + " | Current Score: " + currentScore);
     }
 
     // increments total stop sign stops
@@ -276,7 +275,7 @@ public class scoreScript : MonoBehaviour
     public void noSignal(int penalty)
     {
         turnSigPenalty += penalty;
-        Debug.Log("Turn Signal Penalty: " + penalty);
+        // Debug.Log("Turn Signal Penalty: " + penalty);
         calculateScore();
     }
 

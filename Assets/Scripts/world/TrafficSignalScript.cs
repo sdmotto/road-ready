@@ -253,7 +253,7 @@ public class TrafficSignalGenerator : MonoBehaviour
             // Process only if the player enters.
             if (other.CompareTag("Player")) return;
             playerInside = true;
-            Debug.Log("Player entered traffic signal zone: " + gameObject.name);
+            // Debug.Log("Player entered traffic signal zone: " + gameObject.name);
             ShowLight();
         }
 
@@ -262,7 +262,7 @@ public class TrafficSignalGenerator : MonoBehaviour
             // Process only if the player exits.
             if (other.CompareTag("Player")) return;
             playerInside = false;
-            Debug.Log("Player exited traffic signal zone: " + gameObject.name);
+            // Debug.Log("Player exited traffic signal zone: " + gameObject.name);
             HideAllLights();
 
             if (currentLightStatus == LightStatus.Red)
@@ -276,7 +276,7 @@ public class TrafficSignalGenerator : MonoBehaviour
             else if (currentLightStatus == LightStatus.Green)
             {
                 scoreManager.RegisterTrafficLightSuccess();
-                Debug.Log("OBEY");
+                // Debug.Log("OBEY");
             }
         }
 

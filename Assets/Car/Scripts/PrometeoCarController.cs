@@ -377,7 +377,7 @@ public class PrometeoCarController : MonoBehaviour
       {
         if (Input.GetKeyDown("joystick button " + i))
         {
-          Debug.Log("Joystick Button Pressed: " + i);
+          // Debug.Log("Joystick Button Pressed: " + i);
         }
       }
     }
