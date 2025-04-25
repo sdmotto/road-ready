@@ -203,27 +203,10 @@ public class speedScript : MonoBehaviour
                 JObject json = JObject.Parse(jsonResponse);
                 JArray elements = (JArray)json["elements"];
                 JObject firstElement;
-                JObject test;
 
-<<<<<<< HEAD
                 if (elements != null && elements.Count > 0)
                 {
-                    if (elements.Count > 1 && (directionTravelled == "E" || directionTravelled == "W"))
-                    {
-                        firstElement = (JObject)elements[1];
-                        Debug.Log("pos 1: " + firstElement);
-                    }
-                    else
-                    {
-                        firstElement = (JObject)elements[0];
-                        Debug.Log("pos 0: " + firstElement);
-=======
-                if (elements != null && elements.Count > 0) {
                     firstElement = (JObject)elements[0];
-                    for (int i=0; i<elements.Count; i++){
-                        //Debug.Log("pos " + i + " " + elements[i]);
->>>>>>> origin/main
-                    }
 
                     JObject tags = (JObject)firstElement["tags"];
                     if (tags != null && tags.ContainsKey("maxspeed"))
@@ -233,14 +216,9 @@ public class speedScript : MonoBehaviour
                     if (tags != null && tags.ContainsKey("name"))
                     {
                         roadData.name = (string)tags["name"];
-<<<<<<< HEAD
                     }
                     else
                     {
-=======
-                        Debug.Log((string)tags["name"]);
-                    } else {
->>>>>>> origin/main
                         callback(new RoadData { name = "Unknown Road", maxspeed = null });
                     }
                 }
@@ -269,8 +247,7 @@ public class speedScript : MonoBehaviour
 
         // Compute initial bearing
         double y = Math.Sin(deltaLon) * Math.Cos(latRad2);
-        double x = Math.Cos(latRad1) * Math.Sin(latRad2) -
-                Math.Sin(latRad1) * Math.Cos(latRad2) * Math.Cos(deltaLon);
+        double x = Math.Cos(latRad1) * Math.Sin(latRad2) - Math.Sin(latRad1) * Math.Cos(latRad2) * Math.Cos(deltaLon);
 
         double bearingRad = Math.Atan2(y, x);
         double bearingDeg = (bearingRad * 180.0 / Math.PI + 360.0) % 360.0;
@@ -289,5 +266,4 @@ public class speedScript : MonoBehaviour
         int index = (int)Math.Round(bearing / 45.0) % 8;
         return directions[index];
     }
-
 }

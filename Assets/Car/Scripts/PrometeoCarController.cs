@@ -8,6 +8,11 @@ P.S: If you need more cars, you can check my other vehicle assets on the Unity A
 something useful for your game. Best regards, Mena.
 */
 
+/*
+Removed any touchscreen-related controls from this script since we do not plan on implementing any touch screen controls. 
+The Update() method was modified to accomodate the wheel and pedal inputs.
+*/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,9 +22,10 @@ using UnityEngine.UI;
 public class PrometeoCarController : MonoBehaviour
 {
 
+  //CAR SETUP
 
-<<<<<<< HEAD
   [Space(20)]
+  //[Header("CAR SETUP")]
   [Space(10)]
   [Range(20, 190)]
   public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
@@ -33,8 +39,8 @@ public class PrometeoCarController : MonoBehaviour
   [Range(0.1f, 1f)]
   public float steeringSpeed = 0.2f; // How fast the steering wheel turns.
   [Space(10)]
-  [Range(100, 1000)]
-  public int brakeForce = 600; // The strength of the wheel brakes.
+  [Range(100, 2000)]
+  public int brakeForce = 1000; // The strength of the wheel brakes.
   [Range(1, 10)]
   public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
   [Range(1, 10)]
@@ -44,34 +50,10 @@ public class PrometeoCarController : MonoBehaviour
                                  // in the points x = 0 and z = 0 of your car. You can select the value that you want in the y axis,
                                  // however, you must notice that the higher this value is, the more unstable the car becomes.
                                  // Usually the y value goes from 0 to 1.5.
-=======
-      [Space(20)]
-      //[Header("CAR SETUP")]
-      [Space(10)]
-      [Range(20, 190)]
-      public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
-      [Range(10, 120)]
-      public int maxReverseSpeed = 45; //The maximum speed that the car can reach while going on reverse in km/h.
-      [Range(1, 10)]
-      public int accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
-      [Space(10)]
-      [Range(10, 45)]
-      public int maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
-      [Range(0.1f, 1f)]
-      public float steeringSpeed = 0.2f; // How fast the steering wheel turns.
-      [Space(10)]
-      [Range(100, 2000)]
-      public int brakeForce = 1000; // The strength of the wheel brakes.
-      [Range(1, 10)]
-      public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
-      [Range(1, 10)]
-      public int handbrakeDriftMultiplier = 5; // How much grip the car loses when the user hit the handbrake.
-      [Space(10)]
-      public Vector3 bodyMassCenter; // This is a vector that contains the center of mass of the car. I recommend to set this value
-                                    // in the points x = 0 and z = 0 of your car. You can select the value that you want in the y axis,
-                                    // however, you must notice that the higher this value is, the more unstable the car becomes.
-                                    // Usually the y value goes from 0 to 1.5.
->>>>>>> origin/main
+
+  //WHEELS
+
+  //[Header("WHEELS")]
 
   /*
   The following variables are used to store the wheels' data of the car. We need both the mesh-only game objects and wheel
@@ -107,9 +89,11 @@ public class PrometeoCarController : MonoBehaviour
   public TrailRenderer RLWTireSkid;
   public TrailRenderer RRWTireSkid;
 
-  [Space(20)]
-  [Space(10)]
+  //SPEED TEXT (UI)
 
+  [Space(20)]
+  //[Header("UI")]
+  [Space(10)]
   //The following variable lets you to set up a UI text to display the speed of your car.
   public bool useUI = false;
   public Text carSpeedText; // Used to store the UI object that is going to show the speed of the car.
@@ -117,6 +101,7 @@ public class PrometeoCarController : MonoBehaviour
   //SOUNDS
 
   [Space(20)]
+  //[Header("Sounds")]
   [Space(10)]
   //The following variable lets you to set up sounds for your car such as the car engine or tire screech sounds.
   public bool useSounds = false;
@@ -127,6 +112,7 @@ public class PrometeoCarController : MonoBehaviour
   //CONTROLS
 
   [Space(20)]
+  //[Header("CONTROLS")]
   [Space(10)]
 
   //CAR DATA
@@ -137,6 +123,12 @@ public class PrometeoCarController : MonoBehaviour
   public bool isDrifting; // Used to know whether the car is drifting or not.
   [HideInInspector]
   public bool isTractionLocked; // Used to know whether the traction of the car is locked or not.
+
+  //PRIVATE VARIABLES
+
+  /*
+  IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
+  */
   Rigidbody carRigidbody; // Stores the car's rigidbody.
   float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
   float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
@@ -212,220 +204,10 @@ public class PrometeoCarController : MonoBehaviour
       initialCarEngineSoundPitch = carEngineSound.pitch;
     }
 
-<<<<<<< HEAD
     // We invoke 2 methods inside this script. CarSpeedUI() changes the text of the UI object that stores
     // the speed of the car and CarSounds() controls the engine and drifting sounds. Both methods are invoked
     // in 0 seconds, and repeatedly called every 0.1 seconds.
     if (useUI)
-=======
-      startPosition = transform.position;
-      startRotation = transform.rotation;
-
-      //Initial setup to calculate the drift value of the car. This part could look a bit
-      //complicated, but do not be afraid, the only thing we're doing here is to save the default
-      //friction values of the car wheels so we can set an appropiate drifting value later.
-      FLwheelFriction = new WheelFrictionCurve ();
-        FLwheelFriction.extremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
-        FLWextremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
-        FLwheelFriction.extremumValue = frontLeftCollider.sidewaysFriction.extremumValue;
-        FLwheelFriction.asymptoteSlip = frontLeftCollider.sidewaysFriction.asymptoteSlip;
-        FLwheelFriction.asymptoteValue = frontLeftCollider.sidewaysFriction.asymptoteValue;
-        FLwheelFriction.stiffness = frontLeftCollider.sidewaysFriction.stiffness;
-      FRwheelFriction = new WheelFrictionCurve ();
-        FRwheelFriction.extremumSlip = frontRightCollider.sidewaysFriction.extremumSlip;
-        FRWextremumSlip = frontRightCollider.sidewaysFriction.extremumSlip;
-        FRwheelFriction.extremumValue = frontRightCollider.sidewaysFriction.extremumValue;
-        FRwheelFriction.asymptoteSlip = frontRightCollider.sidewaysFriction.asymptoteSlip;
-        FRwheelFriction.asymptoteValue = frontRightCollider.sidewaysFriction.asymptoteValue;
-        FRwheelFriction.stiffness = frontRightCollider.sidewaysFriction.stiffness;
-      RLwheelFriction = new WheelFrictionCurve ();
-        RLwheelFriction.extremumSlip = rearLeftCollider.sidewaysFriction.extremumSlip;
-        RLWextremumSlip = rearLeftCollider.sidewaysFriction.extremumSlip;
-        RLwheelFriction.extremumValue = rearLeftCollider.sidewaysFriction.extremumValue;
-        RLwheelFriction.asymptoteSlip = rearLeftCollider.sidewaysFriction.asymptoteSlip;
-        RLwheelFriction.asymptoteValue = rearLeftCollider.sidewaysFriction.asymptoteValue;
-        RLwheelFriction.stiffness = rearLeftCollider.sidewaysFriction.stiffness;
-      RRwheelFriction = new WheelFrictionCurve ();
-        RRwheelFriction.extremumSlip = rearRightCollider.sidewaysFriction.extremumSlip;
-        RRWextremumSlip = rearRightCollider.sidewaysFriction.extremumSlip;
-        RRwheelFriction.extremumValue = rearRightCollider.sidewaysFriction.extremumValue;
-        RRwheelFriction.asymptoteSlip = rearRightCollider.sidewaysFriction.asymptoteSlip;
-        RRwheelFriction.asymptoteValue = rearRightCollider.sidewaysFriction.asymptoteValue;
-        RRwheelFriction.stiffness = rearRightCollider.sidewaysFriction.stiffness;
-
-        // We save the initial pitch of the car engine sound.
-        if(carEngineSound != null){
-          initialCarEngineSoundPitch = carEngineSound.pitch;
-        }
-
-          // We invoke 2 methods inside this script. CarSpeedUI() changes the text of the UI object that stores
-          // the speed of the car and CarSounds() controls the engine and drifting sounds. Both methods are invoked
-          // in 0 seconds, and repeatedly called every 0.1 seconds.
-          if(useUI){
-            InvokeRepeating("CarSpeedUI", 0f, 0.1f);
-          }else if(!useUI){
-            if(carSpeedText != null){
-              carSpeedText.text = "0";
-            }
-          }
-
-          if(useSounds){
-            InvokeRepeating("CarSounds", 0f, 0.1f);
-          }else if(!useSounds){
-            if(carEngineSound != null){
-              carEngineSound.Stop();
-            }
-            if(tireScreechSound != null){
-              tireScreechSound.Stop();
-            }
-          }
-
-          if(!useEffects){
-            if(RLWParticleSystem != null){
-              RLWParticleSystem.Stop();
-            }
-            if(RRWParticleSystem != null){
-              RRWParticleSystem.Stop();
-            }
-            if(RLWTireSkid != null){
-              RLWTireSkid.emitting = false;
-            }
-            if(RRWTireSkid != null){
-              RRWTireSkid.emitting = false;
-            }
-          }
-      }
-
-
-      public enum GearState { Drive, Reverse }
-
-      private GearState currentGear = GearState.Drive; // Default to Drive
-      private bool isCarStationary => Mathf.Abs(carRigidbody.velocity.magnitude) < 1f; // Check if car is stopped/slow
-
-
-      // Update is called once per frame
-      void Update() {
-        // Read Logitech G920 Steering Input
-        float wheelSteeringInput = Input.GetAxis("Steering"); // G920 X-axis (-1 to 1)
-
-        // Read Logitech G920 Pedal Inputs
-        float gasPedalInput = Input.GetAxis("Gas");   // G920 Gas Pedal (0 to 1)
-        float brakePedalInput = Input.GetAxis("Brake"); // G920 Brake Pedal (0 to 1)
-
-        // Normalize pedal inputs - maybe dont need? this code breaks acceleration if pedals aren't plugged in 
-        gasPedalInput = -1f * gasPedalInput + 1f; 
-        brakePedalInput = (-1f * brakePedalInput + 1f) * 10;
-
-        // Check if pedals are plugged in
-        bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
-
-        // Keyboard Inputs
-        bool wKey = Input.GetKey(KeyCode.W);
-        bool sKey = Input.GetKey(KeyCode.S);
-        bool spaceKey = Input.GetKey(KeyCode.Space);
-
-        // Use W key for gas if pedals are unplugged
-        float gasInput = pedalsConnected ? gasPedalInput : (wKey ? 1f : 0f);
-
-        // Use Space or brake pedal for braking
-        float brakeInput = pedalsConnected ? brakePedalInput : (spaceKey ? 1f : 0f);
-
-        // Smooth Steering Transition
-        float steeringAngle = 7.5f * wheelSteeringInput * maxSteeringAngle;
-        frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
-        frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
-
-        // Gear Toggling with F key or RSB button on wheel
-        if (isCarStationary && (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown("joystick button 8")))
-        {
-            currentGear = (currentGear == GearState.Drive) ? GearState.Reverse : GearState.Drive;
-            Debug.Log($"Shifted to {currentGear}");
-        }
-
-        // Apply Gas (Proportional to Pedal Input)
-        if (gasInput > 0.1f)
-        {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-
-            // Clear brakes if gas is applied
-            ApplyBrakes(0f);
-
-            float appliedTorque = (accelerationMultiplier * 50f) * gasInput;
-
-            if (currentGear == GearState.Drive)
-            {
-                ApplyMotorTorque(appliedTorque);
-            }
-            else if (currentGear == GearState.Reverse)
-            {
-                ApplyMotorTorque(-appliedTorque); // Negative torque for reverse
-            }
-        }
-        else
-        {
-            ApplyMotorTorque(0f); // No gas input, stop torque
-        }
-
-        // Apply Brakes (Proportional to Pedal Input)
-        if (brakeInput > 0.1f)
-        {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-
-            float appliedBrakeForce = brakeForce * brakeInput * 100;
-            ApplyBrakes(appliedBrakeForce);
-        }
-        else if (spaceKey) // Emergency brake
-        {
-            ApplyBrakes(brakeForce);
-        }
-        else if (!deceleratingCar && gasInput <= 0.1f && brakeInput <= 0.1f)
-        {
-            InvokeRepeating("DecelerateCar", 0f, 0.1f);
-            deceleratingCar = true;
-        }
-        else if (isCarStationary && brakeInput <= 0.1f)
-        {
-            ApplyBrakes(0f); // Clear brakes if the car is stopped and brake pedal is released
-        }
-
-        // Steering with A/D keys override
-        if (Input.GetKey(KeyCode.A))
-        {
-            TurnLeft();
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            TurnRight();
-        }
-        if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && Mathf.Abs(wheelSteeringInput) < 0.01f)
-        {
-            ResetSteeringAngle();
-        }
-
-        // Animate Wheel Meshes
-        AnimateWheelMeshes();
-
-        // Debugging
-        //Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
-        // Print joystick button for debugging
-        if (Input.anyKeyDown) {
-          for (int i = 0; i < 20; i++) {
-              if (Input.GetKeyDown("joystick button " + i))
-              {
-                  Debug.Log("Joystick Button Pressed: " + i);
-              }
-          }
-        }
-      }
-
-
-
-    // alex stuff
-
-    public void resetPosition()
->>>>>>> origin/main
     {
       InvokeRepeating("CarSpeedUI", 0f, 0.1f);
     }
@@ -474,9 +256,12 @@ public class PrometeoCarController : MonoBehaviour
     }
   }
 
+
   public enum GearState { Drive, Reverse }
+
   private GearState currentGear = GearState.Drive; // Default to Drive
-  private bool isCarStationary => Mathf.Abs(carRigidbody.velocity.magnitude) < 0.1f; // Check if car is stopped
+  private bool isCarStationary => Mathf.Abs(carRigidbody.velocity.magnitude) < 1f; // Check if car is stopped/slow
+
 
   // Update is called once per frame
   void Update()
@@ -488,9 +273,9 @@ public class PrometeoCarController : MonoBehaviour
     float gasPedalInput = Input.GetAxis("Gas");   // G920 Gas Pedal (0 to 1)
     float brakePedalInput = Input.GetAxis("Brake"); // G920 Brake Pedal (0 to 1)
 
-    // Normalize pedal inputs - comment out these 2 lines if no pedal plugged in
-    gasPedalInput = -1f * gasPedalInput + 1f; 
-    brakePedalInput = -1f * brakePedalInput + 1f;
+    // Normalize pedal inputs - maybe dont need? this code breaks acceleration if pedals aren't plugged in 
+    gasPedalInput = -1f * gasPedalInput + 1f;
+    brakePedalInput = (-1f * brakePedalInput + 1f) * 10;
 
     // Check if pedals are plugged in
     bool pedalsConnected = !(Mathf.Approximately(gasPedalInput, 0f) && Mathf.Approximately(brakePedalInput, 0f));
@@ -511,8 +296,8 @@ public class PrometeoCarController : MonoBehaviour
     frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
     frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
 
-    // Gear Toggling with F key
-    if (isCarStationary && Input.GetKeyDown(KeyCode.F))
+    // Gear Toggling with F key or RSB button on wheel
+    if (isCarStationary && (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown("joystick button 8")))
     {
       currentGear = (currentGear == GearState.Drive) ? GearState.Reverse : GearState.Drive;
       Debug.Log($"Shifted to {currentGear}");
@@ -549,7 +334,7 @@ public class PrometeoCarController : MonoBehaviour
       CancelInvoke("DecelerateCar");
       deceleratingCar = false;
 
-      float appliedBrakeForce = brakeForce * brakeInput * 5;
+      float appliedBrakeForce = brakeForce * brakeInput * 100;
       ApplyBrakes(appliedBrakeForce);
     }
     else if (spaceKey) // Emergency brake
@@ -585,6 +370,7 @@ public class PrometeoCarController : MonoBehaviour
 
     // Debugging
     //Debug.Log($"Steering: {wheelSteeringInput} | Gas Input: {gasInput} | Brake Input: {brakeInput}");
+    // Print joystick button for debugging
     if (Input.anyKeyDown)
     {
       for (int i = 0; i < 20; i++)
@@ -692,6 +478,7 @@ public class PrometeoCarController : MonoBehaviour
         tireScreechSound.Stop();
       }
     }
+
   }
 
   //
@@ -1010,12 +797,14 @@ public class PrometeoCarController : MonoBehaviour
     // and, as a consequense, the car starts to emit trails to simulate the wheel skids.
     isTractionLocked = true;
     DriftCarPS();
+
   }
 
   // This function is used to emit both the particle systems of the tires' smoke and the trail renderers of the tire skids
   // depending on the value of the bool variables 'isDrifting' and 'isTractionLocked'.
   public void DriftCarPS()
   {
+
     if (useEffects)
     {
       try
@@ -1035,6 +824,7 @@ public class PrometeoCarController : MonoBehaviour
       {
         Debug.LogWarning(ex);
       }
+
       try
       {
         if ((isTractionLocked || Mathf.Abs(localVelocityX) > 5f) && Mathf.Abs(carSpeed) > 12f)
@@ -1072,6 +862,7 @@ public class PrometeoCarController : MonoBehaviour
         RRWTireSkid.emitting = false;
       }
     }
+
   }
 
   // This function is used to recover the traction of the car when the user has stopped using the car's handbrake.
@@ -1102,6 +893,7 @@ public class PrometeoCarController : MonoBehaviour
       rearRightCollider.sidewaysFriction = RRwheelFriction;
 
       Invoke("RecoverTraction", Time.deltaTime);
+
     }
     else if (FLwheelFriction.extremumSlip < FLWextremumSlip)
     {

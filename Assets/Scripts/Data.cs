@@ -22,7 +22,7 @@ public class Data : MonoBehaviour
     public int numRightTurns;
 
     public float stopSignPenalty;
-    public float redPenalty;   
+    public float redPenalty;
     public float yellowPenalty;
     public float collisionPenalty;
     public float speedingPenalty;
