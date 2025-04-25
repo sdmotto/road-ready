@@ -20,7 +20,7 @@ public class speedScript : MonoBehaviour
 {
     [SerializeField] private CesiumGeoreference cesiumGeoreference;
     [SerializeField] public TMP_Text speedText;
-    
+
     // How often (in seconds) to update the speed reading.
     [SerializeField] private float updateInterval = 0.5f;
 
@@ -44,13 +44,15 @@ public class speedScript : MonoBehaviour
     public string directionTravelled = "";
     private string speedLimit = "";
     private string roadName = "";
-   
 
-    public float GetAverageSpeed() {
+
+    public float GetAverageSpeed()
+    {
         return speedSamples > 0 ? totalSpeed / speedSamples : 0f;
     }
 
-    public void setAverageSpeed() {
+    public void setAverageSpeed()
+    {
         speedSamples = 0;
         totalSpeed = 0f;
     }
@@ -81,7 +83,8 @@ public class speedScript : MonoBehaviour
             // Convert to speed in m/s, then mph
             double speedMps = distanceMeters / dt;
             double speedMph = speedMps * 2.23694; // 1 m/s ~ 2.23694 mph
-            if(speedMph > 0.5) {
+            if (speedMph > 0.5)
+            {
                 directionTravelled = direction;
             }
 
@@ -89,18 +92,22 @@ public class speedScript : MonoBehaviour
             speedText.text = speedMph.ToString("F1") + " MPH";
 
             // Update max speed, limit it to less than 200 mph because resetting the car can create an abnoramlly high speed
-            if ((float)speedMph <= 200f && (float)speedMph > maxSpeed){
+            if ((float)speedMph <= 200f && (float)speedMph > maxSpeed)
+            {
                 maxSpeed = (float)speedMph;
             }
 
             // Track total speed and number of samples, only include if below 200mph
-            if((float)speedMph <= 200f) {
+            if ((float)speedMph <= 200f)
+            {
                 totalSpeed += (float)speedMph;
                 speedSamples++;
             }
-            
-            if (counter >= 10) {
-                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) => {
+
+            if (counter >= 10)
+            {
+                StartCoroutine(GetSpeedDataCoroutine(lastLat, lastLon, (roadData) =>
+                {
                     if (!string.IsNullOrEmpty(roadData.maxspeed) && !roadData.maxspeed.Equals("NA", StringComparison.OrdinalIgnoreCase))
                     {
                         speedLimit = roadData.maxspeed;
@@ -125,10 +132,10 @@ public class speedScript : MonoBehaviour
             counter++;
         }
 
-        
+
     }
 
- 
+
     //The "opposite" of LatLongToUnityPosition:
     // 1) Transform the given Unity world position to Earth-Centered Earth-Fixed (ECEF).
     // 2) Convert ECEF to (longitude, latitude, height).
@@ -152,7 +159,7 @@ public class speedScript : MonoBehaviour
     private double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
     {
         // Earth radius in meters
-        const double R = 6371000.0;  
+        const double R = 6371000.0;
 
         // Convert degrees to radians
         double latRad1 = lat1 * math.PI / 180.0;
@@ -198,26 +205,35 @@ public class speedScript : MonoBehaviour
                 JArray elements = (JArray)json["elements"];
                 JObject firstElement;
 
-                if (elements != null && elements.Count > 0) {
-                    if(elements.Count > 1 && (directionTravelled == "E" || directionTravelled == "W")){
-                        firstElement = (JObject)elements[1]; 
+                if (elements != null && elements.Count > 0)
+                {
+                    if (elements.Count > 1 && (directionTravelled == "E" || directionTravelled == "W"))
+                    {
+                        firstElement = (JObject)elements[1];
                         Debug.Log("pos 1: " + firstElement);
-                    } else {
+                    }
+                    else
+                    {
                         firstElement = (JObject)elements[0];
                         Debug.Log("pos 0: " + firstElement);
                     }
-                    
+
                     JObject tags = (JObject)firstElement["tags"];
-                    if (tags != null && tags.ContainsKey("maxspeed")) {
+                    if (tags != null && tags.ContainsKey("maxspeed"))
+                    {
                         roadData.maxspeed = (string)tags["maxspeed"];
-                    } 
-                    if (tags != null && tags.ContainsKey("name")){
+                    }
+                    if (tags != null && tags.ContainsKey("name"))
+                    {
                         roadData.name = (string)tags["name"];
-                    } else {
+                    }
+                    else
+                    {
                         callback(new RoadData { name = "Unknown Road", maxspeed = null });
                     }
                 }
-                else {
+                else
+                {
                     callback(new RoadData { name = "Unknown Road", maxspeed = null });
                 }
             }

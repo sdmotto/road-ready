@@ -15,8 +15,8 @@ public class displayScore : MonoBehaviour
         float totalTime = Data.Instance.elapsedTime;
 
         scoreText.text = $"Avg Speed: {avgSpeed:F1} MPH\n" +
-                       $"Max Speed: {maxSpeed:F1} MPH\n" +
-                       $"Time: {totalTime:F2} sec\n" +
-                       $"Score: {score:F1}";
+                         $"Max Speed: {maxSpeed:F1} MPH\n" +
+                         $"Time: {totalTime:F2} sec\n" +
+                         $"Score: {score:F1}";
     }
 }

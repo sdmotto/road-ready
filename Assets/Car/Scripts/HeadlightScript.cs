@@ -1,7 +1,8 @@
 using UnityEngine;
 
 
-public class HeadlightControl : MonoBehaviour {
+public class HeadlightControl : MonoBehaviour
+{
     public Light headlightLeft;
     public Light headlightRight;
     public Light parkLightLeft;
@@ -11,10 +12,8 @@ public class HeadlightControl : MonoBehaviour {
 
     public DayNightToggle dayNightToggle; // Reference to DayNightToggle script so we can turn headlights on automatically if on auto and night time
 
-
-
-
-    void Update() {
+    void Update()
+    {
         // Read button states
         bool offMode = Input.GetKey("joystick button 2");
         bool parkMode = Input.GetKey("joystick button 3");
@@ -24,32 +23,35 @@ public class HeadlightControl : MonoBehaviour {
 
 
         // Headlight logic
-        if(offMode) {
+        if (offMode)
+        {
             SetLights(false, false, false);
         }
-        else if(headlightMode) {
+        else if (headlightMode)
+        {
             SetLights(true, false, false);
         }
-        else if(parkMode) {
+        else if (parkMode)
+        {
             SetLights(false, true, false);
         }
-        else {
+        else
+        {
             bool isNight = dayNightToggle.isDay == false; // if it is night time set is night to true
             SetLights(isNight, false, false);
         }
 
-        if(flashMode) {
+        if (flashMode)
+        {
             SetLights(false, false, true);
         }
         // if(!normalMode) {
         //     SetLights(false, false, true);
         // }
-
-
-
     }
 
-    void SetLights(bool headlightsOn, bool parkLightsOn, bool brightsOn) {
+    void SetLights(bool headlightsOn, bool parkLightsOn, bool brightsOn)
+    {
         // Control left and right headlights
         headlightLeft.enabled = headlightsOn;
         headlightRight.enabled = headlightsOn;

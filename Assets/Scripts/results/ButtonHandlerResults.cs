@@ -13,7 +13,7 @@ public class ButtonHandlerResults : MonoBehaviour
         // Wire up the buttons at runtime
         if (menuButton != null)
             menuButton.onClick.AddListener(() => SceneManager.LoadScene("menu"));
-            
+
         if (moreResultsButton != null)
             moreResultsButton.onClick.AddListener(() => SceneManager.LoadScene("moreresults"));
     }

@@ -26,7 +26,7 @@ public class menuScript : MonoBehaviour
 
     private List<Route> loadedRoutes;
 
-    public timerScript timerScript;     
+    public timerScript timerScript;
     public scoreScript scoreScript;
     public playerMarkerDetectorScript playerMarkerDetectorScript;
 
@@ -116,7 +116,7 @@ public class menuScript : MonoBehaviour
                         timerScript.ResetTimer();
                         timerScript.UpdateTimerDisplay();
                         playerMarkerDetectorScript.startMarkerHit = false; // reset flag
-                        
+
 
                         // Move car to start
                         if (selectedRoute.linePoints.Count >= 2 && car != null)

@@ -7,7 +7,8 @@ public class DetailedResultsDisplay : MonoBehaviour
     public TMP_Text generalInfoText;
     public TMP_Text penaltyBreakdownText;
 
-    void Start() {
+    void Start()
+    {
         // General info
         generalInfoText.text =
             $"Total Stops: {Data.Instance.totalStopCount}\n" +
