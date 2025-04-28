@@ -20,11 +20,8 @@ public class TrafficSignalGenerator : MonoBehaviour
     private HashSet<long> processedTrafficSignalIds = new HashSet<long>();
 
     [Header("Zone & UI Settings")]
-    // (speedText is unused in this simplified version)
     public TMP_Text speedText;
-    // The detection zone radius (Unity units)
     public float zoneRadius = 5f;
-    // Penalty for leaving the zone without stopping (unused here)
     public int redLightPenalty = 5;
     public int yellowLightPenalty = 2;
 
@@ -32,7 +29,6 @@ public class TrafficSignalGenerator : MonoBehaviour
     public scoreScript scoreManager;
 
     [Header("Traffic Light Images")]
-    // UI Images for each traffic light state. Assign these in the Inspector.
     public Image redLightImage;
     public Image yellowLightImage;
     public Image greenLightImage;
@@ -69,7 +65,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         yield return StartCoroutine(FetchTrafficSignalData(overpassUrl + query));
     }
 
-    // Fetch traffic signal data using UnityWebRequest.
+    // Fetch traffic signal data
     private IEnumerator FetchTrafficSignalData(string url)
     {
         using (UnityWebRequest request = UnityWebRequest.Get(url))
@@ -114,7 +110,7 @@ public class TrafficSignalGenerator : MonoBehaviour
         }
     }
 
-    // Create a detection zone (with visual debugging) at the given position.
+    // Create a detection zone at the given position.
     private void CreateTrafficSignalZone(Vector3 position)
     {
         GameObject zone = new GameObject("TrafficSignalZone");
@@ -199,7 +195,6 @@ public class TrafficSignalGenerator : MonoBehaviour
         public scoreScript scoreManager;
         public MeshRenderer zoneVisualRenderer;
 
-        // UI Images for each light state (assign in the Inspector)
         public Image redLightImage;
         public Image yellowLightImage;
         public Image greenLightImage;
