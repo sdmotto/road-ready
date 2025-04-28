@@ -27,7 +27,8 @@ public class RoadGenerator : MonoBehaviour
         return cesiumGeoreference.TransformEarthCenteredEarthFixedPositionToUnity(earthPosition);
     }
 
-    void Start() {
+    void Start()
+    {
         StartCoroutine(SweepArea());
     }
 
@@ -39,7 +40,7 @@ public class RoadGenerator : MonoBehaviour
             {
                 float lat = baseLat + (j * gridSize);
                 float lon = baseLon + (i * gridSize);
-                
+
                 string query = $@"
                     [out:json];
                     way(around:500,{lat},{lon})
@@ -113,7 +114,7 @@ public class RoadGenerator : MonoBehaviour
         LineRenderer lineRenderer = roadObject.AddComponent<LineRenderer>();
         roadObject.transform.SetParent(roadManager.transform, false);
 
-        
+
 
         lineRenderer.positionCount = road.Count;
         lineRenderer.SetPositions(road.ToArray());
@@ -131,7 +132,8 @@ public class RoadGenerator : MonoBehaviour
         lineRenderer.material = pinkMaterial;
     }
 
-    private static Vector3 toVector3(double3 x) {
+    private static Vector3 toVector3(double3 x)
+    {
         return new Vector3((float)x.x, (float)x.y, (float)x.z);
     }
 }

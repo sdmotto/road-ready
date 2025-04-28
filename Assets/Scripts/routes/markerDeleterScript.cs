@@ -22,7 +22,7 @@ public class MarkerDeleterScript : MonoBehaviour
             Ray deletionRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            // Draw the ray in the Scene view for 1 second (visible during Play mode)
+            // Draw the ray in the Scene view for 1 second
             Debug.DrawRay(deletionRay.origin, deletionRay.direction * deletionRayDistance, Color.red, 1f);
 
             // Perform the raycast
@@ -32,12 +32,12 @@ public class MarkerDeleterScript : MonoBehaviour
                 // Check if the hit object is tagged as "Marker"
                 if (hit.collider.CompareTag("Marker"))
                 {
-                    Debug.Log("Deleting marker: " + hit.collider.gameObject.name);
+                    // Debug.Log("Deleting marker: " + hit.collider.gameObject.name);
                     Destroy(hit.collider.gameObject);
                 }
                 else
                 {
-                    Debug.Log("Hit object is not tagged as Marker.");
+                    // Debug.Log("Hit object is not tagged as Marker.");
                 }
             }
             else

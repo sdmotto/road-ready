@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ControlsMenuScript : MonoBehaviour
 {
- public RectTransform tabPanel; // Reference to the panel
+    public RectTransform tabPanel; // Reference to the panel
     public Button toggleButton;    // Reference to the button
     public float slideSpeed = 10f; // Speed of tab movement
 

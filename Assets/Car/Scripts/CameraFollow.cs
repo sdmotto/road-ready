@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour {
+public class CameraFollow : MonoBehaviour
+{
 
 	public Transform carTransform;
 	[Range(1, 10)]
@@ -13,7 +14,8 @@ public class CameraFollow : MonoBehaviour {
 	Vector3 initialCarPosition;
 	Vector3 absoluteInitCameraPosition;
 
-	void Start(){
+	void Start()
+	{
 		initialCameraPosition = gameObject.transform.position;
 		initialCarPosition = carTransform.position;
 		absoluteInitCameraPosition = initialCameraPosition - initialCarPosition;
@@ -29,7 +31,5 @@ public class CameraFollow : MonoBehaviour {
 		//Move to car
 		Vector3 _targetPos = absoluteInitCameraPosition + carTransform.transform.position;
 		transform.position = Vector3.Lerp(transform.position, _targetPos, followSpeed * Time.deltaTime);
-
 	}
-
 }

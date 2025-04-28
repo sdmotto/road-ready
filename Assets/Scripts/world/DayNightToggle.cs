@@ -9,7 +9,7 @@ public class DayNightToggle : MonoBehaviour
     public Color nightColor = new Color(0.1f, 0.1f, 0.2f); // Dark blue night color
     public float dayIntensity = 1.0f;
     public float nightIntensity = 0.2f;
-    
+
     public bool isDay = true; // public so can be accessed elsewhere
 
     void Start()
@@ -18,7 +18,7 @@ public class DayNightToggle : MonoBehaviour
         {
             directionalLight = GetComponent<Light>();
         }
-        
+
         // Set initial skybox
         RenderSettings.skybox = SkyNoon;
         DynamicGI.UpdateEnvironment(); // Update lighting to reflect the skybox change

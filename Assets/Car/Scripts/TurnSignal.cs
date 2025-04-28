@@ -50,7 +50,6 @@ public class TurnSignalController : MonoBehaviour
             rightCoroutine = null;
             SetAlpha(rightArrow, 0f); // Hide right arrow
         }
-
     }
 
     IEnumerator Blink(Image arrow)

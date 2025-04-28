@@ -33,7 +33,5 @@ public class CesiumApiKeyLoader : MonoBehaviour
 
         string fullUrl = GoogleTilesBaseUrl + apiKey;
         cesiumTileset.url = fullUrl;
-
-        Debug.Log($"[CesiumApiKeyLoader] Cesium tileset URL updated to: {fullUrl}");
     }
 }

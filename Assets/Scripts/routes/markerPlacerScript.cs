@@ -181,7 +181,7 @@ public class markerPlacerScript : MonoBehaviour
     public void Name()
     {
         routeName = routeNameInput.text;
-        Debug.Log("User entered route name: " + routeName);
+        // Debug.Log("User entered route name: " + routeName);
         routeNamerPanel.SetActive(false);
 
         CreateRouteMap();
