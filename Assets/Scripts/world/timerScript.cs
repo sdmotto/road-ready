@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// Import TextMeshPro namespace
 using TMPro;
 
 public class timerScript : MonoBehaviour
 {
     [Header("UI Reference")]
-    // Use a TMP_Text field instead of UnityEngine.UI.Text
     public TMP_Text timerText;
 
     private float elapsedTime = 0f;

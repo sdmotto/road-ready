@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using CesiumForUnity;    // Or whatever namespace Cesium uses in your setup
-using Unity.Mathematics; // For double3, math.sin, etc.
-using System;            // For Math.Sqrt, Math.Sin, etc.
+using CesiumForUnity;    
+using Unity.Mathematics; 
+using System;            
 using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -29,7 +29,6 @@ public class speedScript : MonoBehaviour
 
     // private float speedLimitInterval = 5f;
 
-    // We'll store the previous latitude/longitude and time 
     private double lastLat;
     private double lastLon;
     private float lastTime;
@@ -237,7 +236,7 @@ public class speedScript : MonoBehaviour
         callback(roadData);
     }
 
-    // Returns the compass direction (e.g., North, South-East) from one lat/lon to another
+    // Returns the compass direction from one lat/lon to another
     private string GetDirection(double lat1, double lon1, double lat2, double lon2)
     {
         // Convert degrees to radians
