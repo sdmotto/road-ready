@@ -291,7 +291,7 @@ public class PrometeoCarController : MonoBehaviour
     // Use Space or brake pedal for braking
     float brakeInput = pedalsConnected ? brakePedalInput : (spaceKey ? 1f : 0f);
 
-    // Smooth Steering Transition
+    // smooth steering 
     float steeringAngle = 7.5f * wheelSteeringInput * maxSteeringAngle;
     frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
     frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
@@ -303,7 +303,7 @@ public class PrometeoCarController : MonoBehaviour
       Debug.Log($"Shifted to {currentGear}");
     }
 
-    // Apply Gas (Proportional to Pedal Input)
+    // apply gas proportional to pedal input
     if (gasInput > 0.1f)
     {
       CancelInvoke("DecelerateCar");
@@ -312,7 +312,7 @@ public class PrometeoCarController : MonoBehaviour
       // Clear brakes if gas is applied
       ApplyBrakes(0f);
 
-      float appliedTorque = (accelerationMultiplier * 50f) * gasInput;
+      float appliedTorque = accelerationMultiplier * 50f * gasInput; // this is dumb but it works
 
       if (currentGear == GearState.Drive)
       {
@@ -328,7 +328,7 @@ public class PrometeoCarController : MonoBehaviour
       ApplyMotorTorque(0f); // No gas input, stop torque
     }
 
-    // Apply Brakes (Proportional to Pedal Input)
+    // Apply Brakes proportional to pedal input
     if (brakeInput > 0.1f)
     {
       CancelInvoke("DecelerateCar");
@@ -337,7 +337,7 @@ public class PrometeoCarController : MonoBehaviour
       float appliedBrakeForce = brakeForce * brakeInput * 100;
       ApplyBrakes(appliedBrakeForce);
     }
-    else if (spaceKey) // Emergency brake
+    else if (spaceKey) // brake if space key is pressed
     {
       ApplyBrakes(brakeForce);
     }

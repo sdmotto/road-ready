@@ -16,6 +16,7 @@ public class CameraFollow : MonoBehaviour
 
 	void Start()
 	{
+		// set initial camera position on car
 		initialCameraPosition = gameObject.transform.position;
 		initialCarPosition = carTransform.position;
 		absoluteInitCameraPosition = initialCameraPosition - initialCarPosition;

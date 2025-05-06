@@ -46,7 +46,7 @@ public class HeadlightControl : MonoBehaviour
             SetLights(false, false, true);
         }
         // if(!normalMode) {
-        //     SetLights(false, false, true);
+        //     SetLights(false, false, true); prob don't need
         // }
     }
 

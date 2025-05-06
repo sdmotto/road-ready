@@ -42,7 +42,7 @@ public class MarkerDeleterScript : MonoBehaviour
             }
             else
             {
-                Debug.Log("Ray did not hit any object.");
+                //Debug.Log("Ray did not hit any object.");
             }
         }
     }
@@ -60,8 +60,7 @@ public class MarkerDeleterScript : MonoBehaviour
         // Check if any result is part of an interactive UI element.
         foreach (RaycastResult result in results)
         {
-            // Using GetComponentInParent ensures that even if the hit UI element is a child,
-            // it will still detect the button parent.
+            // Using GetComponentInParent ensures that even if the hit UI element is a child, it will still detect the button parent
             Button btn = result.gameObject.GetComponentInParent<Button>();
             if (btn != null && btn.interactable)
                 return true;

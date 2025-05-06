@@ -20,26 +20,28 @@ public class AuthUIManager : MonoBehaviour
 
     private void Start()
     {
-        loginButton.onClick.AddListener(OnLoginClicked);
-        signupButton.onClick.AddListener(OnSignupClicked);
+        loginButton.onClick.AddListener(OnLoginClicked); // listener for login button
+        signupButton.onClick.AddListener(OnSignupClicked); // listener for signup button
     }
 
     private async void OnLoginClicked()
     {
-        string email = loginEmailInput.text.Trim();
-        string password = loginPasswordInput.text.Trim();
-        bool remember = rememberMeToggle == null || rememberMeToggle.isOn;
+        string email = loginEmailInput.text.Trim();  // get email input
+        string password = loginPasswordInput.text.Trim(); //get password input
+        bool remember = rememberMeToggle == null || rememberMeToggle.isOn; // defualt to true if toggle is missing 
 
+        // check if email or password is empty
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
             Debug.LogWarning("Login: Email or password is empty.");
             return;
         }
 
+        // call supabase login method
         bool success = await SupabaseManager.Instance.SignInOrSignUpAsync(email, password, remember);
         if (success)
         {
-            SceneManager.LoadScene("menu");
+            SceneManager.LoadScene("menu"); // load menu if email and password are correct
         }
         else
         {
@@ -49,20 +51,22 @@ public class AuthUIManager : MonoBehaviour
 
     private async void OnSignupClicked()
     {
-        string email = signupEmailInput.text.Trim();
-        string password = signupPasswordInput.text.Trim();
-        bool remember = rememberMeToggle == null || rememberMeToggle.isOn;
+        string email = signupEmailInput.text.Trim(); // get email input
+        string password = signupPasswordInput.text.Trim(); // get password input
+        bool remember = rememberMeToggle == null || rememberMeToggle.isOn; // defualt to true if toggle is missing 
 
+        // check if email or password is empty
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
             Debug.LogWarning("Signup: Email or password is empty.");
             return;
         }
 
+        // call supabase login method
         bool success = await SupabaseManager.Instance.SignInOrSignUpAsync(email, password, remember);
         if (success)
         {
-            SceneManager.LoadScene("menu");
+            SceneManager.LoadScene("menu"); // load menu if email and password are correct
         }
         else
         {
