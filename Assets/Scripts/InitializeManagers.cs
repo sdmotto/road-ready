@@ -15,6 +15,7 @@ public class InitializeManagers : MonoBehaviour
         EnsureManager<RouteStatsManager>("RouteStatsManager");
     }
 
+    // makes sure all 'managers' are properly initialized
     private void EnsureManager<T>(string name) where T : MonoBehaviour
     {
         if (FindObjectOfType<T>() == null)
