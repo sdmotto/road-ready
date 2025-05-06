@@ -94,11 +94,13 @@ public class scoreScript : MonoBehaviour
                 if (float.TryParse(limitStr, out float speedLimit)
                     && float.TryParse(currentStr, out float currentSpeed))
                 {
+                    // check if player is speeding
                     if (currentSpeed > speedLimit)
                     {
                         float overSpeed = currentSpeed - speedLimit;
                         float penaltyPerSecond = 0f;
-
+    
+                        // Apply penalty based on how much over speed limit
                         if (overSpeed <= 5f)
                         {
                             penaltyPerSecond = 1f;
@@ -127,7 +129,7 @@ public class scoreScript : MonoBehaviour
     {
         gradingActive = true;
         ResetScore();  // Reset score at the start if needed.
-        Debug.Log("Grading started. Score reset to: " + currentScore);
+        //Debug.Log("Grading started. Score reset to: " + currentScore);
     }
 
     public void resetEverything()

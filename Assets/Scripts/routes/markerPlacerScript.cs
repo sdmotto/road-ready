@@ -33,11 +33,11 @@ public class markerPlacerScript : MonoBehaviour
     {
         if (locked) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) // Checkk for left click
         {
-            if (IsPointerOverInteractiveUI()) return;
+            if (IsPointerOverInteractiveUI()) return; // Ensure mouse is not over a UI element
 
-            Vector3 markerPosition = GetMouseWorldPosition();
+            Vector3 markerPosition = GetMouseWorldPosition(); 
             GameObject newMarker = Instantiate(markerPrefab, markerPosition, Quaternion.identity, markerHolder);
             markerList.Add(newMarker);
         }
@@ -45,13 +45,14 @@ public class markerPlacerScript : MonoBehaviour
 
     public async void CreateRouteMap()
     {
+        // If there are 0 markers, return
         if (markerHolder.childCount == 0)
         {
             Debug.LogWarning("No markers to create route.");
             return;
         }
 
-        // Destroy the previous route (line + markers)
+        // Destroy the previous route 
         if (lastRouteObject != null)
         {
             Destroy(lastRouteObject);
@@ -86,6 +87,7 @@ public class markerPlacerScript : MonoBehaviour
             linePoints = groundPoints
         };
 
+        // Add marker positions to route
         foreach (Transform marker in markers)
         {
             route.markerPositions.Add(marker.position);
@@ -100,6 +102,7 @@ public class markerPlacerScript : MonoBehaviour
         GameObject lineObj = new GameObject("LineRenderer_" + route.RouteName);
         lineObj.transform.SetParent(lastRouteObject.transform);
 
+        // Instantiate LineRenderer with material, width, etc.
         LineRenderer lr = lineObj.AddComponent<LineRenderer>();
         lr.material = lineMaterial;
         lr.widthMultiplier = lineWidth;
@@ -128,10 +131,12 @@ public class markerPlacerScript : MonoBehaviour
         markerList.Clear();
     }
 
+    // Funtion to obtain mouse position in the world using raycasting
     private Vector3 GetMouseWorldPosition()
     {
         Vector3 markerPosition = new Vector3(0, groundOffset, 0);
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // Set marker postion based on where ray hits the ground
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
         {
             markerPosition = hit.point + new Vector3(0, groundOffset, 0);
@@ -139,6 +144,7 @@ public class markerPlacerScript : MonoBehaviour
         return markerPosition;
     }
 
+    // Finds the height of the ground where the ray hits
     private Vector3 GetGroundPosition(Vector3 originalPos)
     {
         Vector3 pos = originalPos;
@@ -150,6 +156,7 @@ public class markerPlacerScript : MonoBehaviour
         return pos;
     }
 
+    // Checks whether or not the pointer is over any UI element
     private bool IsPointerOverInteractiveUI()
     {
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
@@ -170,6 +177,7 @@ public class markerPlacerScript : MonoBehaviour
         return false;
     }
 
+    // Displays the route naking panel when the user connects a route
     public void ShowRouteNamer()
     {
         routeNamerPanel.SetActive(true);
@@ -178,6 +186,7 @@ public class markerPlacerScript : MonoBehaviour
         locked = true;
     }
 
+    // Sets the route name
     public void Name()
     {
         routeName = routeNameInput.text;

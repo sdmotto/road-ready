@@ -8,7 +8,7 @@ public class displayScore : MonoBehaviour
     void Update()
     {
         if (scoreText == null) return;
-
+        // basic statistics (score, avg speed, max speed, time)
         float score = Data.Instance.score;
         float avgSpeed = Data.Instance.averageSpeed;
         float maxSpeed = Data.Instance.maxSpeed;

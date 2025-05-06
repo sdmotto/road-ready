@@ -3,10 +3,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
+// this script allows the user to tab (or shift-tab) between entries on the login/signup page
 public class TabNavigation : MonoBehaviour
 {
     void Update()
     {
+        // check for tab press
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             GameObject current = EventSystem.current.currentSelectedGameObject;
@@ -21,9 +23,10 @@ public class TabNavigation : MonoBehaviour
             {
                 return;
             }
-
+            // bool for if shift key is held
             bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
+            // move up or down depening on if shift is held 
             Selectable next = shiftHeld
                 ? currentSelectable.FindSelectableOnUp()
                 : currentSelectable.FindSelectableOnDown();

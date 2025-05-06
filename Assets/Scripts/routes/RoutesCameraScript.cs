@@ -16,7 +16,7 @@ public class CameraScript : MonoBehaviour
     {
         if (markerPlacerScript.locked) return;
 
-        // --- Calculate scaling factor based on camera's distance from the ground ---
+        // Calculate scaling factor based on camera's distance from the ground
         float scalingFactor = 1f;
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
@@ -43,7 +43,7 @@ public class CameraScript : MonoBehaviour
         if (Input.GetKey(KeyCode.Space)) inputY += 1f;      // Space moves up
         if (Input.GetKey(KeyCode.LeftShift)) inputY -= 1f;  // Left Shift moves down
 
-        // --- Apply Instant Movement (Snappy) ---
+        // Apply movement
         Vector3 moveDirection = new Vector3(inputX, inputY, inputZ).normalized; // Prevent diagonal speed boost
         Vector3 moveAmount = moveDirection * baseMoveSpeed * scalingFactor * Time.deltaTime;
 

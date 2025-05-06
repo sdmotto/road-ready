@@ -42,17 +42,20 @@ public class PersistentOverlay : MonoBehaviour
         }
     }
 
+    // getter for brightness
     public float GetBrightness()
     {
         return currentBrightness;
     }
 
+    // setter for volume
     public void SetVolume(float volume)
     {
         currentVolume = volume;
         AudioListener.volume = volume;
     }
 
+    // getter for volumte
     public float GetVolume()
     {
         return currentVolume;

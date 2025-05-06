@@ -5,7 +5,6 @@ using UnityEngine;
 public class DynamicCamAnchor : MonoBehaviour
 {
     [Header("Tracking Settings")]
-    [Tooltip("The transform whose position will be followed exactly (e.g., the CameraRig).")]
     public Transform trackingTarget;
 
     void LateUpdate()

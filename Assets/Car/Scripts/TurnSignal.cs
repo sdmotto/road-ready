@@ -4,13 +4,13 @@ using System.Collections;
 
 public class TurnSignalController : MonoBehaviour
 {
-    public Image leftArrow;   // Drag Left Arrow UI Image
-    public Image rightArrow;  // Drag Right Arrow UI Image
+    public Image leftArrow;   // left arrow UI Image
+    public Image rightArrow;  // right arrow UI Image
     private Coroutine leftCoroutine;
     private Coroutine rightCoroutine;
 
-    private Vector3 startPosition;  // Store the car's initial position
-    private Quaternion startRotation; // Store the car's initial rotation
+    private Vector3 startPosition;  // store the car's initial position
+    private Quaternion startRotation; // store the car's initial rotation
 
     public static bool leftActive;
     public static bool rightActive;
@@ -30,23 +30,23 @@ public class TurnSignalController : MonoBehaviour
     {
         leftActive = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.JoystickButton1);
         rightActive = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.JoystickButton0);
-
+        // start blinking left arrow
         if (leftActive && leftCoroutine == null)
             leftCoroutine = StartCoroutine(Blink(leftArrow));
-
+        // start blinking right arrow
         if (rightActive && rightCoroutine == null)
             rightCoroutine = StartCoroutine(Blink(rightArrow));
 
         if (!leftActive && leftCoroutine != null)
         {
-            StopCoroutine(leftCoroutine);
+            StopCoroutine(leftCoroutine); // stop blinking
             leftCoroutine = null;
             SetAlpha(leftArrow, 0f); // Hide left arrow
         }
 
         if (!rightActive && rightCoroutine != null)
         {
-            StopCoroutine(rightCoroutine);
+            StopCoroutine(rightCoroutine); // stop blinking
             rightCoroutine = null;
             SetAlpha(rightArrow, 0f); // Hide right arrow
         }
@@ -66,7 +66,7 @@ public class TurnSignalController : MonoBehaviour
     void SetAlpha(Image img, float alpha)
     {
         Color color = img.color;
-        color.a = alpha;  // Modify only the alpha channel
+        color.a = alpha;  // Modify only alpha 
         img.color = color;
     }
 }

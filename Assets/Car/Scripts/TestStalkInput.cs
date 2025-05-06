@@ -1,3 +1,5 @@
+// This was used for initial testing when implenting the turn signal stalk, but it is not used in the actual game
+
 using UnityEngine;
 
 public class USBInputDebugger : MonoBehaviour
