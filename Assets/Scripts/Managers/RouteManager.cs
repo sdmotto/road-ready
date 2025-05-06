@@ -19,6 +19,7 @@ public class RouteManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // return all routes for the signed in user
     public async Task<List<Route>> GetAllRoutesForUserAsync()
     {
         var client = SupabaseManager.Instance.GetClient();
@@ -38,6 +39,7 @@ public class RouteManager : MonoBehaviour
         return response.Models;
     }
 
+    // saves route to supabase
     public async Task<bool> SaveRouteAsync(Route route)
     {
         var client = SupabaseManager.Instance.GetClient();

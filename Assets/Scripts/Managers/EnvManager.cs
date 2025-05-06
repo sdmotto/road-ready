@@ -7,6 +7,7 @@ public static class EnvManager
     private static Dictionary<string, string> env = new Dictionary<string, string>();
     private static bool isLoaded = false;
 
+    // Load in variables from .env
     public static void LoadEnv()
     {
         if (isLoaded) return;
@@ -39,6 +40,7 @@ public static class EnvManager
         Debug.Log($"[EnvManager] Loaded {env.Count} environment variables from {envPath}");
     }
 
+    // get .env variable
     public static string Get(string key)
     {
         LoadEnv();

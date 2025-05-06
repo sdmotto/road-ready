@@ -18,6 +18,7 @@ public class RouteStatsManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // saves route stats to supabase
     public async Task<bool> SaveRouteStatsAsync(RouteStats stats)
     {
         var client = SupabaseManager.Instance.GetClient();
