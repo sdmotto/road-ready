@@ -21,17 +21,17 @@ public class StopSignGenerator : MonoBehaviour
     private HashSet<long> processedStopSignIds = new HashSet<long>();
 
     [Header("Zone & UI Settings")]
-    // Reference to the UI Image for the stop sign indicator (invisible by default).
+    // Reference to the UI Image for the stop sign indicator (invisible by default)
     public Image stopSignImage;
-    // Reference to the TextMeshPro element displaying the player's speed.
+    // Reference to the TextMeshPro element displaying the players speed
     public TMP_Text speedText;
-    // The detection zone radius (Unity units).
+    // The detection zone radius (Unity units)
     public float zoneRadius = 20f;
-    // Penalty for leaving the zone without stopping.
+    // Penalty for leaving the zone without stopping
     public float stopSignPenalty = 10f;
 
     [Header("Scoring")]
-    // Reference to the score manager.
+    // Reference to the score manager
     public scoreScript scoreManager;
 
     void Start()
@@ -41,14 +41,14 @@ public class StopSignGenerator : MonoBehaviour
         StartCoroutine(SweepArea());
     }
 
-    // Convert latitude, longitude, and a given height to a Unity world position.
+    // Convert latitude, longitude, and a given height to a Unity world position
     private double3 LatLongToUnityPosition(float lat, float lon, float height)
     {
         double3 earthPosition = CesiumWgs84Ellipsoid.LongitudeLatitudeHeightToEarthCenteredEarthFixed(new double3(lon, lat, height));
         return cesiumGeoreference.TransformEarthCenteredEarthFixedPositionToUnity(earthPosition);
     }
 
-    // Sweep the area around the base coordinate and query stop sign nodes.
+    // Sweep the area around the base coordinate and query stop sign nodes
     private IEnumerator SweepArea()
     {
         float lat = baseLat;
@@ -63,7 +63,7 @@ public class StopSignGenerator : MonoBehaviour
         yield return StartCoroutine(FetchStopSignData(overpassUrl + query));
     }
 
-    // Fetch stop sign data using UnityWebRequest.
+    // Fetch stop sign data
     private IEnumerator FetchStopSignData(string url)
     {
         using (UnityWebRequest request = UnityWebRequest.Get(url))

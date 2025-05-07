@@ -197,7 +197,7 @@ public class scoreScript : MonoBehaviour
     }
 
 
-    // Called automatically by Unity when this GameObject collides with another
+    // Called automatically by Unity when car GameObject collides with another
     // Only processes collisions when grading is active
     void OnCollisionEnter(Collision collision)
     {
