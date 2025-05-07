@@ -13,8 +13,8 @@ public class TrafficSignalGenerator : MonoBehaviour
 {
     [Header("Cesium & Overpass Settings")]
     public CesiumGeoreference cesiumGeoreference;
-    [SerializeField] private float baseLat = 41.65962f;
-    [SerializeField] private float baseLon = -91.53464f;
+    [SerializeField] private float baseLat = 41.65962f; // iowa city
+    [SerializeField] private float baseLon = -91.53464f; // iowa city
     [SerializeField] private int queryRadius = 1000;
     private string overpassUrl = "https://overpass-api.de/api/interpreter?data=";
     private HashSet<long> processedTrafficSignalIds = new HashSet<long>();

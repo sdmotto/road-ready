@@ -174,6 +174,7 @@ public class menuScript : MonoBehaviour
         }
     }
 
+    // display routes menu
     public void DisplayRoutes()
     {
         if (!menuActive) return;
@@ -205,6 +206,7 @@ public class menuScript : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
     }
 
+    // update routes display
     void UpdateMenuDisplay()
     {
         if (menuText == null)

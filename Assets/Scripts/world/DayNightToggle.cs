@@ -24,6 +24,7 @@ public class DayNightToggle : MonoBehaviour
         DynamicGI.UpdateEnvironment(); // Update lighting to reflect the skybox change
     }
 
+    // toggle day.night if N is pressed or LSB on wheel
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown("joystick button 9"))
@@ -36,13 +37,14 @@ public class DayNightToggle : MonoBehaviour
     {
         isDay = !isDay;
 
+        // set skybox to noon
         if (isDay)
         {
             directionalLight.color = dayColor;
             directionalLight.intensity = dayIntensity;
             RenderSettings.skybox = SkyNoon;
         }
-        else
+        else // set skybox to night
         {
             directionalLight.color = nightColor;
             directionalLight.intensity = nightIntensity;

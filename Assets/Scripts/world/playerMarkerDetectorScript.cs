@@ -23,11 +23,12 @@ public class playerMarkerDetectorScript : MonoBehaviour
         }
     }
 
+    // eCheck if user has entered first route marker
     private async Task OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("StartMarker") && !startMarkerHit)
         {
-            Debug.Log("Player has driven over the START marker!");
+            //Debug.Log("Player has driven over the START marker!");
             startMarkerHit = true;
             scoring.resetEverything();
             scoring?.StartGrading();
@@ -39,9 +40,10 @@ public class playerMarkerDetectorScript : MonoBehaviour
                 checker.enabled = true;
             }
         }
+        // check if user has driven over the end marker
         else if (other.CompareTag("EndMarker") && !endMarkerHit)
         {
-            Debug.Log("Player has driven over the END marker!");
+            //Debug.Log("Player has driven over the END marker!");
             endMarkerHit = true;
             scoring?.EndGrading();
 
