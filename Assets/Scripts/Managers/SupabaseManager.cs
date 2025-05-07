@@ -34,6 +34,7 @@ public class SupabaseManager : MonoBehaviour
         await InitializeSupabase();
     }
 
+    // initialize connection to supabase
     private async Task InitializeSupabase()
     {
         supabaseClient = new Supabase.Client(SupabaseUrl, SupabaseAnonKey, new SupabaseOptions
@@ -62,6 +63,7 @@ public class SupabaseManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene("auth");
     }
 
+    // handles log in / signing up
     public async Task<bool> SignInOrSignUpAsync(string email, string password, bool remember = true)
     {
         email = email.Trim().ToLower();
@@ -99,6 +101,7 @@ public class SupabaseManager : MonoBehaviour
         }
     }
 
+    // helper functions for "remember me" functionality
     public void ForgetCredentials()
     {
         string path = Path.Combine(Application.persistentDataPath, CredsFile);
